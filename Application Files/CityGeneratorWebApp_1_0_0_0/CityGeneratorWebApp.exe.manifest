@@ -3,22 +3,14 @@
   <asmv1:assemblyIdentity name="CityGeneratorWebApp.exe" version="1.0.0.0" publicKeyToken="105b9b7959031f5e" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="CityGeneratorWebApp" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="CityGeneratorWebApp" version="1.0.0.0" publicKeyToken="81C1B3CFC0416DBE" language="neutral" processorArchitecture="msil" />
     <commandLine file="CityGeneratorWebApp.exe" parameters="" />
     <hostInBrowser xmlns="urn:schemas-microsoft-com:asm.v3" />
   </entryPoint>
   <trustInfo>
     <security>
       <applicationRequestMinimum>
-        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="Internet" Description="Default rights given to Internet applications" ID="Custom" SameSite="site">
-          <IPermission version="1" class="System.Security.Permissions.FileDialogPermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Access="Open" />
-          <IPermission UserQuota="1024000" version="1" class="System.Security.Permissions.IsolatedStorageFilePermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Allowed="ApplicationIsolationByUser" />
-          <IPermission version="1" class="System.Security.Permissions.SecurityPermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Flags="Execution" />
-          <IPermission version="1" class="System.Security.Permissions.UIPermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Clipboard="OwnClipboard" Window="SafeTopLevelWindows" />
-          <IPermission version="1" class="System.Drawing.Printing.PrintingPermission, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Level="SafePrinting" />
-          <IPermission version="1" class="System.Security.Permissions.MediaPermission, WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Audio="SafeAudio" Image="SafeImage" Video="SafeVideo" />
-          <IPermission version="1" class="System.Security.Permissions.WebBrowserPermission, WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Level="Safe" />
-        </PermissionSet>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="Internet" Description="Default rights given to Internet applications" Unrestricted="true" ID="Custom" SameSite="site" />
         <defaultAssemblyRequest permissionSetReference="Custom" />
       </applicationRequestMinimum>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -39,26 +31,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CityGenerator.dll" size="127488">
-      <assemblyIdentity name="CityGenerator" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CityGenerator.dll" size="123392">
+      <assemblyIdentity name="CityGenerator" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>GvQkoGXpBpr3lklppQy5lqdGw4+bbLn5HTyKa6VAl68=</dsig:DigestValue>
+        <dsig:DigestValue>FHVtStCjUrv3oIQFP1T5AI8QJ7tIihWFPFTmLzyHJMQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CityGeneratorWebApp.exe" size="25000">
-      <assemblyIdentity name="CityGeneratorWebApp" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CityGeneratorWebApp.exe" size="22440">
+      <assemblyIdentity name="CityGeneratorWebApp" version="1.0.0.0" publicKeyToken="81C1B3CFC0416DBE" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>jnpF4h3j4iawCurDMlLhyAf9E7WAT4bmen5s9xCGalA=</dsig:DigestValue>
+        <dsig:DigestValue>l3oyspqSg6y2QVg+oTtCgLL5oIRQ+qSJveh0b4JuLuI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -74,4 +66,4 @@
       </hash>
     </dependentAssembly>
   </dependency>
-<publisherIdentity name="CN=AzureAD\ChaseBurke" issuerKeyHash="515010a7c284d16ceb9651c575316db7b513425c" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>O+1kE+UHeGP/cG0tpskq8Wogkrk=</DigestValue></Reference></SignedInfo><SignatureValue>Nz153U37JfLU+k/rpeFUI+S3k9D34eqKabvCbzV8pKuyutF2TxVQWuVhQW4i0+jmHN2jiWzvtwXfknz7pjkzJd42eIPkyerCpz2+yOr7hh5E+Nv+h5Kt4GvYKuDEhionKmrRk9RXz0GHSGz8+Zr4Ul50gPfBCx2Vipqwg31I3vk=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>xDI81/5MqzQmPfMRU0Mb8M3Xnv7S7JrgbcKwfZhd7G8AjEOAO5/HdTWchJY7p0j0oz7W+FWEaU16TMQaq1eEPKfQtmfGC7UGYr7XGiitIldIahRJAt5TEdQ8MIEdI+ruioeAcLM3g57U/HAL0lja1d6KAM28IgiQpgPSLzFMegU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="b992206af12ac9a62d6d70ff637807e51364ed3b" Description="" Url=""><as:assemblyIdentity name="CityGeneratorWebApp.exe" version="1.0.0.0" publicKeyToken="105b9b7959031f5e" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=AzureAD\ChaseBurke</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>nm5akArzBYfCxuKqiVtidJ1g12g=</DigestValue></Reference></SignedInfo><SignatureValue>hOuCO8NJkpT0D1ROxLf80roiXht1/WCbAmuZR2ERC/MYQEQl5cYryfaIaypkhmKLLQ6RYlUhRidemfB0mo5ookPd7g3WF8VrNGf1AhR9bQTrHLxi+sWZjdT8UIfkFpHmp7gBVR4Ig5ruOsA056k70PaC44rnZz/IdS30YikgYKU=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>xDI81/5MqzQmPfMRU0Mb8M3Xnv7S7JrgbcKwfZhd7G8AjEOAO5/HdTWchJY7p0j0oz7W+FWEaU16TMQaq1eEPKfQtmfGC7UGYr7XGiitIldIahRJAt5TEdQ8MIEdI+ruioeAcLM3g57U/HAL0lja1d6KAM28IgiQpgPSLzFMegU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB4TCCAUqgAwIBAgIQaghJknBz9b9Okd7tjR+vtjANBgkqhkiG9w0BAQUFADAvMS0wKwYDVQQDHiQAQQB6AHUAcgBlAEEARABcAEMAaABhAHMAZQBCAHUAcgBrAGUwHhcNMTkxMTEyMDc1ODQ5WhcNMjAxMTExMTM1ODQ5WjAvMS0wKwYDVQQDHiQAQQB6AHUAcgBlAEEARABcAEMAaABhAHMAZQBCAHUAcgBrAGUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMQyPNf+TKs0Jj3zEVNDG/DN157+0uya4G3CsH2YXexvAIxDgDufx3U1nISWO6dI9KM+1vhVhGlNekzEGqtXhDyn0LZnxgu1BmK+1xoorSJXSGoUSQLeUxHUPDCBHSPq7oqHgHCzN4Oe1PxwC9JY2tXeigDNvCIIkKYD0i8xTHoFAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAo4ywPonGInjC3/xrnmr3z1cb3pKS6HrU1DHmij7ScIjr0beIDoPkM4sUXJt48gWrUna+/PlD9cLGDuYRIzhdYuDRfVA0dlFzjaRvB9X7FnycTSFPpE+msoIrc9jyyPKj5XKNwCL9EWeTuuKaBGWu7x8gz6vIX9d0izfFRD7owS4=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
+<publisherIdentity name="CN=AzureAD\ChaseBurke" issuerKeyHash="515010a7c284d16ceb9651c575316db7b513425c" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>GEvzDO1EXAwK5lq+5Nk7LCMHWmY=</DigestValue></Reference></SignedInfo><SignatureValue>cXXl71DHWasN0qK2D9bqvO5r2+YIPXbZ0dM+ebZmP+JAsd3NafacbgQm/160RgiPmvffZ+4es8gVp2YI6+HBGwMTABc7uDmzYGPHnhdgKcpy2EhzZVpRPKl4Q6aPY9x8h6e8sMm/qMJ1/CT10LGRfzaclMRBdrEAalN4VQmSXgk=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>xDI81/5MqzQmPfMRU0Mb8M3Xnv7S7JrgbcKwfZhd7G8AjEOAO5/HdTWchJY7p0j0oz7W+FWEaU16TMQaq1eEPKfQtmfGC7UGYr7XGiitIldIahRJAt5TEdQ8MIEdI+ruioeAcLM3g57U/HAL0lja1d6KAM28IgiQpgPSLzFMegU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="665a07232c3bd9e4be5ae60a0c5c44ed0cf34b18" Description="" Url=""><as:assemblyIdentity name="CityGeneratorWebApp.exe" version="1.0.0.0" publicKeyToken="105b9b7959031f5e" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=AzureAD\ChaseBurke</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>CoLKxfDBzz/ltWZmb623kgiGeSY=</DigestValue></Reference></SignedInfo><SignatureValue>NeN2vnL3M20kGWtLpxXQmnXiWxwLzHy5erWdxmBlg/uba1b262NHUX1qaRC2HH2X+AbZAYPc0/fD5K6yw28NaEtJ/BqfvUUsd4KvUXG0vIaN02xEny6+rqi3SAkAfAzy5QUW0xdDR5OgbYipyYyoY79eqcogRnkJf2LgHy0ZbLA=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>xDI81/5MqzQmPfMRU0Mb8M3Xnv7S7JrgbcKwfZhd7G8AjEOAO5/HdTWchJY7p0j0oz7W+FWEaU16TMQaq1eEPKfQtmfGC7UGYr7XGiitIldIahRJAt5TEdQ8MIEdI+ruioeAcLM3g57U/HAL0lja1d6KAM28IgiQpgPSLzFMegU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB4TCCAUqgAwIBAgIQaghJknBz9b9Okd7tjR+vtjANBgkqhkiG9w0BAQUFADAvMS0wKwYDVQQDHiQAQQB6AHUAcgBlAEEARABcAEMAaABhAHMAZQBCAHUAcgBrAGUwHhcNMTkxMTEyMDc1ODQ5WhcNMjAxMTExMTM1ODQ5WjAvMS0wKwYDVQQDHiQAQQB6AHUAcgBlAEEARABcAEMAaABhAHMAZQBCAHUAcgBrAGUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMQyPNf+TKs0Jj3zEVNDG/DN157+0uya4G3CsH2YXexvAIxDgDufx3U1nISWO6dI9KM+1vhVhGlNekzEGqtXhDyn0LZnxgu1BmK+1xoorSJXSGoUSQLeUxHUPDCBHSPq7oqHgHCzN4Oe1PxwC9JY2tXeigDNvCIIkKYD0i8xTHoFAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAo4ywPonGInjC3/xrnmr3z1cb3pKS6HrU1DHmij7ScIjr0beIDoPkM4sUXJt48gWrUna+/PlD9cLGDuYRIzhdYuDRfVA0dlFzjaRvB9X7FnycTSFPpE+msoIrc9jyyPKj5XKNwCL9EWeTuuKaBGWu7x8gz6vIX9d0izfFRD7owS4=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
