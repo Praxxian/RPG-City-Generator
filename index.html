@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Fantasy City Generator</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.21/datatables.min.css" />
+</head>
+
+<body class="bg-light">
+
+    <div class="container-lg px-5" id="citygenapp">
+        <p class="display-1 text-center">
+            Fantasy City Generator
+        </p>
+
+        <div class="row">
+            <div class="col-2 collapse show" id="settings_col">
+                <div class="row my-1">
+                    <div class="col text-center">
+                        <button class="btn btn-success btn-lg" @click="generate()"
+                            :disabled="generateDisabled">Generate</button>
+                    </div>
+                </div>
+                <div class="row my-1">
+                    <select class="custom-select" v-model="citySize" @change="onSelectChanged($event)" required>
+                        <option value="" selected>City Size</option>
+                        <option v-for="o in citySizeOptions" :value="o.name">{{ o.name }}</option>
+                    </select>
+                </div>
+                <div class="row my-1">
+                    <select class="custom-select" v-model="industry" @change="onSelectChanged($event)" required>
+                        <option value="" selected>Major Industry</option>
+                        <option v-for="o in industryOptions" :value="o">{{ o }}</option>
+                    </select>
+                </div>
+                <div class="row my-1 border p-3 bg-white rounded">
+                    <div class="input-group">
+                        <label class="form-label">Generated Name Frequency</label>
+                        <input type="range" class="custom-range w-75 mr-3" v-model="gen_name_range" />
+                        <span>{{ gen_name_range }}%</span>
+                    </div>
+                </div>
+                <div class="row my-1 border p-3 bg-white rounded">
+                    <h5>Race Frequency</h5>
+                    <table class="table">
+                        <tr v-for="r in raceOptions">
+                            <td>
+                                <label class="form-label">{{r}}</label>
+                            </td>
+                            <td>
+                                <select class="custom-select" :id="r.replace(' ','')">
+                                    <option value="" selected>None</option>
+                                    <option v-for="o in raceFreqOptions" :value="o">{{ o }}</option>
+                                </select>
+                            </td>
+                    </table>
+                </div>
+            </div>
+            <div v-if="people.length > 0" class="col-auto h-auto px-1">
+                <button class="btn h-100" @click="toggleSettings($event)" id="collapse-btn">&laquo;</button>
+            </div>
+            <div class="col px-0">
+                <div v-if="isLoading">
+                    <h1>Loading...</h1>
+                </div>
+                <div v-else-if="people && people.length > 0 && people[0] != null">
+                    <table class="table table-dark" id="people_table">
+                        <thead>
+                            <td>Name</td>
+                            <td>Race</td>
+                            <td>Caste</td>
+                            <td>Age</td>
+                            <td>Gender</td>
+                            <td>Spouse</td>
+                            <td>Works At</td>
+                            <td>Appearance</td>
+                        </thead>
+                        <tr v-for="p in people">
+                            <td>{{ p.fullName() }}</td>
+                            <td>{{ p.Race }}</td>
+                            <td>{{ p.Caste.name }}</td>
+                            <td>{{ p.Age }}</td>
+                            <td>{{ p.Gender }}</td>
+                            <td>{{ p.Spouse }}</td>
+                            <td>
+                                <p v-if="p.getBusiness()">{{ p.getBusiness() }} (Owner)</p>
+                                <p v-if="p.getEmployer()">{{ p.getEmployer() }}</p>
+                            </td>
+                            <td>{{ p.Appearance }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div v-else class="bg-secondary w-100 h-100">
+                    <ol class="h4 text-light">
+                        <li>Set the city size.</li>
+                        <li>Select the major industry.</li>
+                        <li>(Optional) Adjust how often races appear.</li>
+                        <li>Click Generate!</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+    <!-- TODO swap for prod version -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+    <script src="static/js/stats.js"></script>
+    <script src="static/js/enums.js"></script>
+    <script src="static/js/models.js"></script>
+    <script src="static/js/citygen.js"></script>
+    <script>
+        var citygenapp = new Vue({
+            el: '#citygenapp',
+            data: {
+                generateDisabled: true,
+                citySizeOptions: CitySize,
+                industryOptions: MajorIndustry,
+                raceOptions: Race,
+                raceFreqOptions: RaceFrequency,
+                defaultRaceSettings: [
+                    { race: Race.HUMAN, frequency: RaceFrequency.COMMON },
+                    { race: Race.HALF_ELF, frequency: RaceFrequency.UNCOMMON },
+                    { race: Race.DWARF, frequency: RaceFrequency.RARE },
+                    { race: Race.ELF, frequency: RaceFrequency.RARE }],
+                citySize: '',
+                industry: '',
+                gen_name_range: 0,
+                people: [],
+                isLoading: false,
+            },
+            mounted: function () {
+                // Race.forEach(r => {
+                //     raceFreqOptions.push({race:r, value:null});
+                // });
+
+                this.defaultRaceSettings.forEach(s => {
+                    var id = s.race.replace(' ', '');
+                    $(`#${id}`).val(s.frequency).change();
+                });
+            },
+            updated: function () {
+                this.initDataTables();
+            },
+            computed: {
+                raceFreqSettings: function () {
+                    var arr = []
+                    Object.keys(Race).forEach(k => {
+                        var race = Race[k];
+                        var id = race.replace(' ', '');
+                        var frequency = $(`#${id}`).children("option:selected").val();
+                        if (frequency)
+                            arr.push({ race: race, frequency: frequency });
+                    });
+                    return arr;
+                }
+            },
+            methods: {
+                onSelectChanged(event) {
+                    if (this.citySize && this.industry)
+                        this.generateDisabled = false;
+                },
+                async generate() {
+                    try {
+                        console.log('generating...');
+                        this.isLoading = true;
+                        $('#people_table').DataTable().destroy();
+                        var settings = {
+                            CitySize: this.citySize,
+                            Races: this.raceFreqSettings,
+                        }
+                        var cg = new CityGenerator(settings);
+                        var city = await cg.getNew();
+                        this.people = city.People;
+                        console.log('done.');
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                    finally {
+                        this.isLoading = false;
+                    }
+                },
+                toggleSettings(event) {
+                    $('#settings_col').collapse('toggle');
+                    var button = $('#collapse-btn');
+                    if (button.html() == '«')
+                        button.html("Settings<br/>»");
+                    else
+                        button.html("«");
+                },
+                initDataTables() {
+                    if ($('#people_table').DataTable())
+                        $('#people_table').DataTable().destroy();
+                    $('#people_table').DataTable({
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                text: 'Save current page',
+                                exportOptions: {
+                                    modifier: {
+                                        page: 'current'
+                                    }
+                                }
+                            }
+                        ]
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
