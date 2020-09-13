@@ -40,6 +40,7 @@ class CityGenerator {
             thisCG.City = new City();
             thisCG.createPopulation();
             thisCG.matchFamilies();
+            thisCG.defaultFamilies();
             resolve(thisCG.City);
         })
         return promise;
@@ -82,6 +83,7 @@ class CityGenerator {
                 person.Race = getRandom(freqGroup);
             else
                 person.Race = getRandom(this.Races[RaceFrequency.COMMON]);
+            person.RaceAge = this.adjustAgeByRace(person.Race, person.Age);
             person.Appearance = person.Age >= WorkingHumanAge && Math.random() > 0.67 ? getRandom(Appearances) : null;
             person.Personality = new Personality();
             person.Personality.Openess = PersonalityRandom.next();
@@ -102,13 +104,21 @@ class CityGenerator {
             family.LastName = spouse1.LastName;
             family.Caste = spouse1.Caste;
             family.add(spouse1);
+
+            // Spouse 2
             var spouse2Gender = spouse1.Gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
             if (Math.random() >= 0.05)
                 spouse2Gender = spouse1.Gender;
             var spouse2 = null;
             for (var j = i + 1; j < this.City.People.length; j++) {
                 spouse2 = this.City.People[j];
-                if (spouse2.Family || spouse2.Age < AdultHumanAge || Math.abs(spouse2.Age - spouse1.Age) > 10 || spouse2Gender != spouse2.Gender || spouse2.Caste != spouse1.Caste)
+                var outgoing = spouse1.Personality.Openess >= 67;
+                if (spouse2.Family
+                    || spouse2.Age < AdultHumanAge
+                    || Math.abs(spouse2.Age - spouse1.Age) > 10
+                    || spouse2Gender != spouse2.Gender
+                    || spouse2.Caste != spouse1.Caste
+                    || (spouse2.Race != spouse1.Race && !outgoing))
                     continue;
                 // TODO personality difference?
                 family.add(spouse2);
@@ -116,6 +126,126 @@ class CityGenerator {
                 spouse1.Spouse = spouse2.fullName();
                 break;
             }
+
+            // Children
+            if (spouse2 || Math.random() < 0.1) {
+                var minParentAge = spouse1.Age;
+                if (spouse2)
+                    minParentAge = Math.min(spouse1.Age, spouse2.Age);
+                var childYears = minParentAge - AdultHumanAge;
+                var childrenTotal = childYears / 2;
+                for (var j = 0; j < childYears; j += 2) {
+                    if (Math.random() < spouse1.Caste.infantMortality)
+                        childrenTotal--;
+                }
+
+                for (var j = 0; j < this.City.People.length && childrenTotal > 0; j++) {
+                    var child = this.City.People[j];
+                    if (!child
+                        || child.Family
+                        || child.Age + AdultHumanAge > minParentAge
+                        || child.Caste != spouse1.Caste
+                        || (child.Race != spouse1.Race && child.Race != spouse2.Race))
+                        continue;
+                    family.add(child);
+                    childrenTotal--;
+                    break;
+                }
+            }
         }
     }
+
+    defaultFamilies() {
+        this.City.People.forEach(p => {
+            if (!p.Family) {
+                var f = new Family();
+                f.LastName = p.LastName;
+                f.Caste = p.Caste;
+                f.add(p);
+            }
+        });
+    }
+
+    adjustAgeByRace(race, age) {
+        switch (race) {
+            case Race.DRAGONBORN:
+                return Math.floor((15.0 / 18.0) * age);
+            case Race.DWARF:
+                return Math.floor((50.0 / 18.0) * age);
+            case Race.ELF:
+                return Math.floor((100.0 / 18.0) * age);
+            case Race.GNOME:
+                return Math.floor((40.0 / 18.0) * age);
+            case Race.HALF_ELF:
+                return Math.floor((20.0 / 18.0) * age);
+            case Race.HALFLING:
+                return Math.floor((20.0 / 18.0) * age);
+            case Race.HALF_ORC:
+                return Math.floor((14.0 / 18.0) * age);
+            case Race.HUMAN:
+                break;
+            case Race.TIEFLING:
+                break;
+            case Race.AARAKOCRA:
+                return Math.floor((3.0 / 18.0) * age);
+            case Race.GENASI:
+                return age <= AdultHumanAge ? age : Math.floor((120.0 / 80.0) * age);
+            case Race.GOLIATH:
+                break;
+            case Race.AASIMAR:
+                return age <= AdultHumanAge ? age : Math.floor((160.0 / 80.0) * age);
+            case Race.BUGBEAR:
+                return Math.floor((16.0 / 18.0) * age);
+            case Race.FIRBOLG:
+                return Math.floor((30.0 / 18.0) * age);
+            case Race.GOBLIN:
+                return Math.floor((8.0 / 18.0) * age);
+            case Race.HOBGOBLIN:
+                break;
+            case Race.KENKU:
+                return Math.floor((12.0 / 18.0) * age);
+            case Race.KOBOLD:
+                return age <= 6 ? Math.floor((6.0 / 18.0) * age) : Math.floor((120 / 80.0) * age);
+            case Race.LIZARDFOLK:
+                return Math.floor((14.0 / 18.0) * age);
+            case Race.ORC:
+                return Math.floor((12.0 / 18.0) * age);
+            case Race.TABAXI:
+                break;
+            case Race.TRITON:
+                return age <= 15 ? Math.floor((15.0 / 18.0) * age) : Math.floor((200.0 / 80.0) * age);
+            case Race.YUANTI_PUREBLOOD:
+                break;
+            case Race.TORTLE:
+                return Math.floor((15.0 / 18.0) * age);
+            case Race.GITH:
+                break;
+            case Race.CHANGELING:
+                break;
+            case Race.KALASHTAR:
+                break;
+            case Race.SHIFTER:
+                return Math.floor((10.0 / 18.0) * age);
+            case Race.WARFORGED:
+                return Math.floor((2.0 / 18.0) * age);
+            case Race.CENTAUR:
+                return Math.floor((15.0 / 18.0) * age);
+            case Race.LOXODON:
+                return age <= AdultHumanAge ? age : Math.floor((60.0 / 20.0) * age);
+            case Race.MINOTAUR:
+                return age <= AdultHumanAge ? age : Math.floor((150.0 / 80.0) * age);
+            case Race.SIMIC_HYBRID:
+                break;
+            case Race.VEDALKEN:
+                return age <= AdultHumanAge ? age : Math.floor((500.0 / 80.0) * age);
+            case Race.VERDAN:
+                return Math.floor((24.0 / 18.0) * age);
+            default:
+                break;
+        }
+
+        return age;
+    }
+
+    
 }

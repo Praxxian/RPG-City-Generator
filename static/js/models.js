@@ -21,7 +21,8 @@ class Person {
     FlawOrSecret
     Personality
     Schedule
-
+    RaceAge
+    
     ownedBusiness
     getBusiness() {
         return this.ownedBusiness;
@@ -82,6 +83,7 @@ class Personality {
 class Family {
     LastName
     Caste
+    UUID = createUUID()
 
     add(person) {
         if (!person)
@@ -89,5 +91,9 @@ class Family {
         person.LastName = this.LastName;
         person.Caste = this.Caste;
         person.Family = this;
+    }
+
+    displayValue() {
+        return `${this.LastName} (${this.UUID.substring(0, 7)}...)`;
     }
 }

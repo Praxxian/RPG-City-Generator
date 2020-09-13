@@ -91,19 +91,23 @@ const RaceFrequency = {
 const Caste = {
     PEASANT: {
         name: 'Peasant',
-        ageRandom: new BoxMullerRandom(0.0, 20.0)
+        ageRandom: new BoxMullerRandom(0.0, 20.0),
+        infantMortality: 0.2
     },
     TRADESMEN: {
         name: 'Tradesmen',
-        ageRandom: new BoxMullerRandom(0.0, 25.0)
+        ageRandom: new BoxMullerRandom(0.0, 25.0),
+        infantMortality: 0.15
     },
     MERCANTILE: {
         name: 'Mercantile',
-        ageRandom: new BoxMullerRandom(0.0, 30.0)
+        ageRandom: new BoxMullerRandom(0.0, 30.0),
+        infantMortality: 0.05
     },
     NOBLE: {
         name: 'Noble',
-        ageRandom: new BoxMullerRandom(0.0, 35.0)
+        ageRandom: new BoxMullerRandom(0.0, 35.0),
+        infantMortality: 0.02
     },
 }
 

@@ -74,6 +74,7 @@
                             <td>Age</td>
                             <td>Gender</td>
                             <td>Spouse</td>
+                            <td>Family</td>
                             <td>Works At</td>
                             <td>Appearance</td>
                         </thead>
@@ -81,9 +82,10 @@
                             <td>{{ p.fullName() }}</td>
                             <td>{{ p.Race }}</td>
                             <td>{{ p.Caste.name }}</td>
-                            <td>{{ p.Age }}</td>
+                            <td>{{ p.RaceAge }}</td>
                             <td>{{ p.Gender }}</td>
                             <td>{{ p.Spouse }}</td>
+                            <td>{{ p.Family.displayValue() }}</td>
                             <td>
                                 <p v-if="p.getBusiness()">{{ p.getBusiness() }} (Owner)</p>
                                 <p v-if="p.getEmployer()">{{ p.getEmployer() }}</p>
@@ -114,7 +116,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+    <!-- DataTables -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.3/b-colvis-1.6.3/b-html5-1.6.3/datatables.min.js"></script>
     <!-- TODO swap for prod version -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
@@ -206,16 +212,9 @@
                     if ($('#people_table').DataTable())
                         $('#people_table').DataTable().destroy();
                     $('#people_table').DataTable({
+                        "pageLength": 100,
                         buttons: [
-                            {
-                                extend: 'excelHtml5',
-                                text: 'Save current page',
-                                exportOptions: {
-                                    modifier: {
-                                        page: 'current'
-                                    }
-                                }
-                            }
+                            'excel'
                         ]
                     });
                 }
