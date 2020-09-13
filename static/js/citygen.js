@@ -12,15 +12,15 @@ class CityGenerator {
     }
 
     populateNameGenerators() {
-        this.NameGens = {}
-        this.Settings.Races.forEach(r => {
-            var race = r.race;
-            Object.keys(Gender).forEach(k => {
-                var g = Gender[k];
-                var key = new NameGenKey(race, g);
-                this.NameGens[key] = new NameGenerator(key);
-            })
-        });
+        // this.NameGens = {}
+        // this.Settings.Races.forEach(r => {
+        //     var race = r.race;
+        //     Object.keys(Gender).forEach(k => {
+        //         var g = Gender[k];
+        //         var key = new NameGenKey(race, g);
+        //         this.NameGens[key] = new NameGenerator(key);
+        //     })
+        // });
     }
 
     groupRaceFrequencies() {
@@ -46,9 +46,19 @@ class CityGenerator {
         return promise;
     }
 
+    matchCitySize(name) {
+        var result;
+        Object.keys(CitySize).forEach(function (k) {
+            if (CitySize[k].name == name) {
+                result = CitySize[k];
+            }
+        });
+        return result;
+    }
+
     createPopulation() {
         var percentChange = Math.random() * this.MaxPopVariance * 2 - this.MaxPopVariance;
-        var size = CitySize.match(this.Settings.CitySize);
+        var size = this.matchCitySize(this.Settings.CitySize);
         var popSize = size.avgSize * (1 + percentChange);
         var noblePopSize = Math.floor(popSize * 0.005);
         var merchPopSize = Math.floor(popSize * 0.015);
@@ -64,14 +74,15 @@ class CityGenerator {
     createPeopleByCaste(caste, count) {
         if (isNaN(count))
             return;
+        var nameGen = new NameGenerator(null);
         var ageRandom = caste.ageRandom;
         for (var i = 0; i < count; i++) {
             var person = new Person();
             person.Caste = caste;
             person.Age = Math.abs(ageRandom.next());
-            person.FirstName = `NPC_${Math.floor(Math.random() * 100000)}`;
-            person.LastName = Math.floor(Math.random() * 100000);
             person.Gender = Math.random() > 0.5 ? Gender.FEMALE : Gender.MALE;
+            person.FirstName = nameGen.getFirst(person.Gender);//`NPC_${Math.floor(Math.random() * 100000)}`;
+            person.LastName = nameGen.getLast();//Math.floor(Math.random() * 100000);
             var raceRoll = Math.random();
             person.RaceFrequency = RaceFrequency.COMMON;
             if (raceRoll < 0.33 && raceRoll > 0.01)
@@ -107,7 +118,7 @@ class CityGenerator {
 
             // Spouse 2
             var spouse2Gender = spouse1.Gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
-            if (Math.random() >= 0.05)
+            if (Math.random() <= 0.05)
                 spouse2Gender = spouse1.Gender;
             var spouse2 = null;
             for (var j = i + 1; j < this.City.People.length; j++) {
@@ -247,5 +258,5 @@ class CityGenerator {
         return age;
     }
 
-    
+
 }

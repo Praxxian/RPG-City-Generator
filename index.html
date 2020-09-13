@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Fantasy City Generator</title>
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.21/datatables.min.css" />
+        href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.21/b-1.6.3/b-html5-1.6.3/datatables.min.css" />
 </head>
 
 <body class="bg-light">
@@ -35,7 +35,7 @@
                         <option v-for="o in industryOptions" :value="o">{{ o }}</option>
                     </select>
                 </div>
-                <div class="row my-1 border p-3 bg-white rounded">
+                <div class="row my-1 border p-3 bg-white rounded" hidden>
                     <div class="input-group">
                         <label class="form-label">Generated Name Frequency</label>
                         <input type="range" class="custom-range w-75 mr-3" v-model="gen_name_range" />
@@ -58,10 +58,10 @@
                     </table>
                 </div>
             </div>
-            <div v-if="people.length > 0" class="col-auto h-auto px-1">
+            <div v-if="people.length > 0" class="col-auto h-auto px-1" hidden>
                 <button class="btn h-100" @click="toggleSettings($event)" id="collapse-btn">&laquo;</button>
             </div>
-            <div class="col px-0">
+            <div class="col">
                 <div v-if="isLoading">
                     <h1>Loading...</h1>
                 </div>
@@ -107,25 +107,14 @@
 
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-        crossorigin="anonymous"></script>
-    <!-- DataTables -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.3/b-colvis-1.6.3/b-html5-1.6.3/datatables.min.js"></script>
+        src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.21/b-1.6.3/b-html5-1.6.3/datatables.min.js"></script>
     <!-- TODO swap for prod version -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
     <script src="static/js/stats.js"></script>
     <script src="static/js/enums.js"></script>
+    <script src="static/js/names.js"></script>
     <script src="static/js/models.js"></script>
     <script src="static/js/citygen.js"></script>
     <script>
@@ -147,12 +136,9 @@
                 gen_name_range: 0,
                 people: [],
                 isLoading: false,
+                raceFreqSettings: []
             },
             mounted: function () {
-                // Race.forEach(r => {
-                //     raceFreqOptions.push({race:r, value:null});
-                // });
-
                 this.defaultRaceSettings.forEach(s => {
                     var id = s.race.replace(' ', '');
                     $(`#${id}`).val(s.frequency).change();
@@ -160,29 +146,29 @@
             },
             updated: function () {
                 this.initDataTables();
-            },
-            computed: {
-                raceFreqSettings: function () {
-                    var arr = []
-                    Object.keys(Race).forEach(k => {
-                        var race = Race[k];
-                        var id = race.replace(' ', '');
-                        var frequency = $(`#${id}`).children("option:selected").val();
-                        if (frequency)
-                            arr.push({ race: race, frequency: frequency });
-                    });
-                    return arr;
-                }
+                this.raceFreqSettings = [];
+                Object.keys(Race).forEach(k => {
+                    var race = Race[k];
+                    var id = race.replace(' ', '');
+                    var frequency = $(`#${id}`).children("option:selected").val();
+                    if (frequency)
+                        this.raceFreqSettings.push({ race: race, frequency: frequency });
+                });
             },
             methods: {
                 onSelectChanged(event) {
                     if (this.citySize && this.industry)
                         this.generateDisabled = false;
                 },
-                async generate() {
+                generate() {
+                    this.isLoading = true;
+                    this.generateAsync();
+                    var thisApp = this;
+                    setTimeout(function () { thisApp.initDataTables(); }, 1000);
+                },
+                async generateAsync() {
                     try {
                         console.log('generating...');
-                        this.isLoading = true;
                         $('#people_table').DataTable().destroy();
                         var settings = {
                             CitySize: this.citySize,
@@ -213,8 +199,9 @@
                         $('#people_table').DataTable().destroy();
                     $('#people_table').DataTable({
                         "pageLength": 100,
+                        dom: 'Blfrtip',
                         buttons: [
-                            'excel'
+                            'csv', 'excel',
                         ]
                     });
                 }

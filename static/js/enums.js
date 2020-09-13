@@ -19,15 +19,6 @@ const CitySize = {
         name: 'City',
         avgSize: 25000
     },
-    match: function (name) {
-        var result;
-        Object.keys(CitySize).forEach(function (k) {
-            if (CitySize[k].name == name) {
-                result = CitySize[k];
-            }
-        });
-        return result;
-    }
 }
 
 const MajorIndustry = {
@@ -79,7 +70,6 @@ const Race = {
     SIMIC_HYBRID: 'Simic Hybrid',
     VEDALKEN: 'Vedalken',
     VERDAN: 'Verdan',
-    BAROVIAN: 'Barovian',
 }
 
 const RaceFrequency = {

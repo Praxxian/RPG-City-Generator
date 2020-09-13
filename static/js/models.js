@@ -22,7 +22,7 @@ class Person {
     Personality
     Schedule
     RaceAge
-    
+
     ownedBusiness
     getBusiness() {
         return this.ownedBusiness;
@@ -64,6 +64,19 @@ class NameGenerator {
 
     constructor(key) {
         this.Key = key;
+    }
+
+    getFirst(gender) {
+        switch (gender) {
+            case Gender.FEMALE:
+                return getRandom(FirstNamesFemale);
+            default:
+                return getRandom(FirstNamesMale);
+        }
+    }
+
+    getLast() {
+        return getRandom(LastNames);
     }
 }
 
