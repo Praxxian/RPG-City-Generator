@@ -207,7 +207,7 @@ class CityGenerator {
                     spouse.setBusiness(business);
                 var workingKids = family.filter(p => p != spouse && p != person && p.Age >= WorkingHumanAge);
                 workingKids.forEach(function (k) {
-                    if (Math.random >= 0.1)
+                    if (Math.random() >= 0.1)
                         k.setEmployer(business);
                 });
                 this.City.Businesses.push(business);
