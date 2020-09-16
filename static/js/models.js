@@ -28,9 +28,9 @@ class Person {
         return this.ownedBusiness;
     }
     setBusiness(business) {
-        this.ownedBusiness = business;
-        if (!business.Owners.contains(this))
-            business.Owners.add(this);
+        this.ownedBusiness = business.Name;
+        if (!business.Owners.includes(this))
+            business.Owners.push(this);
     }
 
     worksAt
@@ -38,9 +38,9 @@ class Person {
         return this.worksAt;
     }
     setEmployer(business) {
-        this.worksAt = business;
-        if (!business.Employees.contains(this))
-            business.Employees.add(this);
+        this.worksAt = business.Name;
+        if (!business.Employees.includes(this))
+            business.Employees.push(this);
     }
 
     fullName() {
@@ -82,7 +82,8 @@ class NameGenerator {
 
 class City {
     Settings
-    People
+    People = []
+    Businesses = []
 }
 
 class Personality {
@@ -109,4 +110,13 @@ class Family {
     displayValue() {
         return `${this.LastName} (${this.UUID.substring(0, 7)}...)`;
     }
+}
+
+class Business{
+    NameGenKey
+    BusinessType
+    Owners = []
+    Employees = []
+    Name
+    Description
 }

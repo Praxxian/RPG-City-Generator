@@ -58,43 +58,88 @@
                     </table>
                 </div>
             </div>
-            <div v-if="people.length > 0" class="col-auto h-auto px-1" hidden>
+            <div v-if="city" class="col-auto h-auto px-1" hidden>
                 <button class="btn h-100" @click="toggleSettings($event)" id="collapse-btn">&laquo;</button>
             </div>
             <div class="col">
                 <div v-if="isLoading">
                     <h1>Loading...</h1>
                 </div>
-                <div v-else-if="people && people.length > 0 && people[0] != null">
-                    <table class="table table-dark" id="people_table">
-                        <thead>
-                            <td>Name</td>
-                            <td>Race</td>
-                            <td>Caste</td>
-                            <td>Age</td>
-                            <td>Gender</td>
-                            <td>Spouse</td>
-                            <td>Family</td>
-                            <td>Works At</td>
-                            <td>Appearance</td>
-                        </thead>
-                        <tr v-for="p in people">
-                            <td>{{ p.fullName() }}</td>
-                            <td>{{ p.Race }}</td>
-                            <td>{{ p.Caste.name }}</td>
-                            <td>{{ p.RaceAge }}</td>
-                            <td>{{ p.Gender }}</td>
-                            <td>{{ p.Spouse }}</td>
-                            <td>{{ p.Family.displayValue() }}</td>
-                            <td>
-                                <p v-if="p.getBusiness()">{{ p.getBusiness() }} (Owner)</p>
-                                <p v-if="p.getEmployer()">{{ p.getEmployer() }}</p>
-                            </td>
-                            <td>{{ p.Appearance }}</td>
-                        </tr>
-                    </table>
+                <div v-else-if="city">
+                    <ul class="nav nav-tabs" id="resultTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="people-tab" data-toggle="tab" href="#people"
+                                role="tab">People</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="business-tab" data-toggle="tab" href="#business"
+                                role="tab">Businesses</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="inventory-tab" data-toggle="tab" href="#inventory"
+                                role="tab">Inventories</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-3 bg-white border-left border-right border-bottom" id="resultTabContent">
+                        <div class="tab-pane fade show active" id="people" role="tabpanel">
+                            <table class="table table-dark result-table" id="people_table" style="width: 100%;">
+                                <thead>
+                                    <td>Name</td>
+                                    <td>Race</td>
+                                    <td>Caste</td>
+                                    <td>Age</td>
+                                    <td>Gender</td>
+                                    <td>Spouse</td>
+                                    <td>Family</td>
+                                    <td>Works At</td>
+                                    <td>Appearance</td>
+                                </thead>
+                                <tr v-for="p in city.People">
+                                    <td>{{ p.fullName() }}</td>
+                                    <td>{{ p.Race }}</td>
+                                    <td>{{ p.Caste.name }}</td>
+                                    <td>{{ p.RaceAge }}</td>
+                                    <td>{{ p.Gender }}</td>
+                                    <td>{{ p.Spouse }}</td>
+                                    <td>{{ p.Family.displayValue() }}</td>
+                                    <td>
+                                        <p v-if="p.getBusiness()">{{ p.getBusiness() }} (Owner)</p>
+                                        <p v-if="p.getEmployer()">{{ p.getEmployer() }}</p>
+                                    </td>
+                                    <td>{{ p.Appearance }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="business" role="tabpanel">
+                            <table class="table table-dark result-table" id="business_table" style="width: 100%;">
+                                <thead>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Owners</td>
+                                    <td>Employees</td>
+                                    <td>Description</td>
+                                </thead>
+                                <tr v-for="b in city.Businesses">
+                                    <td>{{ b.Name }}</td>
+                                    <td>{{ b.BusinessType.name }}</td>
+                                    <td>
+                                        <p v-for="o in b.Owners">
+                                            {{ o.fullName() }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p v-for="e in b.Employees">
+                                            {{ e.fullName() }}
+                                        </p>
+                                    </td>
+                                    <td>{{ b.Description }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="inventory" role="tabpanel">...</div>
+                    </div>
                 </div>
-                <div v-else class="bg-secondary w-100 h-100">
+                <div v-else class="bg-secondary w-100 h-100 p-3">
                     <ol class="h4 text-light">
                         <li>Set the city size.</li>
                         <li>Select the major industry.</li>
@@ -134,7 +179,7 @@
                 citySize: '',
                 industry: '',
                 gen_name_range: 0,
-                people: [],
+                city: null,
                 isLoading: false,
                 raceFreqSettings: []
             },
@@ -169,14 +214,13 @@
                 async generateAsync() {
                     try {
                         console.log('generating...');
-                        $('#people_table').DataTable().destroy();
+                        $('.result-table').DataTable().destroy();
                         var settings = {
                             CitySize: this.citySize,
                             Races: this.raceFreqSettings,
                         }
                         var cg = new CityGenerator(settings);
-                        var city = await cg.getNew();
-                        this.people = city.People;
+                        this.city = await cg.getNew();
                         console.log('done.');
                     }
                     catch (e) {
@@ -195,9 +239,9 @@
                         button.html("«");
                 },
                 initDataTables() {
-                    if ($('#people_table').DataTable())
-                        $('#people_table').DataTable().destroy();
-                    $('#people_table').DataTable({
+                    if ($('.result-table').DataTable())
+                        $('.result-table').DataTable().destroy();
+                    $('.result-table').DataTable({
                         "pageLength": 100,
                         dom: 'Blfrtip',
                         buttons: [
