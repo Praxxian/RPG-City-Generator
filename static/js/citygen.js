@@ -181,9 +181,9 @@ class CityGenerator {
 
     createBusinesses() {
         var businessTypes = [];
-        var keys = Object.keys(BussinessType);
+        var keys = Object.keys(BusinessType);
         for (var k in keys) {
-            var bt = BussinessType[keys[k]];
+            var bt = BusinessType[keys[k]];
             var f = bt.frequency(this.City.Settings.CitySize);
             for (var i = 0; i < f; i++)
                 businessTypes.push(bt);
@@ -199,7 +199,7 @@ class CityGenerator {
                     continue;
                 var business = new Business();
                 business.BusinessType = businessType;
-                business.Name = `${person.FirstName}'s ${businessType.name}`.toUpperCase();
+                business.Name = BusinessNameGenerator.get(person, businessType).toUpperCase();
                 person.setBusiness(business);
                 var family = this.City.People.filter(p => p.Family == person.Family);
                 var spouse = family.filter(p => p.fullName() == person.Spouse)[0];
@@ -212,6 +212,20 @@ class CityGenerator {
                 });
                 this.City.Businesses.push(business);
                 break;
+            }
+        }
+
+        this.City.Businesses.sort(function () { return Math.random() });
+
+        for(var b in this.City.Businesses){
+            var biz = this.City.Businesses[b];
+            for (var i = 0; i < this.City.People.length; i++) {
+                var person = this.City.People[i];
+                if (person.Age < WorkingHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != biz.BusinessType.caste)
+                    continue;
+                person.setEmployer(biz);
+                if(biz.Employees.length >= 4 || Math.random() >= 0.5) // TODO max employees per business
+                    break;
             }
         }
     }

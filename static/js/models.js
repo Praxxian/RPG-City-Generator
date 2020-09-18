@@ -48,38 +48,6 @@ class Person {
     }
 }
 
-class NameGenKey {
-    Race
-    Gender
-
-    constructor(race, gender) {
-        this.Race = race;
-        this.Gender = gender;
-    }
-}
-
-class NameGenerator {
-    Key
-    // TODO
-
-    constructor(key) {
-        this.Key = key;
-    }
-
-    getFirst(gender) {
-        switch (gender) {
-            case Gender.FEMALE:
-                return getRandom(FirstNamesFemale);
-            default:
-                return getRandom(FirstNamesMale);
-        }
-    }
-
-    getLast() {
-        return getRandom(LastNames);
-    }
-}
-
 class City {
     Settings
     People = []

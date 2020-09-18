@@ -94,7 +94,7 @@
                                     <td>Works At</td>
                                     <td>Appearance</td>
                                 </thead>
-                                <tr v-for="p in city.People">
+                                <tr v-for="p in city.People" :id="p.fullName().replace(' ','_')">
                                     <td>{{ p.fullName() }}</td>
                                     <td>{{ p.Race }}</td>
                                     <td>{{ p.Caste.name }}</td>
@@ -161,6 +161,7 @@
     <script src="static/js/enums.js"></script>
     <script src="static/js/names.js"></script>
     <script src="static/js/models.js"></script>
+    <script src="static/js/namegen.js"></script>
     <script src="static/js/citygen.js"></script>
     <script>
         var citygenapp = new Vue({
