@@ -4,6 +4,7 @@ class CityGenerator {
     MaxPopVariance = 0.3
     City
     Races
+    TotalPopSize = 1
 
     constructor(settings) {
         this.Settings = settings;
@@ -40,9 +41,11 @@ class CityGenerator {
             thisCG.City = new City();
             thisCG.City.Settings = thisCG.Settings;
             thisCG.createPopulation();
+            thisCG.createDetails();
             thisCG.matchFamilies();
             thisCG.defaultFamilies();
             thisCG.createBusinesses();
+            thisCG.City.Complete = true;
             resolve(thisCG.City);
         })
         return promise;
@@ -62,11 +65,11 @@ class CityGenerator {
         var percentChange = Math.random() * this.MaxPopVariance * 2 - this.MaxPopVariance;
         var size = this.matchCitySize(this.Settings.CitySize);
         this.City.Settings.CitySize = size;
-        var popSize = size.avgSize * (1 + percentChange);
-        var noblePopSize = Math.floor(popSize * 0.005);
-        var merchPopSize = Math.floor(popSize * 0.015);
-        var tradePopSize = Math.floor(popSize * 0.18);
-        var peasantPopSize = Math.floor(popSize * 0.8);
+        this.TotalPopSize = size.avgSize * (1 + percentChange);
+        var noblePopSize = Math.floor(this.TotalPopSize * 0.005);
+        var merchPopSize = Math.floor(this.TotalPopSize * 0.015);
+        var tradePopSize = Math.floor(this.TotalPopSize * 0.18);
+        var peasantPopSize = Math.floor(this.TotalPopSize * 0.8);
         this.createPeopleByCaste(Caste.NOBLE, noblePopSize);
         this.createPeopleByCaste(Caste.MERCANTILE, merchPopSize);
         this.createPeopleByCaste(Caste.TRADESMEN, tradePopSize);
@@ -74,8 +77,6 @@ class CityGenerator {
     }
 
     createPeopleByCaste(caste, count) {
-        if (isNaN(count))
-            return;
         var nameGen = new NameGenerator(null);
         var ageRandom = caste.ageRandom;
         for (var i = 0; i < count; i++) {
@@ -83,8 +84,8 @@ class CityGenerator {
             person.Caste = caste;
             person.Age = Math.abs(ageRandom.next());
             person.Gender = Math.random() > 0.5 ? Gender.FEMALE : Gender.MALE;
-            person.FirstName = nameGen.getFirst(person.Gender);//`NPC_${Math.floor(Math.random() * 100000)}`;
-            person.LastName = nameGen.getLast();//Math.floor(Math.random() * 100000);
+            person.FirstName = nameGen.getFirst(person.Gender);
+            person.LastName = nameGen.getLast();
             var raceRoll = Math.random();
             person.RaceFrequency = RaceFrequency.COMMON;
             if (raceRoll < 0.33 && raceRoll > 0.01)
@@ -106,6 +107,18 @@ class CityGenerator {
             person.Personality.Neuroticisms = PersonalityRandom.next();
             this.City.People.push(person);
         }
+    }
+
+    createDetails() {
+        // _city.Facts.Add("Population", _city.Families.Sum(x => x.Count).ToString("n0"));
+        //     CreateFactFromList(CityFact.NotableTrait);
+        //     CreateFactFromList(CityFact.KnownForIts);
+        //     CreateFactFromList(CityFact.CurrentCalamity);
+        this.City.Details = {
+            notableTrait: getRandom(NotableTrait),
+            knownFor: getRandom(KnownForIts),
+            calamity: getRandom(Calamity)
+        };
     }
 
     matchFamilies() {
@@ -158,7 +171,7 @@ class CityGenerator {
                         || child.Family
                         || child.Age + AdultHumanAge > minParentAge
                         || child.Caste != spouse1.Caste
-                        || (child.Race != spouse1.Race && child.Race != spouse2.Race))
+                        || (child.Race != spouse1.Race && spouse2 && child.Race != spouse2.Race))
                         continue;
                     family.add(child);
                     childrenTotal--;
@@ -180,6 +193,35 @@ class CityGenerator {
     }
 
     createBusinesses() {
+        this.createNobleEstates();
+        this.createStoresAndFarms();
+        this.assignJobs();
+    }
+
+    createNobleEstates() {
+        var nobles = this.City.People.filter(x => x.Caste == Caste.NOBLE);
+        var nobleFamilies = nobles.map(x => x.Family).filter(distinct);
+        for (var i = 0; i < nobleFamilies.length; i++) {
+            var family = nobleFamilies[i];
+            var headOfFamily = nobles.filter(x => x.Family == family).sort(x => x.Age).reverse()[0];
+            var business = new Business();
+            business.BusinessType = BusinessType.ESTATE;
+            business.Name = BusinessNameGenerator.get(headOfFamily, BusinessType.ESTATE);
+            headOfFamily.setBusiness(business);
+            var spouse = this.findSpouse(headOfFamily);
+            if (spouse)
+                spouse.setBusiness(business);
+            this.City.Businesses.push(business);
+        }
+    }
+
+    findSpouse(person) {
+        var family = this.City.People.filter(p => p.Family == person.Family);
+        var spouse = family.filter(p => p.fullName() == person.Spouse)[0];
+        return spouse;
+    }
+
+    createStoresAndFarms() {
         var businessTypes = [];
         var keys = Object.keys(BusinessType);
         for (var k in keys) {
@@ -203,29 +245,37 @@ class CityGenerator {
                 person.setBusiness(business);
                 var family = this.City.People.filter(p => p.Family == person.Family);
                 var spouse = family.filter(p => p.fullName() == person.Spouse)[0];
-                if (spouse)
+                if (spouse && businessType != BusinessType.TEMPLE)
                     spouse.setBusiness(business);
                 var workingKids = family.filter(p => p != spouse && p != person && p.Age >= WorkingHumanAge);
                 workingKids.forEach(function (k) {
                     if (Math.random() >= 0.1)
                         k.setEmployer(business);
                 });
+                business.Description = business.BusinessType.notes();
                 this.City.Businesses.push(business);
                 break;
             }
         }
+    }
+
+    assignJobs() {
+        var maxEmployees = this.Settings.CitySize.maxEmployees;
 
         this.City.Businesses.sort(function () { return Math.random() });
-
-        for(var b in this.City.Businesses){
+        for (var b in this.City.Businesses) {
             var biz = this.City.Businesses[b];
-            for (var i = 0; i < this.City.People.length; i++) {
+            if (maxEmployees == 0 && biz.BusinessType != BusinessType.ESTATE)
+                continue;
+            var minEmployees = BusinessType == BusinessType.ESTATE ? 2 : 1;
+            var bizMaxEmployees = Math.floor(Math.random() * maxEmployees) + minEmployees;
+            bizMaxEmployees -= biz.Employees.length;
+            for (var i = 0; i < this.City.People.length && bizMaxEmployees > 0; i++) {
                 var person = this.City.People[i];
-                if (person.Age < WorkingHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != biz.BusinessType.caste)
+                if (person.Age < WorkingHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != biz.BusinessType.caste || person.Caste == Caste.NOBLE)
                     continue;
                 person.setEmployer(biz);
-                if(biz.Employees.length >= 4 || Math.random() >= 0.5) // TODO max employees per business
-                    break;
+                bizMaxEmployees--;
             }
         }
     }

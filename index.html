@@ -16,17 +16,25 @@
         </p>
 
         <div class="row">
-            <div class="col-2 collapse show" id="settings_col">
+            <div class="col-3 collapse show" id="settings_col">
                 <div class="row my-1">
                     <div class="col text-center">
                         <button class="btn btn-success btn-lg" @click="generate()"
-                            :disabled="generateDisabled">Generate</button>
+                            :disabled="generateDisabled || isLoading">
+                            <div v-if="isLoading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Generating...
+                            </div>
+                            <div v-else>
+                                Generate
+                            </div>
+                        </button>
                     </div>
                 </div>
                 <div class="row my-1">
                     <select class="custom-select" v-model="citySize" @change="onSelectChanged($event)" required>
                         <option value="" selected>City Size</option>
-                        <option v-for="o in citySizeOptions" :value="o.name">{{ o.name }}</option>
+                        <option v-for="o in citySizeOptions" :value="o.name">{{ o.label() }}</option>
                     </select>
                 </div>
                 <div class="row my-1">
@@ -35,15 +43,17 @@
                         <option v-for="o in industryOptions" :value="o">{{ o }}</option>
                     </select>
                 </div>
-                <div class="row my-1 border p-3 bg-white rounded" hidden>
+                <!-- <div class="row my-1 border p-3 bg-white rounded">
                     <div class="input-group">
                         <label class="form-label">Generated Name Frequency</label>
                         <input type="range" class="custom-range w-75 mr-3" v-model="gen_name_range" />
                         <span>{{ gen_name_range }}%</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="row my-1 border p-3 bg-white rounded">
                     <h5>Race Frequency</h5>
+                    <h5><small class="text-muted">Some default values are already selected.</small></h5>
+
                     <table class="table">
                         <tr v-for="r in raceOptions">
                             <td>
@@ -61,15 +71,20 @@
             <div v-if="city" class="col-auto h-auto px-1" hidden>
                 <button class="btn h-100" @click="toggleSettings($event)" id="collapse-btn">&laquo;</button>
             </div>
-            <div class="col">
+            <div class="col-9">
                 <div v-if="isLoading">
-                    <h1>Loading...</h1>
+                    <div class="progress-bar" role="progressbar"
+                        :style="`width: ${ !citygen ? 1 : Math.floor(100 * city.People.length/citygen.TotalPopSize)}%`">
+                    </div>
                 </div>
-                <div v-else-if="city">
+                <div :style="isLoading || !city.Complete ? 'display:none' : ''">
                     <ul class="nav nav-tabs" id="resultTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="people-tab" data-toggle="tab" href="#people"
-                                role="tab">People</a>
+                            <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail"
+                                role="tab">Details</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="people-tab" data-toggle="tab" href="#people" role="tab">People</a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="business-tab" data-toggle="tab" href="#business"
@@ -81,7 +96,16 @@
                         </li>
                     </ul>
                     <div class="tab-content p-3 bg-white border-left border-right border-bottom" id="resultTabContent">
-                        <div class="tab-pane fade show active" id="people" role="tabpanel">
+                        <div v-if="city.Complete" class="tab-pane fade show active" id="detail" role="tabpanel">
+                            <p>
+                                This {{ city.Settings.CitySize.name }} (population
+                                {{ city.People.length.toLocaleString() }}) features
+                                <strong>{{ city.Details.notableTrait }}</strong> and is known for its
+                                <strong>{{ city.Details.knownFor }}</strong>. Unfortunately, it is afflicted by
+                                <strong>{{ city.Details.calamity }}</strong>.
+                            </p>
+                        </div>
+                        <div class="tab-pane fade" id="people" role="tabpanel">
                             <table class="table table-dark result-table" id="people_table" style="width: 100%;">
                                 <thead>
                                     <td>Name</td>
@@ -94,20 +118,6 @@
                                     <td>Works At</td>
                                     <td>Appearance</td>
                                 </thead>
-                                <tr v-for="p in city.People" :id="p.fullName().replace(' ','_')">
-                                    <td>{{ p.fullName() }}</td>
-                                    <td>{{ p.Race }}</td>
-                                    <td>{{ p.Caste.name }}</td>
-                                    <td>{{ p.RaceAge }}</td>
-                                    <td>{{ p.Gender }}</td>
-                                    <td>{{ p.Spouse }}</td>
-                                    <td>{{ p.Family.displayValue() }}</td>
-                                    <td>
-                                        <p v-if="p.getBusiness()">{{ p.getBusiness() }} (Owner)</p>
-                                        <p v-if="p.getEmployer()">{{ p.getEmployer() }}</p>
-                                    </td>
-                                    <td>{{ p.Appearance }}</td>
-                                </tr>
                             </table>
                         </div>
                         <div class="tab-pane fade" id="business" role="tabpanel">
@@ -119,27 +129,12 @@
                                     <td>Employees</td>
                                     <td>Description</td>
                                 </thead>
-                                <tr v-for="b in city.Businesses">
-                                    <td>{{ b.Name }}</td>
-                                    <td>{{ b.BusinessType.name }}</td>
-                                    <td>
-                                        <p v-for="o in b.Owners">
-                                            {{ o.fullName() }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p v-for="e in b.Employees">
-                                            {{ e.fullName() }}
-                                        </p>
-                                    </td>
-                                    <td>{{ b.Description }}</td>
-                                </tr>
                             </table>
                         </div>
                         <div class="tab-pane fade" id="inventory" role="tabpanel">...</div>
                     </div>
                 </div>
-                <div v-else class="bg-secondary w-100 h-100 p-3">
+                <div v-if="!city.Complete && !isLoading" class="bg-secondary w-100 h-100 p-3">
                     <ol class="h4 text-light">
                         <li>Set the city size.</li>
                         <li>Select the major industry.</li>
@@ -164,6 +159,12 @@
     <script src="static/js/namegen.js"></script>
     <script src="static/js/citygen.js"></script>
     <script>
+        function doubleRaf(callback) {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(callback)
+            })
+        }
+
         var citygenapp = new Vue({
             el: '#citygenapp',
             data: {
@@ -180,9 +181,11 @@
                 citySize: '',
                 industry: '',
                 gen_name_range: 0,
-                city: null,
+                city: new City(),
+                citygen: null,
                 isLoading: false,
-                raceFreqSettings: []
+                raceFreqSettings: [],
+                stage: '',
             },
             mounted: function () {
                 this.defaultRaceSettings.forEach(s => {
@@ -191,7 +194,7 @@
                 });
             },
             updated: function () {
-                this.initDataTables();
+                //this.initDataTables();
                 this.raceFreqSettings = [];
                 Object.keys(Race).forEach(k => {
                     var race = Race[k];
@@ -208,21 +211,20 @@
                 },
                 generate() {
                     this.isLoading = true;
-                    this.generateAsync();
-                    var thisApp = this;
-                    setTimeout(function () { thisApp.initDataTables(); }, 1000);
+                    doubleRaf(() => this.generateAsync());
                 },
                 async generateAsync() {
                     try {
-                        console.log('generating...');
+                        console.log('Generating City...');
                         $('.result-table').DataTable().destroy();
                         var settings = {
                             CitySize: this.citySize,
                             Races: this.raceFreqSettings,
                         }
-                        var cg = new CityGenerator(settings);
-                        this.city = await cg.getNew();
-                        console.log('done.');
+                        this.citygen = new CityGenerator(settings);
+                        this.city = await this.citygen.getNew();
+                        this.initDataTables();
+                        console.log('Generating City complete.');
                     }
                     catch (e) {
                         console.log(e);
@@ -240,15 +242,57 @@
                         button.html("«");
                 },
                 initDataTables() {
+                    console.log('Initiating DataTables...');
                     if ($('.result-table').DataTable())
                         $('.result-table').DataTable().destroy();
-                    $('.result-table').DataTable({
+
+                    var peopleArr = [];
+                    var bizArray = [];
+
+                    if (this.city) {
+                        console.log('Setting table data...');
+                        peopleArr = this.city.People.map(x => [
+                            x.fullName(),
+                            x.Race,
+                            x.Caste.name,
+                            x.RaceAge,
+                            x.Gender,
+                            x.Spouse ?? '',
+                            x.Family.displayValue(),
+                            x.getBusiness() ? `${x.getBusiness()} (Owner)` : x.getEmployer() ?? '',
+                            x.Appearance ?? ''
+                        ]);
+
+                        bizArray = this.city.Businesses.map(x => [
+                            x.Name,
+                            x.BusinessType.name,
+                            x.Owners.map(o => o.fullName()).join(', '),
+                            x.Employees.map(o => o.fullName()).join(', '),
+                            x.Description ?? '',
+                        ]);
+                        console.log('Setting table data complete.');
+                    }
+
+                    var peopleTable = $('#people_table').DataTable({
                         "pageLength": 100,
                         dom: 'Blfrtip',
                         buttons: [
-                            'csv', 'excel',
-                        ]
+                            'csv'
+                        ],
+                        'processing': true,
+                        data: peopleArr
                     });
+
+                    var bizTable = $('#business_table').DataTable({
+                        "pageLength": 100,
+                        dom: 'Blfrtip',
+                        buttons: [
+                            'csv'
+                        ],
+                        'processing': true,
+                        data: bizArray
+                    });
+                    console.log('Initiating DataTables complete.');
                 }
             }
         })
