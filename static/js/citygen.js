@@ -253,10 +253,39 @@ class CityGenerator {
                         k.setEmployer(business);
                 });
                 business.Description = business.BusinessType.notes();
+                this.setInventory(business);
                 this.City.Businesses.push(business);
                 break;
             }
         }
+    }
+
+    setInventory(business) {
+        var itemPool = getInventory(business.BusinessType);
+        for (var i in itemPool) {
+            var itemProb = itemPool[i];
+            if (itemProb.probability == 1 || itemProb.probability > Math.random()) {
+                var newItem = itemProb.item.clone();
+                newItem.DefaultCost = newItem.Cost;
+
+                var favorChance = Math.random();
+                if (newItem.Cost > 50000 && favorChance < 0.10) {
+                    newItem.Cost = 3;
+                    newItem.Unit = Unit.FAVOR;
+                }
+                else if (newItem.Cost > 20000 && favorChance < 0.10) {
+                    newItem.Cost = 2;
+                    newItem.Unit = Unit.FAVOR;
+                }
+                else if (newItem.Cost > 1000 && favorChance < 0.10) {
+                    newItem.Cost = 1;
+                    newItem.Unit = Unit.FAVOR;
+                }
+
+                business.Inventory.push(newItem);
+            }
+        }
+        business.Inventory.sort(x => x.Name);
     }
 
     assignJobs() {
