@@ -88,9 +88,11 @@ class CityGenerator {
             person.LastName = nameGen.getLast();
             var raceRoll = Math.random();
             person.RaceFrequency = RaceFrequency.COMMON;
-            if (raceRoll < 0.33 && raceRoll > 0.01)
+            var uncommonMod = this.Races[RaceFrequency.COMMON].length;
+            var rareMod = uncommonMod + this.Races[RaceFrequency.UNCOMMON].length;
+            if (raceRoll < 0.33/uncommonMod && raceRoll > 0.01/uncommonMod)
                 person.RaceFrequency = RaceFrequency.UNCOMMON;
-            else if (raceRoll <= 0.01)
+            else if (raceRoll <= 0.01/rareMod)
                 person.RaceFrequency = RaceFrequency.RARE;
             var freqGroup = this.Races[person.RaceFrequency];
             if (this.Races[person.RaceFrequency])

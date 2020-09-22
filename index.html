@@ -77,26 +77,96 @@
                         :style="`width: ${ !citygen ? 1 : Math.floor(100 * city.People.length/citygen.TotalPopSize)}%`">
                     </div>
                 </div>
-                <div :style="isLoading || !city.Complete ? 'display:none' : ''">
+                <div :style="isLoading ? 'display:none' : ''">
                     <ul class="nav nav-tabs" id="resultTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail"
-                                role="tab">Details</a>
+                            <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about"
+                                role="tab">About</a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="people-tab" data-toggle="tab" href="#people" role="tab">People</a>
+                        <li v-if="city.Complete" class="nav-item" role="presentation">
+                            <a class="nav-link" id="detail-tab"
+                                data-toggle="tab" href="#detail" role="tab">Details</a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="business-tab" data-toggle="tab" href="#business"
-                                role="tab">Businesses</a>
+                        <li v-if="city.Complete" class="nav-item" role="presentation">
+                            <a class="nav-link" id="people-tab"
+                                data-toggle="tab" href="#people" role="tab">People</a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="inventory-tab" data-toggle="tab" href="#inventory"
-                                role="tab">Inventories</a>
+                        <li v-if="city.Complete" class="nav-item" role="presentation">
+                            <a class="nav-link" id="business-tab"
+                                data-toggle="tab" href="#business" role="tab">Businesses</a>
+                        </li>
+                        <li v-if="city.Complete" class="nav-item" role="presentation">
+                            <a class="nav-link" id="inventory-tab"
+                                data-toggle="tab" href="#inventory" role="tab">Inventories</a>
+                        </li>
+                        <li v-if="city.Complete" class="nav-item" role="presentation">
+                            <a class="nav-link" id="stats-tab"
+                                data-toggle="tab" href="#stats" role="tab">Stats</a>
                         </li>
                     </ul>
                     <div class="tab-content p-3 bg-white border-left border-right border-bottom" id="resultTabContent">
-                        <div v-if="city.Complete" class="tab-pane fade show active" id="detail" role="tabpanel">
+                        <div class="tab-pane fade show active" id="about" role="tabpanel">
+                            <h5>
+                                Instructions
+                            </h5>
+                            <ol>
+                                <li>Set the city size.</li>
+                                <li>Select the major industry.</li>
+                                <li>(Optional) Adjust how often races appear.</li>
+                                <li>Click Generate!</li>
+                            </ol>
+                            <hr>
+                            <h5>
+                                Description
+                            </h5>
+                            <p>
+                                I created this free tool to create a village, town, or city population with enough NPCs
+                                to make the populations realistic for a medieval setting.
+                            </p>
+                            <h5>
+                                Features
+                            </h5>
+                            <ul>
+                                <li>Hundreds to thousands of NPCs created with names, families, jobs, personalities, and
+                                    (sometimes) distinct appearances.</li>
+                                <li>Downloadable to CSV.</li>
+                                <li>Select how common/uncommon/rare each race is.</li>
+                                <li>Businesses with distinct names and inventories.</li>
+                                <ul>
+                                    <li>Depending on the business, some items are always available, while others have a
+                                        random chance of appearing. Not every smith has plate barding!</li>
+                                    <li>Inventory items come mostly from the source books, but have been expanded to
+                                        include jewels and other trinkets players might need for spell components.</li>
+                                    <li>Some businesses are only available in Towns and Cities. Small villages may not
+                                        have all the creature comforts.</li>
+                                </ul>
+                                <li>Town descriptions based on roll tables from the DMG.</li>
+                                <ul>
+                                    <li>Presently these are just for flavor and do not translate to the NPCs generated.
+                                    </li>
+                                </ul>
+                                <li>Schedules for each NPC so you can see who is at the pub or store when the PCs enter.
+                                </li>
+                                <li>Age distributions that make sense for medieval settings. It's not equal parts
+                                    children, adults, and elderly.</li>
+                                <li>Populations divided by caste that make sense. (Awful lotta farms...)</li>
+                                <li>Ages adjusted for the NPC race.</li>
+                            </ul>
+                            <h5>
+                                Uses
+                            </h5>
+                            <ul>
+                                <li>Create new towns from scratch and edit it to fit your setting.</li>
+                                <li>Supplement towns from existing adventures.</li>
+                            </ul>
+                            <p>
+                                That last one comes in handy! Want to add a smith and wainwright to The Village of
+                                Barovia in <em>Curse of Strahd</em>? Just copy them, their family, and their inventories
+                                to your
+                                notes. You don't need to bring the whole generated village along if you don't want!
+                            </p>
+                        </div>
+                        <div v-if="city.Complete" class="tab-pane fade" id="detail" role="tabpanel">
                             <p>
                                 This {{ city.Settings.CitySize.name }} (population
                                 {{ city.People.length.toLocaleString() }}) features
@@ -116,6 +186,7 @@
                                     <th>Spouse</th>
                                     <th>Family</th>
                                     <th>Works At</th>
+                                    <th>Personality</th>
                                     <th>Appearance</th>
                                 </thead>
                             </table>
@@ -141,15 +212,11 @@
                                 </thead>
                             </table>
                         </div>
+                        <div class="tab-pane fade" id="stats" role="tabpanel">
+                            <canvas id="age_graph" width="400" height="100"></canvas>
+                            <canvas id="race_graph" width="400" height="100"></canvas>
+                        </div>
                     </div>
-                </div>
-                <div v-if="!city.Complete && !isLoading" class="bg-secondary w-100 h-100 p-3">
-                    <ol class="h4 text-light">
-                        <li>Set the city size.</li>
-                        <li>Select the major industry.</li>
-                        <li>(Optional) Adjust how often races appear.</li>
-                        <li>Click Generate!</li>
-                    </ol>
                 </div>
             </div>
         </div>
@@ -161,6 +228,7 @@
     <!-- TODO swap for prod version -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="static/js/stats.js"></script>
     <script src="static/js/enums.js"></script>
     <script src="static/js/names.js"></script>
@@ -212,6 +280,8 @@
                     if (frequency)
                         this.raceFreqSettings.push({ race: race, frequency: frequency });
                 });
+                // TODO handle invalid race settings and missing race settings
+                // TODO prevent "undefined" in business name
             },
             methods: {
                 onSelectChanged(event) {
@@ -233,6 +303,7 @@
                         this.citygen = new CityGenerator(settings);
                         this.city = await this.citygen.getNew();
                         this.initDataTables();
+                        this.updateCharts();
                         console.log('Generating City complete.');
                     }
                     catch (e) {
@@ -270,6 +341,7 @@
                             x.Spouse ?? '',
                             x.Family.displayValue(),
                             x.getBusiness() ? `${x.getBusiness()} (Owner)` : x.getEmployer() ?? '',
+                            x.Personality.toLabel(),
                             x.Appearance ?? ''
                         ]);
 
@@ -329,7 +401,8 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                             { data: 'Description' },
-                        ]
+                        ],
+                        "order": [[1, "asc"]],
                     });
 
                     var inventoryTable = $('#inventory_table').DataTable({
@@ -342,9 +415,64 @@
                         data: inventoryArray
                     });
                     console.log('Initiating DataTables complete.');
+                },
+                updateCharts() {
+                    var ctxAge = document.getElementById('age_graph').getContext('2d');
+                    var ageData = [
+                        this.city.People.filter(x => x.Age <= 10).length,
+                        this.city.People.filter(x => x.Age > 10 && x.Age <= 20).length,
+                        this.city.People.filter(x => x.Age > 20 && x.Age <= 30).length,
+                        this.city.People.filter(x => x.Age > 30 && x.Age <= 40).length,
+                        this.city.People.filter(x => x.Age > 40 && x.Age <= 50).length,
+                        this.city.People.filter(x => x.Age > 50 && x.Age <= 60).length,
+                        this.city.People.filter(x => x.Age > 60 && x.Age <= 70).length,
+                        this.city.People.filter(x => x.Age > 70 && x.Age <= 80).length,
+                        this.city.People.filter(x => x.Age > 80 && x.Age <= 90).length,
+                        this.city.People.filter(x => x.Age > 90 && x.Age <= 100).length,
+                    ];
+                    var options = {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    };
+                    var ageChart = new Chart(ctxAge, {
+                        type: 'line',
+                        data: {
+                            labels: ['0-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', '91-100'],
+                            datasets: [{
+                                label: 'Age Count',
+                                data: ageData,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: options
+                    });
+
+                    var raceLabels = this.raceFreqSettings.map(x => x.race);
+                    var raceData = [];
+                    for (var i = 0; i < raceLabels.length; i++)
+                        raceData.push(this.city.People.filter(x => x.Race == raceLabels[i]).length);
+
+                    var ctxRace = document.getElementById('race_graph').getContext('2d');
+                    var raceChart = new Chart(ctxRace, {
+                        type: 'line',
+                        data: {
+                            labels: raceLabels,
+                            datasets: [{
+                                label: 'Race Count',
+                                data: raceData,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: options
+                    });
                 }
             }
-        })
+        });
     </script>
 </body>
 

@@ -62,6 +62,60 @@ class Personality {
     Extraversion
     Agreeableness
     Neuroticisms
+
+    toLabel() {
+        var traits = [];
+
+        if (this.Openess <= 10)
+            traits.push("Very cautious");
+        else if (this.Openess <= 30)
+            traits.push("Cautious");
+        else if (this.Openess >= 90)
+            traits.push("Very adventurous");
+        else if (this.Openess >= 60)
+            traits.push("Adventurous");
+
+        if (this.Conscientiousness <= 10)
+            traits.push("Unreliable");
+        else if (this.Conscientiousness <= 30)
+            traits.push("Slightly unreliable");
+        else if (this.Conscientiousness >= 90)
+            traits.push("Extremely reliable");
+        else if (this.Conscientiousness >= 60)
+            traits.push("Reliable");
+
+        if (this.Extraversion <= 10)
+            traits.push("Very introverted");
+        else if (this.Extraversion <= 30)
+            traits.push("Introverted");
+        else if (this.Extraversion >= 90)
+            traits.push("Extremely extraverted");
+        else if (this.Extraversion >= 70)
+            traits.push("Extraverted");
+
+        if (this.Agreeableness <= 5)
+            traits.push("Mean");
+        else if (this.Agreeableness <= 15)
+            traits.push("Grumpy");
+        else if (this.Agreeableness >= 90)
+            traits.push("Extremely kind");
+        else if (this.Agreeableness >= 60)
+            traits.push("Courteous");
+
+        if (this.Neuroticisms <= 10)
+            traits.push("Extremely confident");
+        else if (this.Neuroticisms <= 40)
+            traits.push("Confident");
+        else if (this.Neuroticisms >= 95)
+            traits.push("Extremely anxious");
+        else if (this.Neuroticisms >= 80)
+            traits.push("Slightly anxious");
+
+        if (traits.Count == 0)
+            traits.push("Moderate");
+
+        return traits.join(', ');
+    }
 }
 
 class Family {
@@ -595,7 +649,7 @@ function getInventory(businessType) {
                 { item: AllItems.Case_Crossbow_Bolt, probability: 1 },
                 { item: AllItems.Quiver, probability: 1 }
             ];
-        case BusinessType.BUTCHERSHOP:
+        case BusinessType.BUTCHER_SHOP:
             return [
                 { item: AllItems.Pot_Roast, probability: 1 },
                 { item: AllItems.Chops, probability: 1 },
@@ -605,7 +659,7 @@ function getInventory(businessType) {
                 { item: AllItems.Sausages, probability: 1 },
                 { item: AllItems.Bacon, probability: 1 }
             ];
-        case BusinessType.GENERALSTORE:
+        case BusinessType.GENERAL_STORE:
             return [
                 { item: AllItems.Alchemists_Supplies, probability: 0.10 },
                 { item: AllItems.Brewers_Supplies, probability: 0.67 },
@@ -792,7 +846,7 @@ function getInventory(businessType) {
                 { item: new InventoryItem(ItemType.MISC, "Rare Soporific Herbs", 500, Unit.COPPER), probability: 0.33 },
                 { item: new InventoryItem(ItemType.MISC, "Mushroom and Saffron Ointment", 2500, Unit.COPPER), probability: 0.67 }
             ];
-        case BusinessType.HORSERANCH:
+        case BusinessType.HORSE_RANCH:
             return [
                 { item: AllItems.Donkey_Or_Mule, probability: 1 },
                 { item: AllItems.Horse_Draft_Or_Camel, probability: 1 },
@@ -810,7 +864,7 @@ function getInventory(businessType) {
                 { item: AllItems.Stabling_Per_Day, probability: 1 },
                 { item: AllItems.Untrained_Labor_Per_Day, probability: 1 }
             ];
-        case BusinessType.HUNTINGCABIN:
+        case BusinessType.HUNTING_CABIN:
             return [
                 { item: AllItems.Skilled_Labor_Per_Day, probability: 1 }
             ];
@@ -842,7 +896,7 @@ function getInventory(businessType) {
                 { item: AllItems.Coach_Cab_Beteen_Towns_Per_Mile, probability: 1 },
                 { item: AllItems.Coach_Cab_Within_City, probability: 1 }
             ];
-        case BusinessType.JEWELERYSHOP:
+        case BusinessType.JEWELERY_SHOP:
             return [
                 { item: AllItems.Spyglass, probability: 0.67 },
                 { item: AllItems.Jewelers_Tools, probability: 1 },
@@ -888,7 +942,7 @@ function getInventory(businessType) {
                 { item: new InventoryItem(ItemType.MISC, "Diamond", 30000, Unit.COPPER), probability: 0.67 },
                 { item: new InventoryItem(ItemType.MISC, "Crystal Ball (non-magical)", 100000, Unit.COPPER), probability: 0.67 },
                 { item: new InventoryItem(ItemType.MISC, "Silver Mirror", 100000, Unit.COPPER), probability: 0.67 },
-                { item: new InventoryItem(ItemType.MISC, "Diamond, probability:Emerald, probability:Ruby, probability:and Sapphire Tiara", 500000, Unit.COPPER), probability: 0.67 },
+                { item: new InventoryItem(ItemType.MISC, "Diamond, Emerald, Ruby, and Sapphire Tiara", 500000, Unit.COPPER), probability: 0.67 },
                 { item: new InventoryItem(ItemType.MISC, "Jade Circlet", 150000, Unit.COPPER), probability: 0.67 },
                 { item: new InventoryItem(ItemType.MISC, "Decorative Silver Cage", 10000, Unit.COPPER), probability: 0.67 },
                 { item: new InventoryItem(ItemType.MISC, "Diamond and Opal Earings", 90000, Unit.COPPER), probability: 0.67 },
@@ -977,7 +1031,7 @@ function getInventory(businessType) {
                 { item: AllItems.Level_8_Spell_Before_Components, probability: 1 },
                 { item: AllItems.Level_9_Spell_Before_Components, probability: 1 }
             ];
-        case BusinessType.WEAPONSHOP:
+        case BusinessType.WEAPON_SHOP:
             return [
                 { item: AllItems.Smiths_Tools, probability: 0.33 },
                 { item: AllItems.Club, probability: 1 },
@@ -1020,7 +1074,7 @@ function getInventory(businessType) {
                 { item: AllItems.CaltropsBag_Of_20, probability: 0.67 },
                 { item: AllItems.Ram_Portable, probability: 0.67 }
             ];
-        case BusinessType.WAINWRIGHTWORKSHOP:
+        case BusinessType.WAINWRIGHT_WORKSHOP:
             return [
                 { item: AllItems.Carriage, probability: 0.67 },
                 { item: AllItems.Cart, probability: 1 },
