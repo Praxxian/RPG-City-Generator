@@ -181,6 +181,7 @@
                         <div class="tab-pane fade" id="people" role="tabpanel">
                             <table class="table table-dark result-table" id="people_table" style="width: 100%;">
                                 <thead>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Race</th>
                                     <th>Caste</th>
@@ -341,6 +342,7 @@
                     if (this.city) {
                         console.log('Setting table data...');
                         peopleArr = this.city.People.map(x => [
+                            x.Id,
                             x.fullName(),
                             x.Race,
                             x.Caste.name,
@@ -467,9 +469,9 @@
                     for (var i = 0; i < raceLabels.length; i++) {
                         raceData.push(this.city.People.filter(x => x.Race == raceLabels[i]).length);
 
-                        var r = Math.random() * 159 + 32;
-                        var g = Math.random() * 159 + 32;
-                        var b = Math.random() * 159 + 32;
+                        var r = CryptoRandom.random() * 159 + 32;
+                        var g = CryptoRandom.random() * 159 + 32;
+                        var b = CryptoRandom.random() * 159 + 32;
                         raceColors.push(`rgb(${r}, ${g}, ${b})`);
                     }
 

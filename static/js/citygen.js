@@ -66,7 +66,7 @@ class CityGenerator {
     }
 
     createPopulation() {
-        var percentChange = Math.random() * this.MaxPopVariance * 2 - this.MaxPopVariance;
+        var percentChange = CryptoRandom.random() * this.MaxPopVariance * 2 - this.MaxPopVariance;
         var size = this.matchCitySize(this.Settings.CitySize);
         this.City.Settings.CitySize = size;
         this.TotalPopSize = size.avgSize * (1 + percentChange);
@@ -85,12 +85,13 @@ class CityGenerator {
         var ageRandom = caste.ageRandom;
         for (var i = 0; i < count; i++) {
             var person = new Person();
+            person.Id = this.City.People.length + 1;
             person.Caste = caste;
             person.Age = Math.abs(ageRandom.next());
-            person.Gender = Math.random() > 0.5 ? Gender.FEMALE : Gender.MALE;
+            person.Gender = CryptoRandom.random() > 0.5 ? Gender.FEMALE : Gender.MALE;
             person.FirstName = nameGen.getFirst(person.Gender);
             person.LastName = nameGen.getLast();
-            var raceRoll = Math.random();
+            var raceRoll = CryptoRandom.random();
             person.RaceFrequency = RaceFrequency.COMMON;
             var uncommonMod = this.Races[RaceFrequency.COMMON].length;
             var rareMod = uncommonMod + this.Races[RaceFrequency.UNCOMMON].length;
@@ -104,7 +105,7 @@ class CityGenerator {
             else
                 person.Race = getRandom(this.Races[RaceFrequency.COMMON]);
             person.RaceAge = this.adjustAgeByRace(person.Race, person.Age);
-            person.Appearance = person.Age >= WorkingHumanAge && Math.random() > 0.67 ? getRandom(Appearances) : null;
+            person.Appearance = person.Age >= WorkingHumanAge && CryptoRandom.random() > 0.67 ? getRandom(Appearances) : null;
             person.Personality = new Personality();
             person.Personality.Openess = PersonalityRandom.next();
             person.Personality.Conscientiousness = PersonalityRandom.next();
@@ -140,7 +141,7 @@ class CityGenerator {
 
             // Spouse 2
             var spouse2Gender = spouse1.Gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
-            if (Math.random() <= 0.05)
+            if (CryptoRandom.random() <= 0.05)
                 spouse2Gender = spouse1.Gender;
             var spouse2 = null;
             for (var j = i + 1; j < this.City.People.length; j++) {
@@ -161,14 +162,14 @@ class CityGenerator {
             }
 
             // Children
-            if (spouse2 || Math.random() < 0.1) {
+            if (spouse2 || CryptoRandom.random() < 0.1) {
                 var minParentAge = spouse1.Age;
                 if (spouse2)
                     minParentAge = Math.min(spouse1.Age, spouse2.Age);
                 var childYears = minParentAge - AdultHumanAge;
                 var childrenTotal = childYears / 2;
                 for (var j = 0; j < childYears; j += 2) {
-                    if (Math.random() < spouse1.Caste.infantMortality)
+                    if (CryptoRandom.random() < spouse1.Caste.infantMortality)
                         childrenTotal--;
                 }
 
@@ -239,7 +240,7 @@ class CityGenerator {
                 businessTypes.push(bt);
         }
 
-        businessTypes.sort(function () { return Math.random() });
+        businessTypes.sort(function () { return CryptoRandom.random() });
 
         for (var i in businessTypes) {
             var businessType = businessTypes[i];
@@ -257,7 +258,7 @@ class CityGenerator {
                     spouse.setBusiness(business);
                 var workingKids = family.filter(p => p != spouse && p != person && p.Age >= WorkingHumanAge);
                 workingKids.forEach(function (k) {
-                    if (Math.random() >= 0.1)
+                    if (CryptoRandom.random() >= 0.1)
                         k.setEmployer(business);
                 });
                 business.Description = business.BusinessType.notes();
@@ -272,11 +273,11 @@ class CityGenerator {
         var itemPool = getInventory(business.BusinessType);
         for (var i in itemPool) {
             var itemProb = itemPool[i];
-            if (itemProb.probability == 1 || itemProb.probability > Math.random()) {
+            if (itemProb.probability == 1 || itemProb.probability > CryptoRandom.random()) {
                 var newItem = itemProb.item.clone();
                 newItem.DefaultCost = newItem.Cost;
 
-                var favorChance = Math.random();
+                var favorChance = CryptoRandom.random();
                 if (newItem.Cost > 50000 && favorChance < 0.10) {
                     newItem.Cost = 3;
                     newItem.Unit = Unit.FAVOR;
@@ -299,13 +300,13 @@ class CityGenerator {
     assignJobs() {
         var maxEmployees = this.Settings.CitySize.maxEmployees;
 
-        this.City.Businesses.sort(function () { return Math.random() });
+        this.City.Businesses.sort(function () { return CryptoRandom.random() });
         for (var b in this.City.Businesses) {
             var biz = this.City.Businesses[b];
             if (maxEmployees == 0 && biz.BusinessType != BusinessType.ESTATE)
                 continue;
             var minEmployees = BusinessType == BusinessType.ESTATE ? 2 : 1;
-            var bizMaxEmployees = Math.floor(Math.random() * maxEmployees) + minEmployees;
+            var bizMaxEmployees = Math.floor(CryptoRandom.random() * maxEmployees) + minEmployees;
             bizMaxEmployees -= biz.Employees.length;
             for (var i = 0; i < this.City.People.length && bizMaxEmployees > 0; i++) {
                 var person = this.City.People[i];
