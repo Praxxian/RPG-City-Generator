@@ -196,6 +196,7 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="business" role="tabpanel">
+                            <h3>Shops</h3>
                             <table class="table table-dark result-table" id="business_table" style="width: 100%;">
                                 <thead>
                                     <th></th>
@@ -204,6 +205,26 @@
                                     <th>Owners</th>
                                     <th>Employees</th>
                                     <th>Description</th>
+                                </thead>
+                            </table>
+                            <h3>Estates</h3>
+                            <table class="table table-dark result-table" id="estate_table" style="width: 100%;">
+                                <thead>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Owners</th>
+                                    <th>Employees</th>
+                                </thead>
+                            </table>
+                            <h3>Farms</h3>
+                            <table class="table table-dark result-table" id="farm_table" style="width: 100%;">
+                                <thead>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Owners</th>
+                                    <th>Employees</th>
                                 </thead>
                             </table>
                         </div>
@@ -337,6 +358,8 @@
 
                     var peopleArr = [];
                     var bizArray = [];
+                    var farmArray = [];
+                    var estateArray = [];
                     var inventoryArray = [];
 
                     if (this.city) {
@@ -355,12 +378,26 @@
                             x.Appearance ?? ''
                         ]);
 
-                        bizArray = this.city.Businesses.map(x => ({
+                        bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessType.FARM && x.BusinessType != BusinessType.ESTATE).map(x => ({
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
                             Employees: x.Employees.map(o => o.fullName()).join(', '),
                             Description: x.Description ?? '',
+                        }));
+
+                        farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessType.FARM).map(x => ({
+                            Name: x.Name,
+                            BusinessType: x.BusinessType.name,
+                            Owners: x.Owners.map(o => o.fullName()).join(', '),
+                            Employees: x.Employees.map(o => o.fullName()).join(', '),
+                        }));
+
+                        estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessType.ESTATE).map(x => ({
+                            Name: x.Name,
+                            BusinessType: x.BusinessType.name,
+                            Owners: x.Owners.map(o => o.fullName()).join(', '),
+                            Employees: x.Employees.map(o => o.fullName()).join(', '),
                         }));
 
                         for (var i = 0; i < this.city.Businesses.length; i++) {
@@ -389,7 +426,7 @@
                     });
 
                     var bizTable = $('#business_table').DataTable({
-                        "pageLength": 100,
+                        "pageLength": 10,
                         dom: 'Blfrtip',
                         buttons: [
                             'csv'
@@ -408,6 +445,52 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                             { data: 'Description' },
+                        ],
+                        "order": [[1, "asc"]],
+                    });
+
+                    var farmTable = $('#farm_table').DataTable({
+                        "pageLength": 100,
+                        dom: 'Blfrtip',
+                        buttons: [
+                            'csv'
+                        ],
+                        'processing': true,
+                        data: farmArray,
+                        columns: [
+                            {
+                                className: 'details-control',
+                                orderable: false,
+                                data: null,
+                                defaultContent: ''
+                            },
+                            { data: 'Name' },
+                            { data: 'BusinessType' },
+                            { data: 'Owners' },
+                            { data: 'Employees' },
+                        ],
+                        "order": [[1, "asc"]],
+                    });
+
+                    var estateTable = $('#estate_table').DataTable({
+                        "pageLength": 10,
+                        dom: 'Blfrtip',
+                        buttons: [
+                            'csv'
+                        ],
+                        'processing': true,
+                        data: estateArray,
+                        columns: [
+                            {
+                                className: 'details-control',
+                                orderable: false,
+                                data: null,
+                                defaultContent: ''
+                            },
+                            { data: 'Name' },
+                            { data: 'BusinessType' },
+                            { data: 'Owners' },
+                            { data: 'Employees' },
                         ],
                         "order": [[1, "asc"]],
                     });
