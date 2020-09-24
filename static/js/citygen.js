@@ -5,6 +5,7 @@ class CityGenerator {
     City
     Races
     TotalPopSize = 1
+    FamilyCount = 0
 
     constructor(settings) {
         this.Settings = settings;
@@ -26,13 +27,16 @@ class CityGenerator {
 
     groupRaceFrequencies() {
         this.Races = {}
-        this.Settings.Races.forEach(r => {
-            var freqGroup = this.Races[r.frequency];
+        for (var race in this.Settings.Races) {
+            var frequency = this.Settings.Races[race];
+            if (!frequency)
+                continue;
+            var freqGroup = this.Races[frequency];
             if (freqGroup)
-                freqGroup.push(r.race);
+                freqGroup.push(race);
             else
-                this.Races[r.frequency] = [r.race];
-        });
+                this.Races[frequency] = [race];
+        }
     }
 
     getNew() {
@@ -90,9 +94,9 @@ class CityGenerator {
             person.RaceFrequency = RaceFrequency.COMMON;
             var uncommonMod = this.Races[RaceFrequency.COMMON].length;
             var rareMod = uncommonMod + this.Races[RaceFrequency.UNCOMMON].length;
-            if (raceRoll < 0.33/uncommonMod && raceRoll > 0.01/uncommonMod)
+            if (raceRoll < 0.33 / uncommonMod && raceRoll > 0.1 / uncommonMod)
                 person.RaceFrequency = RaceFrequency.UNCOMMON;
-            else if (raceRoll <= 0.01/rareMod)
+            else if (raceRoll <= 0.1 / rareMod)
                 person.RaceFrequency = RaceFrequency.RARE;
             var freqGroup = this.Races[person.RaceFrequency];
             if (this.Races[person.RaceFrequency])
@@ -132,6 +136,7 @@ class CityGenerator {
             family.LastName = spouse1.LastName;
             family.Caste = spouse1.Caste;
             family.add(spouse1);
+            family.Id = ++this.FamilyCount;
 
             // Spouse 2
             var spouse2Gender = spouse1.Gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
@@ -189,6 +194,7 @@ class CityGenerator {
                 var f = new Family();
                 f.LastName = p.LastName;
                 f.Caste = p.Caste;
+                f.Id = ++this.FamilyCount;
                 f.add(p);
             }
         });

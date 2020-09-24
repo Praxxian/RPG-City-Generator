@@ -121,7 +121,7 @@ class Personality {
 class Family {
     LastName
     Caste
-    UUID = createUUID()
+    Id
 
     add(person) {
         if (!person)
@@ -132,7 +132,7 @@ class Family {
     }
 
     displayValue() {
-        return `${this.LastName} (${this.UUID.substring(0, 7)}...)`;
+        return `${this.LastName} [${this.Id}]`;
     }
 }
 

@@ -60,9 +60,11 @@
                                 <label class="form-label">{{r}}</label>
                             </td>
                             <td>
-                                <select class="custom-select" :id="r.replace(' ','')">
-                                    <option value="" selected>None</option>
-                                    <option v-for="o in raceFreqOptions" :value="o">{{ o }}</option>
+                                <select class="custom-select" :id="r.replace(' ','')" v-model="raceFreqSettings[r]"
+                                    :class="frequencyClass[raceFreqSettings[r]]" @change="$forceUpdate()">
+                                    <option value="">None</option>
+                                    <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">{{ o }}
+                                    </option>
                                 </select>
                             </td>
                     </table>
@@ -84,24 +86,21 @@
                                 role="tab">About</a>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="detail-tab"
-                                data-toggle="tab" href="#detail" role="tab">Details</a>
+                            <a class="nav-link" id="detail-tab" data-toggle="tab" href="#detail" role="tab">Details</a>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="people-tab"
-                                data-toggle="tab" href="#people" role="tab">People</a>
+                            <a class="nav-link" id="people-tab" data-toggle="tab" href="#people" role="tab">People</a>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="business-tab"
-                                data-toggle="tab" href="#business" role="tab">Businesses</a>
+                            <a class="nav-link" id="business-tab" data-toggle="tab" href="#business"
+                                role="tab">Businesses</a>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="inventory-tab"
-                                data-toggle="tab" href="#inventory" role="tab">Inventories</a>
+                            <a class="nav-link" id="inventory-tab" data-toggle="tab" href="#inventory"
+                                role="tab">Inventories</a>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="stats-tab"
-                                data-toggle="tab" href="#stats" role="tab">Stats</a>
+                            <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab">Stats</a>
                         </li>
                     </ul>
                     <div class="tab-content p-3 bg-white border-left border-right border-bottom" id="resultTabContent">
@@ -139,13 +138,17 @@
                                         include jewels and other trinkets players might need for spell components.</li>
                                     <li>Some businesses are only available in Towns and Cities. Small villages may not
                                         have all the creature comforts.</li>
+                                    <li>Some businesses offer services from the DMG like skilled/unskilled labor, coach
+                                        cabs, and messengers.</li>
+                                    <li>Taverns/Inns include pricing for all costs of living so you can choose the
+                                        quality.</li>
                                 </ul>
                                 <li>Town descriptions based on roll tables from the DMG.</li>
                                 <ul>
                                     <li>Presently these are just for flavor and do not translate to the NPCs generated.
                                     </li>
                                 </ul>
-                                <li>Schedules for each NPC so you can see who is at the pub or store when the PCs enter.
+                                <!-- <li>Schedules for each NPC so you can see who is at the pub or store when the PCs enter. -->
                                 </li>
                                 <li>Age distributions that make sense for medieval settings. It's not equal parts
                                     children, adults, and elderly.</li>
@@ -213,8 +216,11 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="stats" role="tabpanel">
-                            <canvas id="age_graph" width="400" height="100"></canvas>
+                            <h5>Race Distributions</h5>
                             <canvas id="race_graph" width="400" height="100"></canvas>
+                            <h5>Age Distributions</h5>
+                            <canvas id="age_graph" width="400" height="100"></canvas>
+
                         </div>
                     </div>
                 </div>
@@ -253,35 +259,37 @@
                 defaultRaceSettings: [
                     { race: Race.HUMAN, frequency: RaceFrequency.COMMON },
                     { race: Race.HALF_ELF, frequency: RaceFrequency.UNCOMMON },
-                    { race: Race.DWARF, frequency: RaceFrequency.RARE },
-                    { race: Race.ELF, frequency: RaceFrequency.RARE }],
+                    { race: Race.DWARF, frequency: RaceFrequency.UNCOMMON },
+                    { race: Race.ELF, frequency: RaceFrequency.RARE },
+                    { race: Race.GNOME, frequency: RaceFrequency.RARE }],
                 citySize: '',
                 industry: '',
                 gen_name_range: 0,
                 city: new City(),
                 citygen: null,
                 isLoading: false,
-                raceFreqSettings: [],
+                raceFreqSettings: {},
                 stage: '',
+                frequencyClass: {
+                    Common: 'text-success',
+                    Uncommon: 'text-warning',
+                    Rare: 'text-danger',
+                }
             },
             mounted: function () {
-                this.defaultRaceSettings.forEach(s => {
-                    var id = s.race.replace(' ', '');
-                    $(`#${id}`).val(s.frequency).change();
-                });
+                for (var i in this.raceOptions) {
+                    var race = this.raceOptions[i];
+                    var defaultSetting = this.defaultRaceSettings.filter(y => y.race == race)[0];
+                    var freq = defaultSetting ? defaultSetting.frequency : '';
+                    this.raceFreqSettings[race] = freq;
+                }
+                this.$forceUpdate();
             },
             updated: function () {
-                //this.initDataTables();
-                this.raceFreqSettings = [];
-                Object.keys(Race).forEach(k => {
-                    var race = Race[k];
-                    var id = race.replace(' ', '');
-                    var frequency = $(`#${id}`).children("option:selected").val();
-                    if (frequency)
-                        this.raceFreqSettings.push({ race: race, frequency: frequency });
-                });
                 // TODO handle invalid race settings and missing race settings
                 // TODO prevent "undefined" in business name
+            },
+            computed: {
             },
             methods: {
                 onSelectChanged(event) {
@@ -298,7 +306,7 @@
                         $('.result-table').DataTable().destroy();
                         var settings = {
                             CitySize: this.citySize,
-                            Races: this.raceFreqSettings,
+                            Races: this.raceFreqSettings, //TODO
                         }
                         this.citygen = new CityGenerator(settings);
                         this.city = await this.citygen.getNew();
@@ -392,9 +400,6 @@
                                 orderable: false,
                                 data: null,
                                 defaultContent: ''
-                                //                                 defaultContent: `<a><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                //   <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                // </svg></a>`
                             },
                             { data: 'Name' },
                             { data: 'BusinessType' },
@@ -452,24 +457,42 @@
                         options: options
                     });
 
-                    var raceLabels = this.raceFreqSettings.map(x => x.race);
+                    var raceLabels = [];
+                    for (var i in this.raceFreqSettings) {
+                        if (this.raceFreqSettings[i])
+                            raceLabels.push(i);
+                    }
                     var raceData = [];
-                    for (var i = 0; i < raceLabels.length; i++)
+                    var raceColors = [];
+                    for (var i = 0; i < raceLabels.length; i++) {
                         raceData.push(this.city.People.filter(x => x.Race == raceLabels[i]).length);
+
+                        var r = Math.random() * 159 + 32;
+                        var g = Math.random() * 159 + 32;
+                        var b = Math.random() * 159 + 32;
+                        raceColors.push(`rgb(${r}, ${g}, ${b})`);
+                    }
 
                     var ctxRace = document.getElementById('race_graph').getContext('2d');
                     var raceChart = new Chart(ctxRace, {
-                        type: 'line',
+                        type: 'doughnut',
                         data: {
                             labels: raceLabels,
                             datasets: [{
                                 label: 'Race Count',
                                 data: raceData,
-                                borderWidth: 1
+                                backgroundColor: raceColors
+                                //borderWidth: 1
                             }]
-                        },
-                        options: options
+                        }
                     });
+                },
+                getFrequencyClass(race) {
+                    var f = this.raceFreqSettings[race];
+                    if (f)
+                        return this.frequencyClass[f];
+                    else
+                        return '';
                 }
             }
         });
