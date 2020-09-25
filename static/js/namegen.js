@@ -50,6 +50,12 @@ class BusinessNameGenerator {
             var noun = getRandom(nouns);
             var adj = getRandom(BusinessType.TEMPLE.adjectives);
             var name = getRandom(altNames);
+            if (r <= 0.1) {
+                var nameGen = new NameGenerator(null);
+                var saintName = nameGen.getFirst(r < 0.5 ? Gender.MALE : Gender.FEMALE);
+                saintName += saintName.slice(-1).toUpperCase() == "S" ? "'" : "'s";
+                return `Saint ${saintName} ${name}`;
+            }
             if (r > 0.5)
                 return `${name} of the ${adj} ${noun}`;
             return `The ${adj} ${noun} ${name}`;
