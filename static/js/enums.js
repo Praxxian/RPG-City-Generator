@@ -7,7 +7,7 @@ const CitySize = {
         name: 'Extra Small Village',
         avgSize: 50,
         maxEmployees: 0,
-        label: function(){
+        label: function () {
             return `${this.name} (~${this.avgSize.toLocaleString()} people)`
         }
     },
@@ -15,7 +15,7 @@ const CitySize = {
         name: 'Small Village',
         avgSize: 300,
         maxEmployees: 1,
-        label: function(){
+        label: function () {
             return `${this.name} (~${this.avgSize.toLocaleString()} people)`
         }
     },
@@ -23,7 +23,7 @@ const CitySize = {
         name: 'Village',
         avgSize: 1000,
         maxEmployees: 2,
-        label: function(){
+        label: function () {
             return `${this.name} (~${this.avgSize.toLocaleString()} people)`
         }
     },
@@ -31,7 +31,7 @@ const CitySize = {
         name: 'Town',
         avgSize: 5000,
         maxEmployees: 3,
-        label: function(){
+        label: function () {
             return `${this.name} (~${this.avgSize.toLocaleString()} people)`
         }
     },
@@ -39,7 +39,7 @@ const CitySize = {
         name: 'City',
         avgSize: 25000,
         maxEmployees: 4,
-        label: function(){
+        label: function () {
             return `${this.name} (~${this.avgSize.toLocaleString()} people, takes a minute)`
         }
     },
@@ -143,9 +143,9 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.01 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.01 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.1 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.1 ? 1 : 0;
                 case CitySize.VILLAGE:
                 case CitySize.TOWN:
                     return 1;
@@ -166,11 +166,11 @@ const BusinessType = {
                 case CitySize.SMALL_VILLAGE:
                     return 0;
                 case CitySize.VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    (Math.floor(Math.random()) + 2);
+                    (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -183,14 +183,14 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         }
     },
@@ -203,14 +203,14 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    (Math.floor(Math.random()) + 2)
+                    (Math.floor(CryptoRandom.random()) + 2)
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         }
     },
@@ -223,15 +223,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.01 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.01 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.1 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.1 ? 1 : 0;
                 case CitySize.VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -244,15 +244,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                     return 1;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         }
     },
@@ -271,9 +271,9 @@ const BusinessType = {
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         }
     },
@@ -288,13 +288,13 @@ const BusinessType = {
                 case CitySize.EXTRA_SMALL_VILLAGE:
                     return 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.VILLAGE:
-                    return Math.random() <= 0.67 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.67 ? 1 : 0;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -307,15 +307,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                     return 1;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -330,13 +330,13 @@ const BusinessType = {
                 case CitySize.EXTRA_SMALL_VILLAGE:
                     return 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
                     return 1;
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -349,15 +349,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                     return 1;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -372,7 +372,7 @@ const BusinessType = {
             , "Elf", "Devil", "Gnome", "Orc", "Dragon", "Giant", "Angel", "Goblin", "Raven", "Crow", "Kobold", "Leopard", "Jaguar", "Fish"],
         altNames: ["Hotel", "Lodge", "Public House"],
         notes: function () {
-            var r = Math.floor(Math.random() * 20) + 1;
+            var r = Math.floor(CryptoRandom.random() * 20) + 1;
             if (r <= 5)
                 return "Quiet, low-key bar";
             else if (r <= 9)
@@ -395,15 +395,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                     return 1;
                 case CitySize.VILLAGE:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 3);
+                    return (Math.floor(CryptoRandom.random()) + 3);
             }
         }
     },
@@ -418,13 +418,13 @@ const BusinessType = {
                 case CitySize.EXTRA_SMALL_VILLAGE:
                     return 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.01 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.01 ? 1 : 0;
                 case CitySize.VILLAGE:
-                    return Math.random() <= 0.1 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.1 ? 1 : 0;
                 case CitySize.TOWN:
                     return 1;
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
             }
         }
     },
@@ -437,14 +437,14 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -459,13 +459,13 @@ const BusinessType = {
                 case CitySize.EXTRA_SMALL_VILLAGE:
                     return 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.01 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.01 ? 1 : 0;
                 case CitySize.VILLAGE:
-                    return Math.random() <= 0.1 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.1 ? 1 : 0;
                 case CitySize.TOWN:
                     return 1;
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
             }
         }
     },
@@ -478,15 +478,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                     return 1;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         }
     },
@@ -499,14 +499,14 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -522,7 +522,7 @@ const BusinessType = {
             , "Elf", "Devil", "Gnome", "Orc", "Dragon", "Giant", "Angel", "Goblin", "Raven", "Crow", "Kobold", "Leopard", "Jaguar", "Fish"],
         altNames: ["Bar", "Pub", "Alehouse", "Brewery"],
         notes: function () {
-            var r = Math.floor(Math.random() * 20) + 1;
+            var r = Math.floor(CryptoRandom.random() * 20) + 1;
             if (r <= 5)
                 return "Quiet, low-key bar";
             else if (r <= 9)
@@ -545,24 +545,25 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         }
     },
     TEMPLE: {
         name: 'Temple',
         caste: Caste.TRADESMEN,
-        nouns: [],
+        nouns: ["Mother", "Father", "Chalice", "Spirit", "Star", "Dragon", "Hand", "Skull", "Rose", "Candle", "Eye", "Cog", "Gauntlet", "Scales", "Sun", "Moon", "Mist", "Mask", "Scroll", "Leaf", "Maiden", "Sword", "Coin", "Hammer", "Water", "Shield", "Stone", "Bridge", "Tree", "Mountain", "Spear", "Waterfall"],
         altNames: ["Monastery", "Chapel", "Shrine", "Cathedral", "Sanctuary"],
+        adjectives: ["Holy", "Divine", "Revered", "Righteous", "Sublime", "Humble", "Devoted", "Faithful", "Blessed", "Devout", "Just", "Pious", "Reverent", "Virtuous", "Crimson", "Golden", "Verdant", "Azure", "Violet", "Rose", "Amber", "Silver", "Black", "White", "Sterling", "Gilded", "Gleaming", "Flaming", "Bloody", "Bound", "Unkown", "Forbidden"],
         notes: function () {
-            var r = Math.floor(Math.random() * 20) + 1;
+            var r = Math.floor(CryptoRandom.random() * 20) + 1;
             if (r <= 10)
                 return "Temple to a good or neutral deity";
             else if (r <= 12)
@@ -579,13 +580,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.5 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.5 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
+                    return 1;
                 case CitySize.VILLAGE:
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 2);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random() * 2) + 2);
+                    return (Math.floor(CryptoRandom.random() * 2) + 3);
             }
         }
     },
@@ -601,11 +604,11 @@ const BusinessType = {
                 case CitySize.SMALL_VILLAGE:
                     return 0;
                 case CitySize.VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    (Math.floor(Math.random()) + 2);
+                    (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -618,15 +621,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.random() <= 0.01 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.01 ? 1 : 0;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },
@@ -639,15 +642,15 @@ const BusinessType = {
         frequency: function (citySize) {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
-                    return Math.floor(Math.random() * 3) + 7;
+                    return Math.floor(CryptoRandom.random() * 3) + 7;
                 case CitySize.SMALL_VILLAGE:
-                    return Math.floor(Math.random() * 12) + 28;
+                    return Math.floor(CryptoRandom.random() * 12) + 28;
                 case CitySize.VILLAGE:
-                    return Math.floor(Math.random() * 44) + 99;
+                    return Math.floor(CryptoRandom.random() * 44) + 99;
                 case CitySize.TOWN:
-                    return Math.floor(Math.random() * 220) + 447;
+                    return Math.floor(CryptoRandom.random() * 220) + 447;
                 case CitySize.CITY:
-                    return Math.floor(Math.random() * 1100) + 2233;
+                    return Math.floor(CryptoRandom.random() * 1100) + 2233;
             }
         }
     },
@@ -666,13 +669,13 @@ const BusinessType = {
             switch (citySize) {
                 case CitySize.EXTRA_SMALL_VILLAGE:
                 case CitySize.SMALL_VILLAGE:
-                    return Math.random() <= 0.33 ? 1 : 0;
+                    return CryptoRandom.random() <= 0.33 ? 1 : 0;
                 case CitySize.VILLAGE:
                     return 1;
                 case CitySize.TOWN:
-                    return (Math.floor(Math.random()) + 1);
+                    return (Math.floor(CryptoRandom.random()) + 1);
                 case CitySize.CITY:
-                    return (Math.floor(Math.random()) + 2);
+                    return (Math.floor(CryptoRandom.random()) + 2);
             }
         }
     },

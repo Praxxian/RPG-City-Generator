@@ -41,9 +41,19 @@ class BusinessNameGenerator {
         if (businessType == BusinessType.SHIPPING)
             return `${owner.LastName} Shipping Co`;
 
-        var r = Math.random();
-
+        var r = CryptoRandom.random();
         var nouns = businessType.nouns;
+        var altNames = businessType.altNames;
+        altNames.push(businessType.name);
+
+        if (businessType == BusinessType.TEMPLE) {
+            var noun = getRandom(nouns);
+            var adj = getRandom(BusinessType.TEMPLE.adjectives);
+            var name = getRandom(altNames);
+            if (r > 0.5)
+                return `${name} of the ${adj} ${noun}`;
+            return `The ${adj} ${noun} ${name}`;
+        }
 
         if (r < 0.25 && nouns.length > 1 && businessType != BusinessType.FARM && businessType != BusinessType.BREWERY) {
             var a = getRandom(nouns);
@@ -51,8 +61,7 @@ class BusinessNameGenerator {
             return `${a} & ${getRandom(nouns)}`;
         }
 
-        var altNames = businessType.altNames;
-        altNames.push(businessType.name);
+
 
         if (r < 0.75 && nouns.length > 0 && businessType != BusinessType.FARM) {
             var adjectives = GeneralAdjectives;
