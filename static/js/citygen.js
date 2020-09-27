@@ -6,6 +6,7 @@ class CityGenerator {
     Races
     TotalPopSize = 1
     FamilyCount = 0
+    MajorIndustry
 
     constructor(settings) {
         this.Settings = settings;
@@ -86,7 +87,7 @@ class CityGenerator {
         for (var i = 0; i < count; i++) {
             var person = new Person();
             person.Id = this.City.People.length + 1;
-            person.Caste = caste;
+            person.Caste = caste.name;
             person.Age = Math.abs(ageRandom.next());
             person.Gender = CryptoRandom.random() > 0.5 ? Gender.FEMALE : Gender.MALE;
             person.FirstName = nameGen.getFirst(person.Gender);
@@ -105,22 +106,32 @@ class CityGenerator {
             else
                 person.Race = getRandom(this.Races[RaceFrequency.COMMON]);
             person.RaceAge = this.adjustAgeByRace(person.Race, person.Age);
-            person.Appearance = person.Age >= WorkingHumanAge && CryptoRandom.random() > 0.67 ? getRandom(Appearances) : null;
-            person.Personality = new Personality();
-            person.Personality.Openess = PersonalityRandom.next();
-            person.Personality.Conscientiousness = PersonalityRandom.next();
-            person.Personality.Extraversion = PersonalityRandom.next();
-            person.Personality.Agreeableness = PersonalityRandom.next();
-            person.Personality.Neuroticisms = PersonalityRandom.next();
+            person.Appearance = person.Age >= WorkingHumanAge ? getRandom(Appearances) : null;
+            person.Strength = person.Age >= WorkingHumanAge ? getRandom(Strengths) : null;
+            person.Weakness = person.Age >= WorkingHumanAge ? getRandom(Weaknesses) : null;
+            while (person.Strength && person.Strength.split('-')[0] == person.Weakness.split('-')[0])
+                person.Weakness = getRandom(Weaknesses);
+            person.Talent = person.Age >= WorkingHumanAge ? getRandom(Talents) : null;
+            person.Manuerism = person.Age >= WorkingHumanAge ? getRandom(Manuerisms) : null;
+            person.Interaction = person.Age >= WorkingHumanAge ? getRandom(Interactions) : null;
+            person.GoodOrEvilIdeal = person.Age >= WorkingHumanAge ? getRandom(GoodOrEvilIdeals) : null;
+            person.LawfulOrChaoticIdeal = person.Age >= WorkingHumanAge ? getRandom(LawfulOrChaoticIdeals) : null;
+            person.NeutralOrOtherIdeal = person.Age >= WorkingHumanAge ? getRandom(NeutralOrOtherIdeals) : null;
+            person.Bond = person.Age >= WorkingHumanAge ? getRandom(Bonds) : null;
+            while (person.Bond && person.Bond.indexOf("Roll twice, ignoring results of 10") >= 0)
+                person.Bond = getRandom(Bonds) + ' and ' + getRandom(Bonds);
+            person.FlawOrSecret = person.Age >= WorkingHumanAge ? getRandom(FlawOrSecrets) : null;
+            // person.Personality = new Personality();
+            // person.Personality.Openess = PersonalityRandom.next();
+            // person.Personality.Conscientiousness = PersonalityRandom.next();
+            // person.Personality.Extraversion = PersonalityRandom.next();
+            // person.Personality.Agreeableness = PersonalityRandom.next();
+            // person.Personality.Neuroticisms = PersonalityRandom.next();
             this.City.People.push(person);
         }
     }
 
     createDetails() {
-        // _city.Facts.Add("Population", _city.Families.Sum(x => x.Count).ToString("n0"));
-        //     CreateFactFromList(CityFact.NotableTrait);
-        //     CreateFactFromList(CityFact.KnownForIts);
-        //     CreateFactFromList(CityFact.CurrentCalamity);
         this.City.Details = {
             notableTrait: getRandom(NotableTrait),
             knownFor: getRandom(KnownForIts),
@@ -146,7 +157,7 @@ class CityGenerator {
             var spouse2 = null;
             for (var j = i + 1; j < this.City.People.length; j++) {
                 spouse2 = this.City.People[j];
-                var outgoing = spouse1.Personality.Openess >= 67;
+                var outgoing = spouse1.Strength && (spouse1.Strength.indexOf("Wisdom") >= 0 || spouse1.Strength.indexOf("Charisma") >= 0); //spouse1.Personality.Openess >= 67;
                 if (spouse2.Family
                     || spouse2.Age < AdultHumanAge
                     || Math.abs(spouse2.Age - spouse1.Age) > 10
@@ -208,7 +219,7 @@ class CityGenerator {
     }
 
     createNobleEstates() {
-        var nobles = this.City.People.filter(x => x.Caste == Caste.NOBLE);
+        var nobles = this.City.People.filter(x => x.Caste == Caste.NOBLE.name);
         var nobleFamilies = nobles.map(x => x.Family).filter(distinct);
         for (var i = 0; i < nobleFamilies.length; i++) {
             var family = nobleFamilies[i];
@@ -221,6 +232,13 @@ class CityGenerator {
             if (spouse)
                 spouse.setBusiness(business);
             this.City.Businesses.push(business);
+
+            if(this.Settings.MajorIndustry != MajorIndustry.AGRICULTURE && i ==0){
+                this.MajorIndustry = new Business();
+                this.MajorIndustry.BusinessType = BusinessType.ESTATE;
+                this.MajorIndustry.Name = BusinessNameGenerator.get(headOfFamily, BusinessType.ESTATE);
+                headOfFamily.setBusiness(this.MajorIndustry);
+            }
         }
     }
 
@@ -246,7 +264,7 @@ class CityGenerator {
             var businessType = businessTypes[i];
             for (var i = 0; i < this.City.People.length; i++) {
                 var person = this.City.People[i];
-                if (person.Age < AdultHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != businessType.caste)
+                if (person.Age < AdultHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != businessType.caste.name)
                     continue;
                 var business = new Business();
                 business.BusinessType = businessType;
@@ -310,7 +328,7 @@ class CityGenerator {
             bizMaxEmployees -= biz.Employees.length;
             for (var i = 0; i < this.City.People.length && bizMaxEmployees > 0; i++) {
                 var person = this.City.People[i];
-                if (person.Age < WorkingHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != biz.BusinessType.caste || person.Caste == Caste.NOBLE)
+                if (person.Age < WorkingHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != biz.BusinessType.caste.name || person.Caste == Caste.NOBLE.name)
                     continue;
                 person.setEmployer(biz);
                 bizMaxEmployees--;

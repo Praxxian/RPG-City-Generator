@@ -22,12 +22,16 @@
                         <button class="btn btn-success btn-lg" @click="generate()"
                             :disabled="generateDisabled || isLoading">
                             <div v-if="isLoading">
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span class="spinner-border spinner-border-sm" role="status"></span>
                                 Generating...
                             </div>
                             <div v-else>
                                 Generate
                             </div>
+                        </button>
+                        <button v-if="city.Complete && !isLoading" class="btn btn-primary btn-lg"
+                            @click="downloadCSV()">
+                            Download
                         </button>
                     </div>
                 </div>
@@ -127,8 +131,11 @@
                             </h5>
                             <ul>
                                 <li>Hundreds to thousands of NPCs created with names, families, jobs, personalities, and
-                                    (sometimes) distinct appearances.</li>
+                                    appearances.</li>
                                 <li>Downloadable to CSV.</li>
+                                <ul>
+                                    <li>Even more details about NPCs are available in the CSV.</li>
+                                </ul>
                                 <li>Select how common/uncommon/rare each race is.</li>
                                 <li>Businesses with distinct names and inventories.</li>
                                 <ul>
@@ -190,8 +197,13 @@
                                     <th>Spouse</th>
                                     <th>Family</th>
                                     <th>Works At</th>
-                                    <th>Personality</th>
+                                    <!-- <th>Personality</th> -->
                                     <th>Appearance</th>
+                                    <th>Strength</th>
+                                    <th>Weakness</th>
+                                    <th>Talent</th>
+                                    <th>Manuerism</th>
+                                    <th>Interaction</th>
                                 </thead>
                             </table>
                         </div>
@@ -199,7 +211,6 @@
                             <h3>Shops</h3>
                             <table class="table table-dark result-table" id="business_table" style="width: 100%;">
                                 <thead>
-                                    <th></th>
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Owners</th>
@@ -210,7 +221,6 @@
                             <h3>Estates</h3>
                             <table class="table table-dark result-table" id="estate_table" style="width: 100%;">
                                 <thead>
-                                    <th></th>
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Owners</th>
@@ -220,7 +230,6 @@
                             <h3>Farms</h3>
                             <table class="table table-dark result-table" id="farm_table" style="width: 100%;">
                                 <thead>
-                                    <th></th>
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Owners</th>
@@ -269,6 +278,29 @@
                 requestAnimationFrame(callback)
             })
         }
+
+        var dice = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
+  <circle cx="4" cy="4" r="1.5"/>
+  <circle cx="12" cy="4" r="1.5"/>
+  <circle cx="12" cy="12" r="1.5"/>
+  <circle cx="12" cy="8" r="1.5"/>
+  <circle cx="4" cy="12" r="1.5"/>
+  <circle cx="4" cy="8" r="1.5"/>
+</svg>`;
+
+        Vue.component('reroll-btn', {
+            props: ['id', 'entity'],
+            template: `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
+  <circle cx="4" cy="4" r="1.5"/>
+  <circle cx="12" cy="4" r="1.5"/>
+  <circle cx="12" cy="12" r="1.5"/>
+  <circle cx="12" cy="8" r="1.5"/>
+  <circle cx="4" cy="12" r="1.5"/>
+  <circle cx="4" cy="8" r="1.5"/>
+</svg>`
+        });
 
         var citygenapp = new Vue({
             el: '#citygenapp',
@@ -366,16 +398,21 @@
                         console.log('Setting table data...');
                         peopleArr = this.city.People.map(x => [
                             x.Id,
-                            x.fullName(),
+                            `${x.fullName()}`,
                             x.Race,
-                            x.Caste.name,
+                            x.Caste,
                             x.RaceAge,
                             x.Gender,
                             x.Spouse ?? '',
                             x.Family.displayValue(),
                             x.getBusiness() ? `${x.getBusiness()} (Owner)` : x.getEmployer() ?? '',
-                            x.Personality.toLabel(),
-                            x.Appearance ?? ''
+                            //x.Personality.toLabel(),
+                            x.Appearance ?? '',
+                            x.Strength ?? '',
+                            x.Weakness ?? '',
+                            x.Talent ?? '',
+                            x.Manuerism ?? '',
+                            x.Interaction ?? '',
                         ]);
 
                         bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessType.FARM && x.BusinessType != BusinessType.ESTATE).map(x => ({
@@ -417,93 +454,61 @@
 
                     var peopleTable = $('#people_table').DataTable({
                         "pageLength": 100,
-                        dom: 'Blfrtip',
-                        buttons: [
-                            'csv'
-                        ],
                         'processing': true,
+                        "scrollX": true,
+                        autoWidth: true,
+                        "fnInitComplete": function (oSettings) {
+                            $(window).resize();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                            $(window).trigger('resize');
+                        },
                         data: peopleArr
                     });
 
                     var bizTable = $('#business_table').DataTable({
                         "pageLength": 10,
-                        dom: 'Blfrtip',
-                        buttons: [
-                            'csv'
-                        ],
                         'processing': true,
                         data: bizArray,
                         columns: [
-                            {
-                                className: 'details-control',
-                                orderable: false,
-                                data: null,
-                                defaultContent: ''
-                            },
                             { data: 'Name' },
                             { data: 'BusinessType' },
                             { data: 'Owners' },
                             { data: 'Employees' },
                             { data: 'Description' },
                         ],
-                        "order": [[1, "asc"]],
                     });
 
                     var farmTable = $('#farm_table').DataTable({
                         "pageLength": 100,
-                        dom: 'Blfrtip',
-                        buttons: [
-                            'csv'
-                        ],
                         'processing': true,
                         data: farmArray,
                         columns: [
-                            {
-                                className: 'details-control',
-                                orderable: false,
-                                data: null,
-                                defaultContent: ''
-                            },
                             { data: 'Name' },
                             { data: 'BusinessType' },
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
-                        "order": [[1, "asc"]],
                     });
 
                     var estateTable = $('#estate_table').DataTable({
                         "pageLength": 10,
-                        dom: 'Blfrtip',
-                        buttons: [
-                            'csv'
-                        ],
                         'processing': true,
                         data: estateArray,
                         columns: [
-                            {
-                                className: 'details-control',
-                                orderable: false,
-                                data: null,
-                                defaultContent: ''
-                            },
                             { data: 'Name' },
                             { data: 'BusinessType' },
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
-                        "order": [[1, "asc"]],
                     });
 
                     var inventoryTable = $('#inventory_table').DataTable({
                         "pageLength": 100,
-                        dom: 'Blfrtip',
-                        buttons: [
-                            'csv'
-                        ],
                         'processing': true,
                         data: inventoryArray
                     });
+                    this.$forceUpdate();
                     console.log('Initiating DataTables complete.');
                 },
                 updateCharts() {
@@ -578,9 +583,63 @@
                         return this.frequencyClass[f];
                     else
                         return '';
-                }
+                },
+                downloadCSV() {
+                    var rows = [
+                        ['Each set of data will be proceeded by a header in square brackets: [].'],
+                        [''],
+                        ['[DESCRIPTION]'],
+                        Object.keys(this.city.Details),
+                        Object.values(this.city.Details),
+                        [''],
+                        ['[PEOPLE]'],
+                        Object.keys(this.city.People[0]),
+                    ];
+
+                    for (var i = 0; i < this.city.People.length; i++) {
+                        rows.push(Object.values(this.city.People[i]).map(x => this.csvClean(x)));
+                    }
+
+                    rows.push(['']);
+                    rows.push(['[BUSINESSES]'])
+                    rows.push(Object.keys(this.city.Businesses[0]));
+                    for (var i = 0; i < this.city.Businesses.length; i++) {
+                        rows.push(Object.values(this.city.Businesses[i]).map(x => this.csvClean(x)));
+                    }
+
+                    rows.push(['']);
+                    rows.push(['[INVENTORY]'])
+                    var invHeaders = ['Business', 'Item', 'Cost'].map(x => this.csvClean(x));
+                    rows.push(invHeaders);
+                    for (var i = 0; i < this.city.Businesses.length; i++) {
+                        for (var j = 0; j < this.city.Businesses[i].Inventory.length; j++) {
+                            var item = this.city.Businesses[i].Inventory[j];
+                            var invData = [this.city.Businesses[i].Name, item.Name, item.displayCost()].map(x => this.csvClean(x));
+                            rows.push(invData);
+                        }
+                    }
+
+                    let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+
+                    var encodedUri = encodeURI(csvContent);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "rpg_city.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                },
+                csvClean(value) {
+                    if (Array.isArray(value))
+                        value = value.join('; ');
+                    return '"' + (value ?? '') + '"';
+                },
             }
         });
+
+        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+            $('.result-table').DataTable().columns.adjust();
+        })
     </script>
 </body>
 
