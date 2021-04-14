@@ -152,7 +152,7 @@ const BusinessType = {
         name: 'Alchemist Shop',
         toString: () => { return BusinessType.ALCHEMIST_SHOP.name },
         caste: Caste.TRADESMEN,
-        nouns: ["Cauldron", "Vial", "Mortar", "Alembic", "Flask", "Boiler", "Beaker", "Bottle", "Phial", "Cistern", "Abacus", "Draught", "Elixer", "Brew", "Dram", "Philter", "Tonic"],
+        nouns: ["Cauldron", "Vial", "Mortar", "Alembic", "Flask", "Boiler", "Beaker", "Bottle", "Phial", "Cistern", "Abacus", "Draught", "Elixer", "Brew", "Dram", "Philter", "Tonic", "Leaf"],
         altNames: ["Hermetics", "Alchemy Supplies", "Potions", "Store Room", "Labaratory"],
         notes: function () { return ''; },
         frequency: function (citySize) {
