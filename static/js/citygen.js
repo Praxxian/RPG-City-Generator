@@ -38,6 +38,10 @@ class CityGenerator {
             else
                 this.Races[frequency] = [race];
         }
+        for(const [key, value] of Object.entries(RaceFrequency)){
+            if(this.Races[value] == null)
+                this.Races[value] = [];
+        }
     }
 
     getNew() {
@@ -101,7 +105,7 @@ class CityGenerator {
             else if (raceRoll <= 0.1 / rareMod)
                 person.RaceFrequency = RaceFrequency.RARE;
             var freqGroup = this.Races[person.RaceFrequency];
-            if (this.Races[person.RaceFrequency])
+            if (this.Races[person.RaceFrequency] && this.Races[person.RaceFrequency].length > 0)
                 person.Race = getRandom(freqGroup);
             else
                 person.Race = getRandom(this.Races[RaceFrequency.COMMON]);
