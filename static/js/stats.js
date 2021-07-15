@@ -39,7 +39,9 @@ class BoxMullerRandom {
 }
 
 function getRandom(l) {
-    return l[Math.floor(CryptoRandom.random() * l.length)];
+    var index = CryptoRandom.random() * l.length;
+    var safeIndex = Math.floor(index);
+    return l[safeIndex];
 }
 
 function createUUID() {

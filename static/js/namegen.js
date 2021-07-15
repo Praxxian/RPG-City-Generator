@@ -61,15 +61,13 @@ class BusinessNameGenerator {
             return `The ${adj} ${noun} ${name}`;
         }
 
-        if (r < 0.25 && nouns.length > 1 && businessType != BusinessType.FARM && businessType != BusinessType.BREWERY) {
+        if (r < 0.33 && nouns.length > 1 && businessType != BusinessType.FARM && businessType != BusinessType.BREWERY) {
             var a = getRandom(nouns);
-            nouns.splice(nouns.indexOf(a));
+            nouns.splice(nouns.indexOf(a),1);
             return `${a} & ${getRandom(nouns)}`;
         }
 
-
-
-        if (r < 0.75 && nouns.length > 0 && businessType != BusinessType.FARM) {
+        if (r < 0.80 && nouns.length > 0 && businessType != BusinessType.FARM) {
             var adjectives = GeneralAdjectives;
             return (businessType == BusinessType.BREWERY ? "" : "The ") + `${getRandom(adjectives)} ${getRandom(nouns)}` + (businessType == BusinessType.BREWERY ? " " + getRandom(altNames) : "");
         }
