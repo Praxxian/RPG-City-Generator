@@ -15,8 +15,20 @@
             Fantasy City Generator
         </p>
 
+        <p class="text-center">
+            <a href="https://paypal.me/praxxian?locale.x=en_US">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dice-6"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M13 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h10zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z" />
+                    <path
+                        d="M5.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm8 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-8 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                </svg>
+                Buy me dice.</a>
+        </p>
+
         <div class="row">
-            <div class="col-3 collapse show" id="settings_col">
+            <div class="col-3" id="settings_col">
                 <div class="row my-1">
                     <div class="col text-center">
                         <button class="btn btn-success btn-lg" @click="generate()"
@@ -42,6 +54,48 @@
                     </select>
                 </div>
                 <div class="row my-1">
+                    <select class="custom-select" v-model="prosperity" @change="onSelectChanged($event)" required>
+                        <option v-for="o in prosperityOptions" :value="o">{{ o.Label }}</option>
+                    </select>
+                </div>
+                <div class="row my-1 border p-3 bg-white rounded" v-if="prosperity.Label == 'Custom'">
+                    <div class="container">
+                        <h5>Caste Percentages</h5>
+                        <div class="row">
+                            <label class="form-label col-sm-4">Nobility</label>
+                            <div class="col-sm-5">
+                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                    v-model="noblePercent" />
+                            </div>
+                            <div class="col-sm">{{ noblePercent * 100 }}%</div>
+                        </div>
+                        <div class="row">
+                            <label class="form-label col-sm-4">Mercantile</label>
+                            <div class="col-sm-5">
+                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                    v-model="mercantilePercent" />
+                            </div>
+                            <div class="col-sm">{{ mercantilePercent * 100 }}%</div>
+                        </div>
+                        <div class="row">
+                            <label class="form-label col-sm-4">Tradesperson</label>
+                            <div class="col-sm-5">
+                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                    v-model="tradePercent" />
+                            </div>
+                            <div class="col-sm">{{ tradePercent * 100 }}%</div>
+                        </div>
+                        <div class="row">
+                            <label class="form-label col-sm-4">Peasant</label>
+                            <div class="col-sm-5">
+                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                    v-model="peasantPercent" />
+                            </div>
+                            <div class="col-sm">{{ peasantPercent * 100 }}%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-1">
                     <select class="custom-select" v-model="industry" @change="onSelectChanged($event)" required>
                         <option value="" selected>Major Industry</option>
                         <option v-for="o in industryOptions" :value="o">{{ o }}</option>
@@ -56,8 +110,9 @@
                 </div> -->
                 <div class="row my-1 border p-3 bg-white rounded">
                     <h5>Race Frequency</h5>
+                    <p>
                     <h5><small class="text-muted">Some default values are already selected.</small></h5>
-
+                    </p>
                     <table class="table">
                         <tr v-for="r in raceOptions">
                             <td>
@@ -73,9 +128,6 @@
                             </td>
                     </table>
                 </div>
-            </div>
-            <div v-if="city" class="col-auto h-auto px-1" hidden>
-                <button class="btn h-100" @click="toggleSettings($event)" id="collapse-btn">&laquo;</button>
             </div>
             <div class="col-9">
                 <div v-if="isLoading">
@@ -302,6 +354,13 @@
 </svg>`
         });
 
+        var prosperityOptions = [
+            { Label: "Average Prosperity", noblePercent: 0.005, mercantilePercent: 0.015, tradePercent: 0.18, peasantPercent: 0.80 },
+            { Label: "Destitute", noblePercent: 0.0025, mercantilePercent: 0.0075, tradePercent: 0.09, peasantPercent: 0.90 },
+            { Label: "Prosperous", noblePercent: 0.01, mercantilePercent: 0.03, tradePercent: 0.36, peasantPercent: 0.60 },
+            { Label: "Custom", noblePercent: 0.005, mercantilePercent: 0.015, tradePercent: 0.18, peasantPercent: 0.80 },
+        ];
+
         var citygenapp = new Vue({
             el: '#citygenapp',
             data: {
@@ -328,7 +387,13 @@
                     Common: 'text-success',
                     Uncommon: 'text-warning',
                     Rare: 'text-danger',
-                }
+                },
+                prosperityOptions: prosperityOptions,
+                prosperity: prosperityOptions[0],
+                noblePercent: -1,
+                mercantilePercent: -1,
+                tradePercent: -1,
+                peasantPercent: -1
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
@@ -341,7 +406,8 @@
             },
             updated: function () {
                 // TODO handle invalid race settings and missing race settings
-                // TODO prevent "undefined" in business name
+
+                this.updateProsperity();
             },
             computed: {
             },
@@ -360,7 +426,9 @@
                         $('.result-table').DataTable().destroy();
                         var settings = {
                             CitySize: this.citySize,
-                            Races: this.raceFreqSettings, //TODO
+                            Races: this.raceFreqSettings,
+                            MajorIndustry: this.industry,
+                            Prosperity: this.prosperity
                         }
                         this.citygen = new CityGenerator(settings);
                         this.city = await this.citygen.getNew();
@@ -634,6 +702,32 @@
                         value = value.join('; ');
                     return '"' + (value ?? '') + '"';
                 },
+                updateProsperity() {
+                    if (this.prosperity.Label == "Custom") {
+                        var total = 1.0;
+
+                        this.noblePercent = Math.min(total, this.noblePercent).toPrecision(3);
+                        this.prosperity.noblePercent = this.noblePercent;
+                        total = Math.max(0, total - this.prosperity.noblePercent);
+
+                        this.mercantilePercent = Math.min(total, this.mercantilePercent).toPrecision(3);
+                        this.prosperity.mercantilePercent = this.mercantilePercent;
+                        total = Math.max(0, total - this.prosperity.mercantilePercent);
+
+                        this.tradePercent = Math.min(total, this.tradePercent).toPrecision(3);
+                        this.prosperity.tradePercent = this.tradePercent
+                        total = Math.max(0, total - this.prosperity.tradePercent);
+
+                        this.peasantPercent = total.toPrecision(3)
+                        this.prosperity.peasantPercent = this.peasantPercent;
+                    }
+                    else {
+                        this.noblePercent = this.prosperity.noblePercent;
+                        this.mercantilePercent = this.prosperity.mercantilePercent;
+                        this.tradePercent = this.prosperity.tradePercent;
+                        this.peasantPercent = this.prosperity.peasantPercent;
+                    }
+                }
             }
         });
 

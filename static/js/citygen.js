@@ -75,10 +75,10 @@ class CityGenerator {
         var size = this.matchCitySize(this.Settings.CitySize);
         this.City.Settings.CitySize = size;
         this.TotalPopSize = size.avgSize * (1 + percentChange);
-        var noblePopSize = Math.floor(this.TotalPopSize * 0.005);
-        var merchPopSize = Math.floor(this.TotalPopSize * 0.015);
-        var tradePopSize = Math.floor(this.TotalPopSize * 0.18);
-        var peasantPopSize = Math.floor(this.TotalPopSize * 0.8);
+        var noblePopSize = Math.floor(this.TotalPopSize * this.Settings.Prosperity.noblePercent);
+        var merchPopSize = Math.floor(this.TotalPopSize * this.Settings.Prosperity.mercantilePercent);
+        var tradePopSize = Math.floor(this.TotalPopSize * this.Settings.Prosperity.tradePercent);
+        var peasantPopSize = Math.floor(this.TotalPopSize * this.Settings.Prosperity.peasantPercent);
         this.createPeopleByCaste(Caste.NOBLE, noblePopSize);
         this.createPeopleByCaste(Caste.MERCANTILE, merchPopSize);
         this.createPeopleByCaste(Caste.TRADESMEN, tradePopSize);
