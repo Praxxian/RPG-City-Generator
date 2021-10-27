@@ -35,11 +35,8 @@ class BusinessNameGenerator {
         if (businessType == BusinessType.ESTATE)
             return `${owner.LastName} Manor`;
 
-        if (businessType == BusinessType.MINE || businessType == BusinessType.QUARRY)
+        if (businessType == BusinessType.MINE || businessType == BusinessType.QUARRY || businessType == BusinessType.FORESTRY)
             return `${owner.LastName} ${businessType.name}`;
-
-        if (businessType == BusinessType.SHIPPING)
-            return `${owner.LastName} Shipping Co`;
 
         var r = CryptoRandom.random();
         var nouns = businessType.nouns;
@@ -61,10 +58,10 @@ class BusinessNameGenerator {
             return `The ${adj} ${noun} ${name}`;
         }
 
-        if (r < 0.33 && nouns.length > 1 && businessType != BusinessType.FARM && businessType != BusinessType.BREWERY) {
-            var a = getRandom(nouns);
-            nouns.splice(nouns.indexOf(a),1);
-            return `${a} & ${getRandom(nouns)}`;
+        if (r < 0.33 && nouns.length > 1 && businessType != BusinessType.FARM && businessType != BusinessType.BREWERY && businessType != BusinessType.SHIPPING && businessType != BusinessType.FISHING) {
+            var firstNoun = getRandom(nouns);
+            nouns.splice(nouns.indexOf(firstNoun), 1);
+            return `${firstNoun} & ${getRandom(nouns)}`;
         }
 
         if (r < 0.80 && nouns.length > 0 && businessType != BusinessType.FARM) {
@@ -72,6 +69,6 @@ class BusinessNameGenerator {
             return (businessType == BusinessType.BREWERY ? "" : "The ") + `${getRandom(adjectives)} ${getRandom(nouns)}` + (businessType == BusinessType.BREWERY ? " " + getRandom(altNames) : "");
         }
 
-        return businessType == BusinessType.BREWERY ? `${owner.LastName} ${getRandom(altNames)}` : `${owner.FirstName}'s ${getRandom(altNames)}`;
+        return businessType == BusinessType.BREWERY || businessType == BusinessType.SHIPPING ? `${owner.LastName} ${getRandom(altNames)}` : `${owner.FirstName}'s ${getRandom(altNames)}`;
     }
 }

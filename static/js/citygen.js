@@ -6,7 +6,8 @@ class CityGenerator {
     Races
     TotalPopSize = 1
     FamilyCount = 0
-    MajorIndustry
+    Mine
+    LumberCamp
 
     constructor(settings) {
         this.Settings = settings;
@@ -38,8 +39,8 @@ class CityGenerator {
             else
                 this.Races[frequency] = [race];
         }
-        for(const [key, value] of Object.entries(RaceFrequency)){
-            if(this.Races[value] == null)
+        for (const [key, value] of Object.entries(RaceFrequency)) {
+            if (this.Races[value] == null)
                 this.Races[value] = [];
         }
     }
@@ -125,12 +126,6 @@ class CityGenerator {
             while (person.Bond && person.Bond.indexOf("Roll twice, ignoring results of 10") >= 0)
                 person.Bond = getRandom(Bonds) + ' and ' + getRandom(Bonds);
             person.FlawOrSecret = person.Age >= WorkingHumanAge ? getRandom(FlawOrSecrets) : null;
-            // person.Personality = new Personality();
-            // person.Personality.Openess = PersonalityRandom.next();
-            // person.Personality.Conscientiousness = PersonalityRandom.next();
-            // person.Personality.Extraversion = PersonalityRandom.next();
-            // person.Personality.Agreeableness = PersonalityRandom.next();
-            // person.Personality.Neuroticisms = PersonalityRandom.next();
             this.City.People.push(person);
         }
     }
@@ -217,8 +212,8 @@ class CityGenerator {
     }
 
     createBusinesses() {
-        this.createNobleEstates();
         this.createStoresAndFarms();
+        this.createNobleEstates();
         this.assignJobs();
     }
 
@@ -228,23 +223,31 @@ class CityGenerator {
         for (var i = 0; i < nobleFamilies.length; i++) {
             var family = nobleFamilies[i];
             var headOfFamily = nobles.filter(x => x.Family == family).sort(x => x.Age).reverse()[0];
-            var business = new Business();
-            business.BusinessType = BusinessType.ESTATE;
-            business.Name = BusinessNameGenerator.get(headOfFamily, BusinessType.ESTATE);
-            headOfFamily.setBusiness(business);
+            var business = this.createNewBusiness(BusinessType.ESTATE, headOfFamily);
             var spouse = this.findSpouse(headOfFamily);
             if (spouse)
                 spouse.setBusiness(business);
-            this.City.Businesses.push(business);
-
-            if(this.Settings.MajorIndustry != MajorIndustry.AGRICULTURE && i ==0){
-                this.MajorIndustry = new Business();
-                this.MajorIndustry.BusinessType = BusinessType.ESTATE;
-                this.MajorIndustry.Name = BusinessNameGenerator.get(headOfFamily, BusinessType.ESTATE);
-                headOfFamily.setBusiness(this.MajorIndustry);
-            }
+            // if (this.shouldCreateSpecialBusiness(headOfFamily, this.Mine, "Mountain/Hills")) {
+            //     this.Mine = this.createNewBusiness(BusinessType.MINE, headOfFamily);
+            // }
+            // else if (this.shouldCreateSpecialBusiness(headOfFamily, this.LumberCamp, "Forest")) {
+            //     this.LumberCamp = this.createNewBusiness(BusinessType.LUMBER_CAMP, headOfFamily);
+            // }
         }
     }
+
+    createNewBusiness(businessType, owner) {
+        var business = new Business();
+        business.BusinessType = businessType;
+        business.Name = BusinessNameGenerator.get(owner, businessType);
+        owner.setBusiness(business);
+        this.City.Businesses.push(business);
+        return business;
+    }
+
+    // shouldCreateSpecialBusiness(owner, business, naturalFeature) {
+    //     return owner.Age >= AdultHumanAge && business == null && this.Settings.NaturalFeatures != null && this.Settings.NaturalFeatures.indexOf(naturalFeature) >= 0;
+    // }
 
     findSpouse(person) {
         var family = this.City.People.filter(p => p.Family == person.Family);
@@ -257,23 +260,24 @@ class CityGenerator {
         var keys = Object.keys(BusinessType);
         for (var k in keys) {
             var bt = BusinessType[keys[k]];
-            var f = bt.frequency(this.City.Settings.CitySize);
+            var f = bt.frequency(this.City.Settings);
             for (var i = 0; i < f; i++)
                 businessTypes.push(bt);
         }
 
-        businessTypes.sort(function () { return CryptoRandom.random() });
+        businessTypes.sort(function (t) { return CryptoRandom.random() });
 
         for (var i in businessTypes) {
             var businessType = businessTypes[i];
             for (var i = 0; i < this.City.People.length; i++) {
                 var person = this.City.People[i];
-                if (person.Age < AdultHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != businessType.caste.name)
+                if (person.Age < AdultHumanAge
+                    || person.getBusiness()
+                    || person.getEmployer()
+                    || businessType.ownerCastes.map(c => c.name).indexOf(person.Caste) < 0)
                     continue;
-                var business = new Business();
-                business.BusinessType = businessType;
-                business.Name = BusinessNameGenerator.get(person, businessType).toUpperCase();
-                person.setBusiness(business);
+
+                var business = this.createNewBusiness(businessType, person);
                 var family = this.City.People.filter(p => p.Family == person.Family);
                 var spouse = family.filter(p => p.fullName() == person.Spouse)[0];
                 if (spouse && businessType != BusinessType.TEMPLE)
@@ -285,7 +289,6 @@ class CityGenerator {
                 });
                 business.Description = business.BusinessType.notes();
                 this.setInventory(business);
-                this.City.Businesses.push(business);
                 break;
             }
         }
@@ -320,19 +323,19 @@ class CityGenerator {
     }
 
     assignJobs() {
-        var maxEmployees = this.Settings.CitySize.maxEmployees;
-
-        this.City.Businesses.sort(function () { return CryptoRandom.random() });
+        this.City.Businesses.sort(function (t) { return t.BusinessType.ownerCastes[0] == Caste.NOBLE ? -1 : Math.floor(CryptoRandom.random() * 2) - 1 });
         for (var b in this.City.Businesses) {
             var biz = this.City.Businesses[b];
-            if (maxEmployees == 0 && biz.BusinessType != BusinessType.ESTATE)
+            if (this.Settings.CitySize.maxEmployees == 0 && biz.BusinessType != BusinessType.ESTATE)
                 continue;
-            var minEmployees = BusinessType == BusinessType.ESTATE ? 2 : 1;
-            var bizMaxEmployees = Math.floor(CryptoRandom.random() * maxEmployees) + minEmployees;
+            var bizMaxEmployees = biz.BusinessType.maxEmployees(this.Settings);
             bizMaxEmployees -= biz.Employees.length;
             for (var i = 0; i < this.City.People.length && bizMaxEmployees > 0; i++) {
                 var person = this.City.People[i];
-                if (person.Age < WorkingHumanAge || person.getBusiness() || person.getEmployer() || person.Caste != biz.BusinessType.caste.name || person.Caste == Caste.NOBLE.name)
+                if (person.Age < WorkingHumanAge
+                    || person.getBusiness()
+                    || person.getEmployer()
+                    || biz.BusinessType.employeeCastes.map(c => c.name).indexOf(person.Caste) < 0)
                     continue;
                 person.setEmployer(biz);
                 bizMaxEmployees--;

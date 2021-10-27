@@ -15,18 +15,6 @@
             Fantasy City Generator
         </p>
 
-        <p class="text-center">
-            <a href="https://paypal.me/praxxian?locale.x=en_US">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dice-6"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M13 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h10zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z" />
-                    <path
-                        d="M5.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm8 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-8 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                </svg>
-                Buy me dice.</a>
-        </p>
-
         <div class="row">
             <div class="col-3" id="settings_col">
                 <div class="row my-1">
@@ -54,7 +42,7 @@
                     </select>
                 </div>
                 <div class="row my-1">
-                    <select class="custom-select" v-model="prosperity" @change="onSelectChanged($event)" required>
+                    <select class="custom-select" v-model="prosperity" required>
                         <option v-for="o in prosperityOptions" :value="o">{{ o.Label }}</option>
                     </select>
                 </div>
@@ -95,38 +83,88 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-1">
-                    <select class="custom-select" v-model="industry" @change="onSelectChanged($event)" required>
-                        <option value="" selected>Major Industry</option>
-                        <option v-for="o in industryOptions" :value="o">{{ o }}</option>
-                    </select>
-                </div>
-                <!-- <div class="row my-1 border p-3 bg-white rounded">
-                    <div class="input-group">
-                        <label class="form-label">Generated Name Frequency</label>
-                        <input type="range" class="custom-range w-75 mr-3" v-model="gen_name_range" />
-                        <span>{{ gen_name_range }}%</span>
-                    </div>
-                </div> -->
                 <div class="row my-1 border p-3 bg-white rounded">
-                    <h5>Race Frequency</h5>
-                    <p>
-                    <h5><small class="text-muted">Some default values are already selected.</small></h5>
-                    </p>
-                    <table class="table">
-                        <tr v-for="r in raceOptions">
-                            <td>
-                                <label class="form-label">{{r}}</label>
-                            </td>
-                            <td>
-                                <select class="custom-select" :id="r.replace(' ','')" v-model="raceFreqSettings[r]"
-                                    :class="frequencyClass[raceFreqSettings[r]]" @change="$forceUpdate()">
-                                    <option value="">None</option>
-                                    <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">{{ o }}
-                                    </option>
-                                </select>
-                            </td>
-                    </table>
+                    <h5>Natural Features</h5>
+                    <div class="container">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Forest" id="forestCheck"
+                                v-model="naturalFeatures">
+                            <label class="form-check-label" for="forestCheck">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-tree" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z" />
+                                </svg> Forest
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Mountains/Hills" id="mountainCheck"
+                                v-model="naturalFeatures">
+                            <label class="form-check-label" for="mountainCheck">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-minecart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M4 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM.115 3.18A.5.5 0 0 1 .5 3h15a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 14 12H2a.5.5 0 0 1-.491-.408l-1.5-8a.5.5 0 0 1 .106-.411zm.987.82 1.313 7h11.17l1.313-7H1.102z" />
+                                </svg> Mountains/Hills
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Ocean" id="oceanCheck"
+                                v-model="naturalFeatures">
+                            <label class="form-check-label" for="oceanCheck">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-tsunami" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.036 12.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zm0 2a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zM2.662 8.08c-.456 1.063-.994 2.098-1.842 2.804a.5.5 0 0 1-.64-.768c.652-.544 1.114-1.384 1.564-2.43.14-.328.281-.68.427-1.044.302-.754.624-1.559 1.01-2.308C3.763 3.2 4.528 2.105 5.7 1.299 6.877.49 8.418 0 10.5 0c1.463 0 2.511.4 3.179 1.058.67.66.893 1.518.819 2.302-.074.771-.441 1.516-1.02 1.965a1.878 1.878 0 0 1-1.904.27c-.65.642-.907 1.679-.71 2.614C11.076 9.215 11.784 10 13 10h2.5a.5.5 0 0 1 0 1H13c-1.784 0-2.826-1.215-3.114-2.585-.232-1.1.005-2.373.758-3.284L10.5 5.06l-.777.388a.5.5 0 0 1-.447 0l-1-.5a.5.5 0 0 1 .447-.894l.777.388.776-.388a.5.5 0 0 1 .447 0l1 .5a.493.493 0 0 1 .034.018c.44.264.81.195 1.108-.036.328-.255.586-.729.637-1.27.05-.529-.1-1.076-.525-1.495-.426-.42-1.19-.77-2.477-.77-1.918 0-3.252.448-4.232 1.123C5.283 2.8 4.61 3.738 4.07 4.79c-.365.71-.655 1.433-.945 2.16-.15.376-.301.753-.463 1.13z" />
+                                </svg> Ocean
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Lake" id="lakeCheck"
+                                v-model="naturalFeatures">
+                            <label class="form-check-label" for="lakeCheck">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-water" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.036 3.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 3.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 6.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 9.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65z" />
+                                </svg> Lake
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="River" id="riverCheck"
+                                v-model="naturalFeatures">
+                            <label class="form-check-label" for="riverCheck">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-droplet" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z" />
+                                    <path fill-rule="evenodd"
+                                        d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z" />
+                                </svg> River
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-1 border p-3 bg-white rounded">
+                    <div class="container">
+                        <h5>Race Frequency</h5>
+                        <h6><small class="text-muted">Some default values are already selected.</small></h6>
+                        <table class="table">
+                            <tr v-for="r in raceOptions">
+                                <td>
+                                    <label class="form-label">{{r}}</label>
+                                </td>
+                                <td>
+                                    <select class="custom-select" :id="r.replace(' ','')" v-model="raceFreqSettings[r]"
+                                        :class="frequencyClass[raceFreqSettings[r]]" @change="$forceUpdate()">
+                                        <option value="">None</option>
+                                        <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">{{ o
+                                            }}
+                                        </option>
+                                    </select>
+                                </td>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-9">
@@ -166,10 +204,35 @@
                             </h5>
                             <ol>
                                 <li>Set the city size.</li>
-                                <li>Select the major industry.</li>
+                                <li>(Optional) Set the prosperity.</li>
+                                <li>(Optional) Add natural features.</li>
                                 <li>(Optional) Adjust how often races appear.</li>
                                 <li>Click Generate!</li>
                             </ol>
+                            <p>
+                                <a href="https://paypal.me/praxxian?locale.x=en_US" target="_blank"
+                                    rel="noopener noreferrer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-dice-6" viewBox="0 0 16 16">
+                                        <path
+                                            d="M13 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h10zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z" />
+                                        <path
+                                            d="M5.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm8 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-8 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                    </svg>
+                                    If you're feeling generous, buy me some dice.
+                                </a>
+                            </p>
+                            <p>
+                                <a href="https://github.com/Praxxian/RPG-City-Generator/issues/new" target="_blank"
+                                    rel="noopener noreferrer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                                        <path
+                                            d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z" />
+                                        <path
+                                            d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z" />
+                                    </svg> Report an issue</a>
+                            </p>
                             <hr>
                             <h5>
                                 Description
@@ -366,7 +429,6 @@
             data: {
                 generateDisabled: true,
                 citySizeOptions: CitySize,
-                industryOptions: MajorIndustry,
                 raceOptions: Race,
                 raceFreqOptions: RaceFrequency,
                 defaultRaceSettings: [
@@ -376,7 +438,6 @@
                     { race: Race.ELF, frequency: RaceFrequency.RARE },
                     { race: Race.GNOME, frequency: RaceFrequency.RARE }],
                 citySize: '',
-                industry: '',
                 gen_name_range: 0,
                 city: new City(),
                 citygen: null,
@@ -393,7 +454,9 @@
                 noblePercent: -1,
                 mercantilePercent: -1,
                 tradePercent: -1,
-                peasantPercent: -1
+                peasantPercent: -1,
+                naturalFeatures: [],
+                naturalFeaturesOptions: NaturalFeatures
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
@@ -413,7 +476,7 @@
             },
             methods: {
                 onSelectChanged(event) {
-                    if (this.citySize && this.industry)
+                    if (this.citySize)
                         this.generateDisabled = false;
                 },
                 generate() {
@@ -427,7 +490,7 @@
                         var settings = {
                             CitySize: this.citySize,
                             Races: this.raceFreqSettings,
-                            MajorIndustry: this.industry,
+                            NaturalFeatures: this.naturalFeatures,
                             Prosperity: this.prosperity
                         }
                         this.citygen = new CityGenerator(settings);
@@ -487,7 +550,7 @@
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o.fullName()).join(', '),
+                            Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(o => o.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
                             Description: x.Description ?? '',
                         }));
 
