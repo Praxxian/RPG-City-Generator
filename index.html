@@ -5,10 +5,16 @@
     <meta charset="utf-8">
     <title>Fantasy City Generator</title>
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.21/b-1.6.3/b-html5-1.6.3/datatables.min.css" />
+        href="static/css/site.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.css" />        
 </head>
 
-<body class="bg-light">
+<!-- TODO dark mode for DataTables pagination-->
+
+<body class="bg-dark text-light">
 
     <div class="container-lg px-5" id="citygenapp">
         <p class="display-1 text-center">
@@ -36,21 +42,22 @@
                     </div>
                 </div>
                 <div class="row my-1">
-                    <select class="custom-select" v-model="citySize" @change="onSelectChanged($event)" required>
+                    <select class="form-select bg-dark text-light" v-model="citySize" @change="onSelectChanged($event)"
+                        required>
                         <option value="" selected>City Size</option>
                         <option v-for="o in citySizeOptions" :value="o.name">{{ o.label() }}</option>
                     </select>
                 </div>
                 <div class="row my-1">
-                    <select class="custom-select" v-model="prosperity" required>
+                    <select class="form-select bg-dark text-light" v-model="prosperity" required>
                         <option v-for="o in prosperityOptions" :value="o">{{ o.Label }}</option>
                     </select>
                 </div>
-                <div class="row my-1 border p-3 bg-white rounded" v-if="prosperity.Label == 'Custom'">
+                <div class="row my-1 border p-3 rounded" v-if="prosperity.Label == 'Custom'">
                     <div class="container">
                         <h5>Caste Percentages</h5>
                         <div class="row">
-                            <label class="form-label col-sm-4">Nobility</label>
+                            <label class="form-label text-light col-sm-4">Nobility</label>
                             <div class="col-sm-5">
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="noblePercent" />
@@ -58,7 +65,7 @@
                             <div class="col-sm">{{ noblePercent * 100 }}%</div>
                         </div>
                         <div class="row">
-                            <label class="form-label col-sm-4">Mercantile</label>
+                            <label class="form-label text-light col-sm-4">Mercantile</label>
                             <div class="col-sm-5">
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="mercantilePercent" />
@@ -66,7 +73,7 @@
                             <div class="col-sm">{{ mercantilePercent * 100 }}%</div>
                         </div>
                         <div class="row">
-                            <label class="form-label col-sm-4">Tradesperson</label>
+                            <label class="form-label text-light col-sm-4">Tradesperson</label>
                             <div class="col-sm-5">
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="tradePercent" />
@@ -74,7 +81,7 @@
                             <div class="col-sm">{{ tradePercent * 100 }}%</div>
                         </div>
                         <div class="row">
-                            <label class="form-label col-sm-4">Peasant</label>
+                            <label class="form-label text-light col-sm-4">Peasant</label>
                             <div class="col-sm-5">
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="peasantPercent" />
@@ -83,7 +90,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-1 border p-3 bg-white rounded">
+                <div class="row my-1 border p-3 rounded">
                     <h5>Natural Features</h5>
                     <div class="container">
                         <div class="form-check">
@@ -145,18 +152,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-1 border p-3 bg-white rounded">
+                <div class="row my-1 border p-3 rounded">
                     <div class="container">
                         <h5>Race Frequency</h5>
                         <h6><small class="text-muted">Some default values are already selected.</small></h6>
                         <table class="table">
                             <tr v-for="r in raceOptions">
                                 <td>
-                                    <label class="form-label">{{r}}</label>
+                                    <label class="form-label text-light">{{r}}</label>
                                 </td>
                                 <td>
-                                    <select class="custom-select" :id="r.replace(' ','')" v-model="raceFreqSettings[r]"
-                                        :class="frequencyClass[raceFreqSettings[r]]" @change="$forceUpdate()">
+                                    <select class="form-select bg-dark text-light" :id="r.replace(' ','')"
+                                        v-model="raceFreqSettings[r]" :class="frequencyClass[raceFreqSettings[r]]"
+                                        @change="$forceUpdate()">
                                         <option value="">None</option>
                                         <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">{{ o
                                             }}
@@ -176,28 +184,31 @@
                 <div :style="isLoading ? 'display:none' : ''">
                     <ul class="nav nav-tabs" id="resultTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about"
-                                role="tab">About</a>
+                            <button class="nav-link active" id="about-tab" data-bs-toggle="tab"
+                                data-bs-target="#about" type="button" role="tab">About</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="detail-tab" data-toggle="tab" href="#detail" role="tab">Details</a>
+                            <button class="nav-link" id="detail-tab" data-bs-toggle="tab"
+                                data-bs-target="#detail" type="button" role="tab">Details</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="people-tab" data-toggle="tab" href="#people" role="tab">People</a>
+                            <button class="nav-link" id="people-tab" data-bs-toggle="tab"
+                                data-bs-target="#people" type="button" role="tab">People</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="business-tab" data-toggle="tab" href="#business"
-                                role="tab">Businesses</a>
+                            <button class="nav-link" id="business-tab" data-bs-toggle="tab"
+                                data-bs-target="#business" type="button" role="tab">Businesses</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="inventory-tab" data-toggle="tab" href="#inventory"
-                                role="tab">Inventories</a>
+                            <button class="nav-link" id="inventory-tab" data-bs-toggle="tab"
+                                data-bs-target="#inventory" type="button" role="tab">Inventories</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab">Stats</a>
+                            <button class="nav-link" id="stats-tab" data-bs-toggle="tab"
+                                data-bs-target="#stats" type="button" role="tab">Stats</button>
                         </li>
                     </ul>
-                    <div class="tab-content p-3 bg-white border-left border-right border-bottom" id="resultTabContent">
+                    <div class="tab-content p-3 border-start border-end border-bottom" id="resultTabContent">
                         <div class="tab-pane fade show active" id="about" role="tabpanel">
                             <h5>
                                 Instructions
@@ -301,7 +312,9 @@
                             </p>
                         </div>
                         <div class="tab-pane fade" id="people" role="tabpanel">
-                            <table class="table table-dark result-table" id="people_table" style="width: 100%;">
+                            <table
+                                class="table result-table table-striped table-hover table-bordered table-sm table-dark nowrap"
+                                id="people_table" style="width: 100%;">
                                 <thead>
                                     <th>ID</th>
                                     <th>Name</th>
@@ -324,7 +337,9 @@
                         </div>
                         <div class="tab-pane fade" id="business" role="tabpanel">
                             <h3>Shops</h3>
-                            <table class="table table-dark result-table" id="business_table" style="width: 100%;">
+                            <table
+                                class="table result-table table-striped table-hover table-bordered table-sm table-dark"
+                                id="business_table" style="width: 100%;">
                                 <thead>
                                     <th>Name</th>
                                     <th>Type</th>
@@ -333,8 +348,11 @@
                                     <th>Description</th>
                                 </thead>
                             </table>
+                            <hr>
                             <h3>Estates</h3>
-                            <table class="table table-dark result-table" id="estate_table" style="width: 100%;">
+                            <table
+                                class="table result-table table-striped table-hover table-bordered table-sm table-dark"
+                                id="estate_table" style="width: 100%;">
                                 <thead>
                                     <th>Name</th>
                                     <th>Type</th>
@@ -342,8 +360,11 @@
                                     <th>Employees</th>
                                 </thead>
                             </table>
+                            <hr>
                             <h3>Farms</h3>
-                            <table class="table table-dark result-table" id="farm_table" style="width: 100%;">
+                            <table
+                                class="table result-table table-striped table-hover table-bordered table-sm table-dark"
+                                id="farm_table" style="width: 100%;">
                                 <thead>
                                     <th>Name</th>
                                     <th>Type</th>
@@ -353,7 +374,9 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="inventory" role="tabpanel">
-                            <table class="table table-dark result-table" id="inventory_table" style="width: 100%;">
+                            <table
+                                class="table result-table table-striped table-hover table-bordered table-sm table-dark nowrap"
+                                id="inventory_table" style="width: 100%;">
                                 <thead>
                                     <th>Business</th>
                                     <th>Item</th>
@@ -376,7 +399,11 @@
     </div>
 
     <script type="text/javascript"
-        src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.21/b-1.6.3/b-html5-1.6.3/datatables.min.js"></script>
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.js"></script>
     <!-- TODO swap for prod version -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
@@ -570,6 +597,8 @@
 
                         for (var i = 0; i < this.city.Businesses.length; i++) {
                             var biz = this.city.Businesses[i];
+                            if (biz.BusinessType == BusinessType.FARM)
+                                continue;
                             for (var j = 0; j < biz.Inventory.length; j++) {
                                 var item = biz.Inventory[j];
                                 inventoryArray.push([
@@ -583,6 +612,10 @@
                         console.log('Setting table data complete.');
                     }
 
+                    var dtDOM = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>';
+                    var dtDOMSmall = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>';
+                    var dtButtons = ['copy','excel','csv'];
+
                     var peopleTable = $('#people_table').DataTable({
                         "pageLength": 100,
                         'processing': true,
@@ -594,12 +627,16 @@
                         "fnDrawCallback": function (oSettings) {
                             $(window).trigger('resize');
                         },
-                        data: peopleArr
+                        data: peopleArr,
+                        dom: dtDOM,
+                        buttons: dtButtons,
+                        colReorder: true
                     });
 
                     var bizTable = $('#business_table').DataTable({
                         "pageLength": 10,
                         'processing': true,
+                        "scrollX": true,
                         data: bizArray,
                         columns: [
                             { data: 'Name' },
@@ -608,11 +645,15 @@
                             { data: 'Employees' },
                             { data: 'Description' },
                         ],
+                        dom: dtDOMSmall,
+                        buttons: dtButtons,
+                        colReorder: true
                     });
 
                     var farmTable = $('#farm_table').DataTable({
-                        "pageLength": 100,
+                        "pageLength": 10,
                         'processing': true,
+                        "scrollX": true,
                         data: farmArray,
                         columns: [
                             { data: 'Name' },
@@ -620,11 +661,15 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
+                        dom: dtDOMSmall,
+                        buttons: dtButtons,
+                        colReorder: true
                     });
 
                     var estateTable = $('#estate_table').DataTable({
                         "pageLength": 10,
                         'processing': true,
+                        "scrollX": true,
                         data: estateArray,
                         columns: [
                             { data: 'Name' },
@@ -632,12 +677,19 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
+                        dom: dtDOMSmall,
+                        buttons: dtButtons,
+                        colReorder: true
                     });
 
                     var inventoryTable = $('#inventory_table').DataTable({
                         "pageLength": 100,
                         'processing': true,
-                        data: inventoryArray
+                        "scrollX": true,
+                        data: inventoryArray,
+                        dom: dtDOM,
+                        buttons: dtButtons,
+                        colReorder: true
                     });
                     this.$forceUpdate();
                     console.log('Initiating DataTables complete.');
@@ -794,7 +846,7 @@
             }
         });
 
-        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+        $(document).on('shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
             $('.result-table').DataTable().columns.adjust();
         })
     </script>
