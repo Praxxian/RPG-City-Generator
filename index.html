@@ -4,12 +4,11 @@
 <head>
     <meta charset="utf-8">
     <title>Fantasy City Generator</title>
-    <link rel="stylesheet" type="text/css"
-        href="static/css/site.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/site.css" />
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.css" />        
+        href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.css" />
 </head>
 
 <!-- TODO dark mode for DataTables pagination-->
@@ -156,6 +155,7 @@
                     <div class="container">
                         <h5>Race Frequency</h5>
                         <h6><small class="text-muted">Some default values are already selected.</small></h6>
+                        <h6 class="text-danger" v-if="raceError">{{raceError}}</h6>
                         <table class="table">
                             <tr v-for="r in raceOptions">
                                 <td>
@@ -184,28 +184,28 @@
                 <div :style="isLoading ? 'display:none' : ''">
                     <ul class="nav nav-tabs" id="resultTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="about-tab" data-bs-toggle="tab"
-                                data-bs-target="#about" type="button" role="tab">About</button>
+                            <button class="nav-link active" id="about-tab" data-bs-toggle="tab" data-bs-target="#about"
+                                type="button" role="tab">About</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <button class="nav-link" id="detail-tab" data-bs-toggle="tab"
-                                data-bs-target="#detail" type="button" role="tab">Details</button>
+                            <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail"
+                                type="button" role="tab">Details</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <button class="nav-link" id="people-tab" data-bs-toggle="tab"
-                                data-bs-target="#people" type="button" role="tab">People</button>
+                            <button class="nav-link" id="people-tab" data-bs-toggle="tab" data-bs-target="#people"
+                                type="button" role="tab">People</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <button class="nav-link" id="business-tab" data-bs-toggle="tab"
-                                data-bs-target="#business" type="button" role="tab">Businesses</button>
+                            <button class="nav-link" id="business-tab" data-bs-toggle="tab" data-bs-target="#business"
+                                type="button" role="tab">Businesses</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <button class="nav-link" id="inventory-tab" data-bs-toggle="tab"
-                                data-bs-target="#inventory" type="button" role="tab">Inventories</button>
+                            <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory"
+                                type="button" role="tab">Inventories</button>
                         </li>
                         <li v-if="city.Complete" class="nav-item" role="presentation">
-                            <button class="nav-link" id="stats-tab" data-bs-toggle="tab"
-                                data-bs-target="#stats" type="button" role="tab">Stats</button>
+                            <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats"
+                                type="button" role="tab">Stats</button>
                         </li>
                     </ul>
                     <div class="tab-content p-3 border-start border-end border-bottom" id="resultTabContent">
@@ -483,7 +483,8 @@
                 tradePercent: -1,
                 peasantPercent: -1,
                 naturalFeatures: [],
-                naturalFeaturesOptions: NaturalFeatures
+                naturalFeaturesOptions: NaturalFeatures,
+                raceError: null
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
@@ -512,6 +513,8 @@
                 },
                 async generateAsync() {
                     try {
+                        if (!this.validateSettings())
+                            return;
                         console.log('Generating City...');
                         $('.result-table').DataTable().destroy();
                         var settings = {
@@ -532,6 +535,16 @@
                     finally {
                         this.isLoading = false;
                     }
+                },
+                validateSettings() {
+                    this.raceError = "You must select at least one common race.";
+                    for (key in this.raceFreqSettings) {
+                        if (this.raceFreqSettings[key] == RaceFrequency.COMMON) {
+                            this.raceError = null;
+                            break;
+                        }
+                    }
+                    return this.raceError == null;
                 },
                 toggleSettings(event) {
                     $('#settings_col').collapse('toggle');
@@ -614,7 +627,7 @@
 
                     var dtDOM = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>';
                     var dtDOMSmall = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>';
-                    var dtButtons = ['copy','excel','csv'];
+                    var dtButtons = ['copy', 'excel', 'csv'];
 
                     var peopleTable = $('#people_table').DataTable({
                         "pageLength": 100,
