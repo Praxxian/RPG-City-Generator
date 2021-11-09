@@ -17,16 +17,51 @@ class NameGenerator {
     }
 
     getFirst(gender) {
-        switch (gender) {
-            case Gender.FEMALE:
-                return getRandom(FirstNamesFemale);
-            default:
-                return getRandom(FirstNamesMale);
-        }
+        var nameList = FirstNamesFemale;
+        if(gender == Gender.MALE)
+            nameList = FirstNamesMale;
+        return CryptoRandom.random() > 0.5 ? getRandom(nameList) : this.createName(nameList);
     }
 
     getLast() {
-        return getRandom(LastNames);
+        return CryptoRandom.random() > 0.5 ? getRandom(LastNames) : this.createName(LastNames);
+    }
+
+    createName(names) {
+        var markovChain = this.createMarkovChain(names);
+        var starts = names.map(n => n.substr(0, 2));
+        var name = getRandom(starts);
+        for (var i = 0; i < 5; i++) {
+            var couplet = name.substr(i, 2);
+            if (couplet == '' && name.length < 4)
+                couplet = name.substr(name.length - 2, 2);
+            var next = this.getNextInChain(markovChain, couplet) ?? '';
+            name += next;
+            name = name.trim();
+        }
+        return name.trim();
+    }
+
+    createMarkovChain(names) {
+        var markovChain = {};
+        for (var i = 0; i < names.length; i++) {
+            var n = names[i] + ' ';
+            for (var j = 0; j < n.length - 1; j++) {
+                var couplet = n.substr(j, 2).toUpperCase();
+                if (!markovChain[couplet])
+                    markovChain[couplet] = [];
+                if (j > n.length - 2)
+                    markovChain[couplet].push('');
+                else
+                    markovChain[couplet].push(n.substr(j + 2, 1));
+            }
+        }
+        return markovChain;
+    }
+
+    getNextInChain(markovChain, value) {
+        var nextValues = markovChain[value] ?? [];
+        return getRandom(nextValues);
     }
 }
 
