@@ -207,6 +207,10 @@
                             <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats"
                                 type="button" role="tab">Stats</button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="changes-tab" data-bs-toggle="tab" data-bs-target="#changes"
+                                type="button" role="tab">Change Log</button>
+                        </li>
                     </ul>
                     <div class="tab-content p-3 border-start border-end border-bottom" id="resultTabContent">
                         <div class="tab-pane fade show active" id="about" role="tabpanel">
@@ -389,7 +393,14 @@
                             <canvas id="race_graph" width="400" height="100"></canvas>
                             <h5>Age Distributions</h5>
                             <canvas id="age_graph" width="400" height="100"></canvas>
-
+                        </div>
+                        <div class="tab-pane fade" id="changes" role="tabpanel">
+                            <div v-for="change in changes">
+                                <h5>{{change.Date}}</h5>
+                                <ul class="ml-3">
+                                    <li v-for="c in change.Changes">{{ c }}</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -408,6 +419,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="static/js/changelog.js"></script>
     <script src="static/js/stats.js"></script>
     <script src="static/js/enums.js"></script>
     <script src="static/js/names.js"></script>
@@ -484,7 +496,8 @@
                 peasantPercent: -1,
                 naturalFeatures: [],
                 naturalFeaturesOptions: NaturalFeatures,
-                raceError: null
+                raceError: null,
+                changes: CHANGES
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
