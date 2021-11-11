@@ -13,7 +13,7 @@ class Person {
     Strength
     Weakness
     Talent
-    Manuerism
+    Mannerism
     Interaction
     GoodOrEvilIdeal
     LawfulOrChaoticIdeal

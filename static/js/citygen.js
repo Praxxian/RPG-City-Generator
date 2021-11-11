@@ -112,7 +112,7 @@ class CityGenerator {
             while (person.Strength && person.Strength.split('-')[0] == person.Weakness.split('-')[0])
                 person.Weakness = getRandom(Weaknesses);
             person.Talent = person.Age >= WorkingHumanAge ? getRandom(Talents) : null;
-            person.Manuerism = person.Age >= WorkingHumanAge ? getRandom(Manuerisms) : null;
+            person.Mannerism = person.Age >= WorkingHumanAge ? getRandom(Mannerisms) : null;
             person.Interaction = person.Age >= WorkingHumanAge ? getRandom(Interactions) : null;
             person.GoodOrEvilIdeal = person.Age >= WorkingHumanAge ? getRandom(GoodOrEvilIdeals) : null;
             person.LawfulOrChaoticIdeal = person.Age >= WorkingHumanAge ? getRandom(LawfulOrChaoticIdeals) : null;
