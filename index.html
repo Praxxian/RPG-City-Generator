@@ -15,13 +15,13 @@
 
 <body class="bg-dark text-light">
 
-    <div class="container-lg px-5" id="citygenapp">
+    <div class="container-fluid px-5" id="citygenapp">
         <p class="display-1 text-center">
             Fantasy City Generator
         </p>
 
         <div class="row">
-            <div class="col-3" id="settings_col">
+            <div class="col-2" id="settings_col">
                 <div class="row my-1">
                     <div class="col text-center">
                         <button class="btn btn-success btn-lg" @click="generate()"
@@ -175,7 +175,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-10">
                 <div v-if="isLoading">
                     <div class="progress-bar" role="progressbar"
                         :style="`width: ${ !citygen ? 1 : Math.floor(100 * city.People.length/citygen.TotalPopSize)}%`">
