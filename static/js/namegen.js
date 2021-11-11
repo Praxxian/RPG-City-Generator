@@ -18,8 +18,10 @@ class NameGenerator {
 
     getFirst(gender) {
         var nameList = FirstNamesFemale;
-        if(gender == Gender.MALE)
+        if (gender == Gender.MALE)
             nameList = FirstNamesMale;
+        else if (gender == Gender.NONBINARY || gender == Gender.GENDERFLUID)
+            nameList = nameList.concat(FirstNamesMale);
         return CryptoRandom.random() > 0.5 ? getRandom(nameList) : this.createName(nameList);
     }
 

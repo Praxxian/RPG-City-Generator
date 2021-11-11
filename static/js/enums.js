@@ -54,7 +54,9 @@ const MajorIndustry = {
 
 const Gender = {
     FEMALE: 'Female',
-    MALE: 'Male'
+    MALE: 'Male',
+    NONBINARY: 'Non-Binary',
+    GENDERFLUID: 'Gender-Fluid'
 };
 
 const Race = {

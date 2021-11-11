@@ -11,20 +11,7 @@ class CityGenerator {
 
     constructor(settings) {
         this.Settings = settings;
-        this.populateNameGenerators();
         this.groupRaceFrequencies();
-    }
-
-    populateNameGenerators() {
-        // this.NameGens = {}
-        // this.Settings.Races.forEach(r => {
-        //     var race = r.race;
-        //     Object.keys(Gender).forEach(k => {
-        //         var g = Gender[k];
-        //         var key = new NameGenKey(race, g);
-        //         this.NameGens[key] = new NameGenerator(key);
-        //     })
-        // });
     }
 
     groupRaceFrequencies() {
@@ -94,7 +81,15 @@ class CityGenerator {
             person.Id = this.City.People.length + 1;
             person.Caste = caste.name;
             person.Age = Math.abs(ageRandom.next());
-            person.Gender = CryptoRandom.random() > 0.5 ? Gender.FEMALE : Gender.MALE;
+            var genderRoll = CryptoRandom.random();
+            if (genderRoll <= 0.05)
+                person.Gender = Gender.GENDERFLUID;
+            else if (genderRoll <= 0.1)
+                person.Gender = Gender.NONBINARY;
+            else if (genderRoll <= .55)
+                person.Gender = Gender.MALE;
+            else
+                person.Gender = Gender.FEMALE;
             person.FirstName = nameGen.getFirst(person.Gender);
             person.LastName = nameGen.getLast();
             var raceRoll = CryptoRandom.random();
@@ -150,9 +145,21 @@ class CityGenerator {
             family.Id = ++this.FamilyCount;
 
             // Spouse 2
-            var spouse2Gender = spouse1.Gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
-            if (CryptoRandom.random() <= 0.05)
-                spouse2Gender = spouse1.Gender;
+            var spouse2GenderRoll = CryptoRandom.random();
+            var spouse2Gender = spouse1.Gender;
+            if (spouse1.Gender == Gender.FEMALE && spouse2GenderRoll > 0.1)
+                spouse2Gender = Gender.MALE;
+            else if (spouse1.Gender == Gender.FEMALE)
+                spouse2Gender = getRandom([Gender.FEMALE, Gender.GENDERFLUID, Gender.NONBINARY]);
+            else if (spouse1.Gender == Gender.MALE && spouse2GenderRoll > 0.1)
+                spouse2Gender = Gender.FEMALE;
+            else if (spouse1.Gender == Gender.MALE)
+                spouse2Gender = getRandom([Gender.MALE, Gender.GENDERFLUID, Gender.NONBINARY]);
+            else if ((spouse1.Gender == Gender.GENDERFLUID || spouse1.Gender == Gender.NONBINARY) && spouse2GenderRoll > 0.1)
+                spouse2Gender = getRandom([Gender.GENDERFLUID, Gender.NONBINARY]);
+            else
+                spouse2Gender = Gender[getRandom(Object.keys(Gender))];
+
             var spouse2 = null;
             for (var j = i + 1; j < this.City.People.length; j++) {
                 spouse2 = this.City.People[j];
@@ -164,7 +171,6 @@ class CityGenerator {
                     || spouse2.Caste != spouse1.Caste
                     || (spouse2.Race != spouse1.Race && !outgoing))
                     continue;
-                // TODO personality difference?
                 family.add(spouse2);
                 spouse2.Spouse = spouse1.fullName();
                 spouse1.Spouse = spouse2.fullName();
@@ -227,12 +233,6 @@ class CityGenerator {
             var spouse = this.findSpouse(headOfFamily);
             if (spouse)
                 spouse.setBusiness(business);
-            // if (this.shouldCreateSpecialBusiness(headOfFamily, this.Mine, "Mountain/Hills")) {
-            //     this.Mine = this.createNewBusiness(BusinessType.MINE, headOfFamily);
-            // }
-            // else if (this.shouldCreateSpecialBusiness(headOfFamily, this.LumberCamp, "Forest")) {
-            //     this.LumberCamp = this.createNewBusiness(BusinessType.LUMBER_CAMP, headOfFamily);
-            // }
         }
     }
 
@@ -244,10 +244,6 @@ class CityGenerator {
         this.City.Businesses.push(business);
         return business;
     }
-
-    // shouldCreateSpecialBusiness(owner, business, naturalFeature) {
-    //     return owner.Age >= AdultHumanAge && business == null && this.Settings.NaturalFeatures != null && this.Settings.NaturalFeatures.indexOf(naturalFeature) >= 0;
-    // }
 
     findSpouse(person) {
         var family = this.City.People.filter(p => p.Family == person.Family);
