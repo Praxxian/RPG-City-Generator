@@ -161,25 +161,28 @@
                             <option v-for="r in raceOptions" :value="r">{{ r }} Only</option>
                         </select>
 
-                        <h5>Race Frequency</h5>
-                        <h6><small class="text-muted">Some default values are already selected.</small></h6>
-                        <h6 class="text-danger" v-if="raceError">{{raceError}}</h6>
+                        <div v-if="raceMode == 'Various'">
+                            <h5>Race Frequency</h5>
+                            <h6><small class="text-muted">Some default values are already selected.</small></h6>
+                            <h6 class="text-danger" v-if="raceError">{{raceError}}</h6>
 
-                        <table class="table">
-                            <tr v-for="r in raceOptions">
-                                <td>
-                                    <label class="form-label text-light">{{r}}</label>
-                                </td>
-                                <td>
-                                    <select class="form-select bg-dark text-light" :id="r.replace(' ','')"
-                                        v-model="raceFreqSettings[r]" :class="frequencyClass[raceFreqSettings[r]]"
-                                        @change="$forceUpdate()">
-                                        <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">{{ o
-                                            }}
-                                        </option>
-                                    </select>
-                                </td>
-                        </table>
+                            <table class="table">
+                                <tr v-for="r in raceOptions">
+                                    <td>
+                                        <label class="form-label text-light">{{r}}</label>
+                                    </td>
+                                    <td>
+                                        <select class="form-select bg-dark text-light" :id="r.replace(' ','')"
+                                            v-model="raceFreqSettings[r]" :class="frequencyClass[raceFreqSettings[r]]"
+                                            @change="$forceUpdate()">
+                                            <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">
+                                                {{ o
+                                                }}
+                                            </option>
+                                        </select>
+                                    </td>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
