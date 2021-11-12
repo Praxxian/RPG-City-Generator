@@ -21,7 +21,7 @@
         </p>
 
         <div class="row">
-            <div class="col-2" id="settings_col">
+            <div class="col-3" id="settings_col">
                 <div class="row my-1">
                     <div class="col text-center">
                         <button class="btn btn-success btn-lg" @click="generate()"
@@ -153,9 +153,18 @@
                 </div>
                 <div class="row my-1 border p-3 rounded">
                     <div class="container">
+
+                        <h5>Race Variety</h5>
+                        <select v-model="raceMode" class="form-select bg-dark text-light mb-3"
+                            @change="makeRaceSettingsConsistent()">
+                            <option value="Various" selected>Various</option>
+                            <option v-for="r in raceOptions" :value="r">{{ r }} Only</option>
+                        </select>
+
                         <h5>Race Frequency</h5>
                         <h6><small class="text-muted">Some default values are already selected.</small></h6>
                         <h6 class="text-danger" v-if="raceError">{{raceError}}</h6>
+
                         <table class="table">
                             <tr v-for="r in raceOptions">
                                 <td>
@@ -165,7 +174,6 @@
                                     <select class="form-select bg-dark text-light" :id="r.replace(' ','')"
                                         v-model="raceFreqSettings[r]" :class="frequencyClass[raceFreqSettings[r]]"
                                         @change="$forceUpdate()">
-                                        <option value="">None</option>
                                         <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">{{ o
                                             }}
                                         </option>
@@ -175,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-10">
+            <div class="col-9">
                 <div v-if="isLoading">
                     <div class="progress-bar" role="progressbar"
                         :style="`width: ${ !citygen ? 1 : Math.floor(100 * city.People.length/citygen.TotalPopSize)}%`">
@@ -497,20 +505,19 @@
                 naturalFeatures: [],
                 naturalFeaturesOptions: NaturalFeatures,
                 raceError: null,
-                changes: CHANGES
+                changes: CHANGES,
+                raceMode: "Various"
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
                     var race = this.raceOptions[i];
                     var defaultSetting = this.defaultRaceSettings.filter(y => y.race == race)[0];
-                    var freq = defaultSetting ? defaultSetting.frequency : '';
+                    var freq = defaultSetting ? defaultSetting.frequency : RaceFrequency.NONE;
                     this.raceFreqSettings[race] = freq;
                 }
                 this.$forceUpdate();
             },
             updated: function () {
-                // TODO handle invalid race settings and missing race settings
-
                 this.updateProsperity();
             },
             computed: {
@@ -867,6 +874,16 @@
                         this.mercantilePercent = this.prosperity.mercantilePercent;
                         this.tradePercent = this.prosperity.tradePercent;
                         this.peasantPercent = this.prosperity.peasantPercent;
+                    }
+                },
+                makeRaceSettingsConsistent() {
+                    if (this.raceMode != "Various") {
+                        for (var key in this.raceFreqSettings) {
+                            if (key == this.raceMode)
+                                this.raceFreqSettings[key] = RaceFrequency.COMMON;
+                            else
+                                this.raceFreqSettings[key] = RaceFrequency.NONE;
+                        }
                     }
                 }
             }

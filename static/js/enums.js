@@ -101,7 +101,8 @@ const Race = {
 const RaceFrequency = {
     COMMON: 'Common',
     UNCOMMON: 'Uncommon',
-    RARE: 'Rare'
+    RARE: 'Rare',
+    NONE: 'None'
 };
 
 const Caste = {

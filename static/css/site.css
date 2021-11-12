@@ -4,6 +4,7 @@
 
 .paginate_button.active > a{
     background-color: #0d6efd!important;
+    border-color: white!important;
 }
 
 .nav-link.active {
