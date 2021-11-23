@@ -11,8 +11,6 @@
         href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.css" />
 </head>
 
-<!-- TODO dark mode for DataTables pagination-->
-
 <body class="bg-dark text-light">
 
     <div class="container-fluid px-5" id="citygenapp">
@@ -158,30 +156,92 @@
                         <select v-model="raceMode" class="form-select bg-dark text-light mb-3"
                             @change="makeRaceSettingsConsistent()">
                             <option value="Various" selected>Various</option>
-                            <option v-for="r in raceOptions" :value="r">{{ r }} Only</option>
+                            <option v-for="r in raceOptions" :value="r.name">{{ r.name }} Only</option>
                         </select>
-
+                        <button v-if="raceMode != 'Various'" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                            :data-bs-target="'#' + raceMode.replace(' ','') + 'Modal'">Names <svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg></button>
                         <div v-if="raceMode == 'Various'">
                             <h5>Race Frequency</h5>
                             <h6><small class="text-muted">Some default values are already selected.</small></h6>
                             <h6 class="text-danger" v-if="raceError">{{raceError}}</h6>
 
                             <table class="table">
-                                <tr v-for="r in raceOptions">
+                                <tr v-for="r in raceOptions" class="align-middle">
                                     <td>
-                                        <label class="form-label text-light">{{r}}</label>
+                                        <label class="form-label text-light">{{r.name}}</label>
                                     </td>
                                     <td>
-                                        <select class="form-select bg-dark text-light" :id="r.replace(' ','')"
-                                            v-model="raceFreqSettings[r]" :class="frequencyClass[raceFreqSettings[r]]"
-                                            @change="$forceUpdate()">
+                                        <select class="form-select bg-dark text-light" :id="r.name.replace(' ','')"
+                                            v-model="raceFreqSettings[r.name]"
+                                            :class="frequencyClass[raceFreqSettings[r.name]]" @change="$forceUpdate()">
                                             <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">
                                                 {{ o
                                                 }}
                                             </option>
                                         </select>
                                     </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                            :data-bs-target="'#' + r.name.replace(' ','') + 'Modal'">Names <svg
+                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                            </svg></button>
+
+                                    </td>
+                                </tr>
                             </table>
+                        </div>
+                        <div v-for="r in raceOptions" class="modal fade" :id="r.name.replace(' ','') + 'Modal'"
+                            data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content bg-dark">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{r.name}} Names</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6><small class="text-muted">Enter new names on separate
+                                                lines.</small></h6>
+                                        <div class="row">
+                                            <div class="col">
+                                                <h6>Male Names</h6>
+                                                <textarea class="form-control" rows="10"
+                                                    v-model="maleNames[r.name]"></textarea>
+                                            </div>
+                                            <div class="col">
+                                                <h6>Female Names</h6>
+                                                <textarea class="form-control"
+                                                    rows="10">{{r.firstNameFemaleList.join('\r\n')}}</textarea>
+                                            </div>
+                                            <div class="col">
+                                                <h6>Last Names</h6>
+                                                <textarea class="form-control"
+                                                    rows="10">{{r.lastNameList.join('\r\n')}}</textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                            @click="saveNames(r.name)">Save</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -432,8 +492,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="static/js/changelog.js"></script>
     <script src="static/js/stats.js"></script>
-    <script src="static/js/enums.js"></script>
     <script src="static/js/names.js"></script>
+    <script src="static/js/enums.js"></script>
     <script src="static/js/models.js"></script>
     <script src="static/js/namegen.js"></script>
     <script src="static/js/citygen.js"></script>
@@ -509,14 +569,20 @@
                 naturalFeaturesOptions: NaturalFeatures,
                 raceError: null,
                 changes: CHANGES,
-                raceMode: "Various"
+                raceMode: "Various",
+                maleNames: {},
+                femaleNames: {},
+                lastNames: {}
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
                     var race = this.raceOptions[i];
                     var defaultSetting = this.defaultRaceSettings.filter(y => y.race == race)[0];
                     var freq = defaultSetting ? defaultSetting.frequency : RaceFrequency.NONE;
-                    this.raceFreqSettings[race] = freq;
+                    this.raceFreqSettings[race.name] = freq;
+                    this.maleNames[race.name] = race.firstNameMaleList.join('\n');
+                    this.femaleNames[race.name] = race.firstNameFemaleList.join('\n');
+                    this.lastNames[race.name] = race.lastNameList.join('\n');
                 }
                 this.$forceUpdate();
             },
@@ -888,6 +954,12 @@
                                 this.raceFreqSettings[key] = RaceFrequency.NONE;
                         }
                     }
+                },
+                saveNames(raceName) {
+                    var key = Object.keys(Race).filter(k => Race[k].name == raceName);
+                    Race[key].firstNameMaleList = this.maleNames[raceName].split('\n');
+                    Race[key].firstNameFemaleList = this.femaleNames[raceName].split('\n');
+                    Race[key].lastNameList = this.lastNames[raceName].split('\n');
                 }
             }
         });

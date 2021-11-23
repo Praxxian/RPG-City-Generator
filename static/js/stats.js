@@ -50,3 +50,18 @@ function createUUID() {
         return v.toString(16);
     });
 }
+
+function randomSample(collection, count) {
+    return collection?.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+function countCharacters(s) {
+    var charCount = {};
+    for (var i = 0; i < s.length; i++) {
+        if (!charCount[s[i]])
+            charCount[s[i]] = 0;
+        charCount[s[i]]++;
+    }
+
+    return charCount;
+}

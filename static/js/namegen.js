@@ -1,37 +1,68 @@
-class NameGenKey {
-    Race
-    Gender
-
-    constructor(race, gender) {
-        this.Race = race;
-        this.Gender = gender;
-    }
-}
+const Vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
 
 class NameGenerator {
     Key
-    // TODO
+    FirstNameList
+    FirstNameMarkovChain
+    FirstNameSimpleMarkovChain
+    FirstNameStarts
+
+    LastNameList
+    LastNameMarkovChain
+    LastNameSimpleMarkovChain
+    LastNameStarts
 
     constructor(key) {
         this.Key = key;
+
+        this.FirstNameList = this.Key.Race.firstNameFemaleList;
+        if (this.Key.Gender == Gender.MALE)
+            this.FirstNameList = this.Key.Race.firstNameMaleList;
+        else if (this.Key.Gender == Gender.NONBINARY || this.Key.Gender == Gender.GENDERFLUID)
+            this.FirstNameList = this.FirstNameList.concat(this.Key.Race.firstNameMaleList);
+
+        this.LastNameList = this.Key.Race.lastNameList;
+
+        this.FirstNameMarkovChain = this.createMarkovChain(this.FirstNameList);
+        this.FirstNameSimpleMarkovChain = this.createSimpleMarkovChain(this.FirstNameList);
+        this.FirstNameStarts = this.FirstNameList.map(n => n.substr(0, 2).toUpperCase());
+
+        this.LastNameMarkovChain = this.createMarkovChain(this.LastNameList);
+        this.LastNameSimpleMarkovChain = this.createSimpleMarkovChain(this.LastNameList);
+        this.LastNameStarts = this.LastNameList.map(n => n.substr(0, 2).toUpperCase());
     }
 
-    getFirst(gender) {
-        var nameList = FirstNamesFemale;
-        if (gender == Gender.MALE)
-            nameList = FirstNamesMale;
-        else if (gender == Gender.NONBINARY || gender == Gender.GENDERFLUID)
-            nameList = nameList.concat(FirstNamesMale);
-        return CryptoRandom.random() > 0.5 ? getRandom(nameList) : this.createName(nameList);
+    getFirst() {
+        var selectRandom = CryptoRandom.random() > this.createNameThreshold(this.FirstNameList, 500.0) || this.Key.Race == Race.KENKU;
+        var name = selectRandom ? getRandom(this.FirstNameList).toUpperCase() : this.createName(this.FirstNameList, this.FirstNameMarkovChain, this.FirstNameSimpleMarkovChain, this.FirstNameStarts).toUpperCase();
+        if (this.Key.Race == Race.GOLIATH)
+            name += ` ${getRandom(Race.GOLIATH.nicknamePrefix).toUpperCase()}${getRandom(Race.GOLIATH.nicknameSuffix).toUpperCase()}`;
+        if (this.Key.Race == Race.TRITON) {
+            if (this.Key.Gender == Gender.MALE && !name.match(/[AEIOUY]S$/g))
+                name += getRandom(Vowels) + 'S';
+            else if (this.Key.Gender == Gender.FEMALE && name.substr(name.length - 1, 1) != 'N') {
+                if (Vowels.indexOf(name[name.length - 1]) > -1)
+                    name += 'N';
+                else
+                    name = name.substr(0, name.length - 1) + 'N';
+            }
+        }
+        return name;
     }
 
     getLast() {
-        return CryptoRandom.random() > 0.5 ? getRandom(LastNames) : this.createName(LastNames);
+        var selectRandom = (CryptoRandom.random() > this.createNameThreshold(this.LastNameList, 100.0) && this.Key.Race != Race.KOBOLD) || this.Key.Race == Race.KENKU;
+        return selectRandom ? getRandom(this.LastNameList).toUpperCase() : this.createName(this.LastNameList, this.LastNameMarkovChain, this.LastNameSimpleMarkovChain, this.LastNameStarts).toUpperCase();
     }
 
-    createName(names) {
-        var markovChain = this.createMarkovChain(names);
-        var starts = names.map(n => n.substr(0, 2));
+    createNameThreshold(nameList, minLength) {
+        if (nameList.length >= minLength)
+            return 0.5;
+        var lowVarietyFactor = (minLength - nameList.length) / minLength;
+        return lowVarietyFactor;
+    }
+
+    createName(names, markovChain, simpleChain, starts) {
         var name = getRandom(starts);
         for (var i = 0; i < 5; i++) {
             var couplet = name.substr(i, 2);
@@ -40,22 +71,42 @@ class NameGenerator {
             var next = this.getNextInChain(markovChain, couplet) ?? '';
             name += next;
             name = name.trim();
+            if (i > 1 && name.length < 3)
+                name += this.getNextInChain(simpleChain, name[name.length - 1]) ?? '';
         }
-        return name.trim();
+        name = name.replaceAll(/[^A-Z]$/g, ''); // trim and remove dangling nonalphas        
+        return name.length > 2 ? name : getRandom(names);
     }
 
     createMarkovChain(names) {
         var markovChain = {};
         for (var i = 0; i < names.length; i++) {
-            var n = names[i] + ' ';
+            var n = names[i].toUpperCase().replaceAll(/[^A-Z\-]/g, '') + ' ';
             for (var j = 0; j < n.length - 1; j++) {
-                var couplet = n.substr(j, 2).toUpperCase();
+                var couplet = n.substr(j, 2);
                 if (!markovChain[couplet])
                     markovChain[couplet] = [];
                 if (j > n.length - 2)
                     markovChain[couplet].push('');
                 else
                     markovChain[couplet].push(n.substr(j + 2, 1));
+            }
+        }
+        return markovChain;
+    }
+
+    createSimpleMarkovChain(names) {
+        var markovChain = {};
+        for (var i = 0; i < names.length; i++) {
+            var n = names[i].toUpperCase().replaceAll(/[^A-Z\-]/g, '') + ' ';
+            for (var j = 0; j < n.length; j++) {
+                var key = n[j];
+                if (!markovChain[key])
+                    markovChain[key] = [];
+                if (j > n.length - 2)
+                    markovChain[key].push('');
+                else
+                    markovChain[key].push(n[j + 1]);
             }
         }
         return markovChain;
@@ -85,8 +136,8 @@ class BusinessNameGenerator {
             var adj = getRandom(BusinessType.TEMPLE.adjectives);
             var name = getRandom(altNames);
             if (r <= 0.1) {
-                var nameGen = new NameGenerator(null);
-                var saintName = nameGen.getFirst(r < 0.5 ? Gender.MALE : Gender.FEMALE);
+                var nameGen = new NameGenerator({ Race: owner.Race, Gender: r < 0.5 ? Gender.MALE : Gender.FEMALE });
+                var saintName = nameGen.getFirst();
                 saintName += saintName.slice(-1).toUpperCase() == "S" ? "'" : "'s";
                 return `Saint ${saintName} ${name}`;
             }

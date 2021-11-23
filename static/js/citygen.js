@@ -8,10 +8,12 @@ class CityGenerator {
     FamilyCount = 0
     Mine
     LumberCamp
+    NameGenerators = []
 
     constructor(settings) {
         this.Settings = settings;
         this.groupRaceFrequencies();
+        this.createNameGenerators();
     }
 
     groupRaceFrequencies() {
@@ -29,6 +31,18 @@ class CityGenerator {
         for (const [key, value] of Object.entries(RaceFrequency)) {
             if (this.Races[value] == null)
                 this.Races[value] = [];
+        }
+    }
+
+    createNameGenerators() {
+        for (var raceName in this.Settings.Races) {
+            if (this.Settings.Races[raceName] == RaceFrequency.NONE)
+                continue;
+            var race = Race[Object.keys(Race).filter(k => Race[k].name == raceName)[0]];
+            for (var genderName in Gender) {
+                var gender = Gender[genderName];
+                this.NameGenerators.push(new NameGenerator({ Race: race, Gender: gender }));
+            }
         }
     }
 
@@ -74,7 +88,7 @@ class CityGenerator {
     }
 
     createPeopleByCaste(caste, count) {
-        var nameGen = new NameGenerator(null);
+
         var ageRandom = caste.ageRandom;
         for (var i = 0; i < count; i++) {
             var person = new Person();
@@ -90,8 +104,7 @@ class CityGenerator {
                 person.Gender = Gender.MALE;
             else
                 person.Gender = Gender.FEMALE;
-            person.FirstName = nameGen.getFirst(person.Gender);
-            person.LastName = nameGen.getLast();
+
             var raceRoll = CryptoRandom.random();
             person.RaceFrequency = RaceFrequency.COMMON;
             var uncommonMod = this.Races[RaceFrequency.COMMON].length;
@@ -105,6 +118,12 @@ class CityGenerator {
                 person.Race = getRandom(freqGroup);
             else
                 person.Race = getRandom(this.Races[RaceFrequency.COMMON]);
+
+            var race = Race[Object.keys(Race).filter(r => Race[r].name == person.Race)[0]];
+            var nameGen = this.NameGenerators.filter(n => n.Key.Race == race && n.Key.Gender == person.Gender)[0];
+            person.FirstName = nameGen.getFirst();
+            person.LastName = nameGen.getLast();
+
             person.RaceAge = this.adjustAgeByRace(person.Race, person.Age);
             person.Appearance = person.Age >= WorkingHumanAge ? getRandom(Appearances) : null;
             person.Strength = person.Age >= WorkingHumanAge ? getRandom(Strengths) : null;
@@ -341,78 +360,58 @@ class CityGenerator {
 
     adjustAgeByRace(race, age) {
         switch (race) {
-            case Race.DRAGONBORN:
+            case Race.DRAGONBORN.name:
                 return Math.floor((15.0 / 18.0) * age);
-            case Race.DWARF:
+            case Race.DWARF.name:
                 return Math.floor((50.0 / 18.0) * age);
-            case Race.ELF:
+            case Race.ELF.name:
                 return Math.floor((100.0 / 18.0) * age);
-            case Race.GNOME:
+            case Race.GNOME.name:
                 return Math.floor((40.0 / 18.0) * age);
-            case Race.HALF_ELF:
+            case Race.HALF_ELF.name:
                 return Math.floor((20.0 / 18.0) * age);
-            case Race.HALFLING:
+            case Race.HALFLING.name:
                 return Math.floor((20.0 / 18.0) * age);
-            case Race.HALF_ORC:
+            case Race.HALF_ORC.name:
                 return Math.floor((14.0 / 18.0) * age);
-            case Race.HUMAN:
+            case Race.HUMAN.name:
                 break;
-            case Race.TIEFLING:
+            case Race.TIEFLING.name:
                 break;
-            case Race.AARAKOCRA:
+            case Race.AARAKOCRA.name:
                 return Math.floor((3.0 / 18.0) * age);
-            case Race.GENASI:
+            case Race.GENASI.name:
                 return age <= AdultHumanAge ? age : Math.floor((120.0 / 80.0) * age);
-            case Race.GOLIATH:
+            case Race.GOLIATH.name:
                 break;
-            case Race.AASIMAR:
+            case Race.AASIMAR.name:
                 return age <= AdultHumanAge ? age : Math.floor((160.0 / 80.0) * age);
-            case Race.BUGBEAR:
+            case Race.BUGBEAR.name:
                 return Math.floor((16.0 / 18.0) * age);
-            case Race.FIRBOLG:
+            case Race.FIRBOLG.name:
                 return Math.floor((30.0 / 18.0) * age);
-            case Race.GOBLIN:
+            case Race.GOBLIN.name:
                 return Math.floor((8.0 / 18.0) * age);
-            case Race.HOBGOBLIN:
+            case Race.HOBGOBLIN.name:
                 break;
-            case Race.KENKU:
+            case Race.KENKU.name:
                 return Math.floor((12.0 / 18.0) * age);
-            case Race.KOBOLD:
+            case Race.KOBOLD.name:
                 return age <= 6 ? Math.floor((6.0 / 18.0) * age) : Math.floor((120 / 80.0) * age);
-            case Race.LIZARDFOLK:
+            case Race.LIZARDFOLK.name:
                 return Math.floor((14.0 / 18.0) * age);
-            case Race.ORC:
+            case Race.ORC.name:
                 return Math.floor((12.0 / 18.0) * age);
-            case Race.TABAXI:
+            case Race.TABAXI.name:
                 break;
-            case Race.TRITON:
+            case Race.TRITON.name:
                 return age <= 15 ? Math.floor((15.0 / 18.0) * age) : Math.floor((200.0 / 80.0) * age);
-            case Race.YUANTI_PUREBLOOD:
+            case Race.YUANTI_PUREBLOOD.name:
                 break;
-            case Race.TORTLE:
+            case Race.TORTLE.name:
                 return Math.floor((15.0 / 18.0) * age);
-            case Race.GITH:
+            case Race.GITH.name:
                 break;
-            case Race.CHANGELING:
-                break;
-            case Race.KALASHTAR:
-                break;
-            case Race.SHIFTER:
-                return Math.floor((10.0 / 18.0) * age);
-            case Race.WARFORGED:
-                return Math.floor((2.0 / 18.0) * age);
-            case Race.CENTAUR:
-                return Math.floor((15.0 / 18.0) * age);
-            case Race.LOXODON:
-                return age <= AdultHumanAge ? age : Math.floor((60.0 / 20.0) * age);
-            case Race.MINOTAUR:
-                return age <= AdultHumanAge ? age : Math.floor((150.0 / 80.0) * age);
-            case Race.SIMIC_HYBRID:
-                break;
-            case Race.VEDALKEN:
-                return age <= AdultHumanAge ? age : Math.floor((500.0 / 80.0) * age);
-            case Race.VERDAN:
-                return Math.floor((24.0 / 18.0) * age);
             default:
                 break;
         }
