@@ -834,7 +834,7 @@
 
                     var raceLabels = [];
                     for (var i in this.raceFreqSettings) {
-                        if (this.raceFreqSettings[i])
+                        if (this.raceFreqSettings[i] && this.raceFreqSettings[i] != RaceFrequency.NONE)
                             raceLabels.push(i);
                     }
                     var raceData = [];
