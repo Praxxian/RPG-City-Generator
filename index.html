@@ -87,6 +87,19 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- <div class="row my-1 border p-3 rounded">
+                    <div class="container">
+                        <h5>Magic Level</h5>
+                        <select class="form-select bg-dark text-light" v-model="magicLevel" required>
+                            <option v-for="o in magicLevelOptions" :value="o">{{ o.Label }}</option>
+                        </select>
+                        <p class="pt-3">
+                            {{ magicLevel.Description }}
+                        </p>
+                    </div>
+                </div> -->
+
                 <div class="row my-1 border p-3 rounded">
                     <h5>Natural Features</h5>
                     <div class="container">
@@ -189,7 +202,7 @@
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                            :data-bs-target="'#' + r.name.replace(' ','') + 'Modal'">Names <svg
+                                            :data-bs-target="'#' + r.name.replace(' ','') + 'Modal'"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path
@@ -208,14 +221,19 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content bg-dark">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">{{r.name}} Names</h5>
+                                        <h4 class="modal-title">Edit {{r.name}}</h4>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <h6><small class="text-muted">Enter new names on separate
-                                                lines.</small></h6>
+                                        <!-- <div class="row">
+                                            <label class="form-label">Name</label>
+                                            <input class="form-input" v-model="r.name">
+                                        </div> -->
                                         <div class="row">
+                                            <h6><small class="text-muted">Enter new names on separate
+                                                    lines.</small></h6>
+
                                             <div class="col">
                                                 <h6>Male Names</h6>
                                                 <textarea class="form-control" rows="10"
@@ -546,7 +564,7 @@
                     { race: Race.HALF_ELF, frequency: RaceFrequency.UNCOMMON },
                     { race: Race.DWARF, frequency: RaceFrequency.UNCOMMON },
                     { race: Race.ELF, frequency: RaceFrequency.RARE },
-                    { race: Race.GNOME, frequency: RaceFrequency.RARE }],
+                    { race: Race.HALFLING, frequency: RaceFrequency.RARE }],
                 citySize: '',
                 gen_name_range: 0,
                 city: new City(),
@@ -572,7 +590,9 @@
                 raceMode: "Various",
                 maleNames: {},
                 femaleNames: {},
-                lastNames: {}
+                lastNames: {},
+                magicLevelOptions: MagicLevel,
+                magicLevel: MagicLevel.NONE
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
@@ -610,7 +630,8 @@
                             CitySize: this.citySize,
                             Races: this.raceFreqSettings,
                             NaturalFeatures: this.naturalFeatures,
-                            Prosperity: this.prosperity
+                            Prosperity: this.prosperity,
+                            MagicLevl: this.magicLevel
                         }
                         this.citygen = new CityGenerator(settings);
                         this.city = await this.citygen.getNew();

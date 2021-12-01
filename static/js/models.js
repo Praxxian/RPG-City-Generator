@@ -164,14 +164,34 @@ class InventoryItem {
     Cost
     Unit
     DefaultCost
+    MagicRarity
+    MagicTier
 
     favors = ['Simple', 'Major', 'Heroic'];
 
-    constructor(itemType, name, cost, unit) {
+    constructor(itemType, name, cost, unit, rarity = null, magicTier = null) {
         this.ItemType = itemType;
         this.Name = name;
         this.Cost = cost;
         this.Unit = unit;
+        this.MagicRarity = rarity;
+        this.MagicTier = magicTier;
+
+        if (this.MagicRarity)
+            this.setMagicCost();
+    }
+
+    setMagicCost() {
+        var roll1 = CryptoRandom.random() * (this.MagicRarity.MaxRoll - this.MagicRarity.MinRoll) + this.MagicRarity.MinRoll;
+        var roll2 = CryptoRandom.random() * (this.MagicRarity.MaxRoll - this.MagicRarity.MinRoll) + this.MagicRarity.MinRoll;
+        var roll = roll1;
+        if (this.MagicTier == MagicItemTier.MINOR)
+            roll = Math.min(roll1, roll2);
+        else
+            roll = Math.max(roll1, roll2);
+        this.Cost = roll * this.MagicRarity.Multiplier * 100;
+        if(this.ItemType == ItemType.POTION || this.ItemType == ItemType.SCROLL)
+            this.COST *= 1/2;
     }
 
     toString() {
@@ -185,6 +205,8 @@ class InventoryItem {
         inv.Cost = this.Cost;
         inv.Unit = this.Unit;
         inv.DefaultCost = this.DefaultCost;
+        inv.MagicRarity = this.MagicRarity;
+        inv.MagicTier = this.MagicTier;
         return inv;
     }
 

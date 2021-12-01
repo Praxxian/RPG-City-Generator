@@ -1224,6 +1224,8 @@ const ItemType = {
     TOOL: 'Tool',
     VEHICLE: 'Vehicle',
     WEAPON: 'Weapon',
+    MAGIC: 'Magic Item',
+    SPELLCASTING: 'Spellcasting'
 }
 
 const NaturalFeatures = {
@@ -1232,4 +1234,22 @@ const NaturalFeatures = {
     OCEAN: "Ocean",
     LAKE: "Lake",
     RIVER: "River"
+}
+
+const MagicLevel = {
+    NONE: {Label: "None", Description: "Magic locations, like Wizard Towers, will not appear and businesses will not sell magic items, potions, scrolls, or spellcasting."},
+    LOW: {Label: "Low", Description: "Magic locations, like Wizard Towers, are rare. Businesses will only sell common magic items, potions, scrolls, and spellcasting (up to level 1)."},
+    HIGH: {Label: "High", Description: "Magic locations, like Wizard Towers, appear rarely for small villages and more frequently for larger settlements. Businesses might sell magic items, potions, scrolls, and spellcasting of all rarity and levels."}
+}
+
+const MagicItemRarity = {
+    COMMON : { MinRoll : 2, MaxRoll: 7, Multiplier: 10},
+    UNCOMMON : { MinRoll : 1, MaxRoll: 6, Multiplier: 100},
+    RARE : { MinRoll : 2, MaxRoll: 20, Multiplier: 1000},
+    VERYRARE: { MinRoll : 2, MaxRoll: 5, Multiplier: 10000}
+}
+
+const MagicItemTier = {
+    MINOR : "Minor",
+    MAJOR : "Major"
 }
