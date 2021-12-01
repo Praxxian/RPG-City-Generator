@@ -136,7 +136,8 @@ class BusinessNameGenerator {
             var adj = getRandom(BusinessType.TEMPLE.adjectives);
             var name = getRandom(altNames);
             if (r <= 0.1) {
-                var nameGen = new NameGenerator({ Race: owner.Race, Gender: r < 0.5 ? Gender.MALE : Gender.FEMALE });
+                var ownerRace = Race[Object.keys(Race).filter(k => Race[k].name == owner.Race)[0]];
+                var nameGen = new NameGenerator({ Race: ownerRace, Gender: r < 0.5 ? Gender.MALE : Gender.FEMALE });
                 var saintName = nameGen.getFirst();
                 saintName += saintName.slice(-1).toUpperCase() == "S" ? "'" : "'s";
                 return `Saint ${saintName} ${name}`;
