@@ -1,6 +1,5 @@
 class CityGenerator {
     Settings
-    NameGens
     MaxPopVariance = 0.3
     City
     Races
@@ -39,8 +38,8 @@ class CityGenerator {
             if (this.Settings.Races[raceName] == RaceFrequency.NONE)
                 continue;
             var race = Race[Object.keys(Race).filter(k => Race[k].name == raceName)[0]];
-            for (var genderName in Gender) {
-                var gender = Gender[genderName];
+            for (var i in this.Settings.Genders) {
+                var gender = this.Settings.Genders[i];
                 this.NameGenerators.push(new NameGenerator({ Race: race, Gender: gender }));
             }
         }
@@ -96,14 +95,16 @@ class CityGenerator {
             person.Caste = caste.name;
             person.Age = Math.abs(ageRandom.next());
             var genderRoll = CryptoRandom.random();
-            if (genderRoll <= 0.05)
+            if (genderRoll <= 0.05 && this.Settings.Genders.indexOf(Gender.GENDERFLUID) >= 0)
                 person.Gender = Gender.GENDERFLUID;
-            else if (genderRoll <= 0.1)
+            else if (genderRoll <= 0.1 && this.Settings.Genders.indexOf(Gender.NONBINARY) >= 0)
                 person.Gender = Gender.NONBINARY;
-            else if (genderRoll <= .55)
+            else if (genderRoll <= .55 && this.Settings.Genders.indexOf(Gender.MALE) >= 0)
                 person.Gender = Gender.MALE;
-            else
+            else if (this.Settings.Genders.indexOf(Gender.FEMALE) >= 0)
                 person.Gender = Gender.FEMALE;
+            else
+                person.Gender = getRandom(this.Settings.Genders);
 
             var raceRoll = CryptoRandom.random();
             person.RaceFrequency = RaceFrequency.COMMON;
@@ -165,19 +166,26 @@ class CityGenerator {
 
             // Spouse 2
             var spouse2GenderRoll = CryptoRandom.random();
-            var spouse2Gender = spouse1.Gender;
-            if (spouse1.Gender == Gender.FEMALE && spouse2GenderRoll > 0.1)
-                spouse2Gender = Gender.MALE;
-            else if (spouse1.Gender == Gender.FEMALE)
-                spouse2Gender = getRandom([Gender.FEMALE, Gender.GENDERFLUID, Gender.NONBINARY]);
-            else if (spouse1.Gender == Gender.MALE && spouse2GenderRoll > 0.1)
-                spouse2Gender = Gender.FEMALE;
-            else if (spouse1.Gender == Gender.MALE)
-                spouse2Gender = getRandom([Gender.MALE, Gender.GENDERFLUID, Gender.NONBINARY]);
-            else if ((spouse1.Gender == Gender.GENDERFLUID || spouse1.Gender == Gender.NONBINARY) && spouse2GenderRoll > 0.1)
-                spouse2Gender = getRandom([Gender.GENDERFLUID, Gender.NONBINARY]);
+            var spouse2Gender = null;
+            const nonheteroThreshold = 0.1;
+            var hasMenAndWomen = this.Settings.Genders.indexOf(Gender.MALE) >= 0 && this.Settings.Genders.indexOf(Gender.FEMALE) >= 0;
+
+            if (hasMenAndWomen) {
+                if (spouse1.Gender == Gender.FEMALE && spouse2GenderRoll > nonheteroThreshold)
+                    spouse2Gender = Gender.MALE;
+                else if (spouse1.Gender == Gender.FEMALE)
+                    spouse2Gender = getRandom(this.Settings.Genders.filter(g => g != Gender.MALE));
+                else if (spouse1.Gender == Gender.MALE && spouse2GenderRoll > nonheteroThreshold)
+                    spouse2Gender = Gender.FEMALE;
+                else if (spouse1.Gender == Gender.MALE)
+                    spouse2Gender = getRandom(this.Settings.Genders.filter(g => g != Gender.FEMALE));
+                else if ((spouse1.Gender == Gender.GENDERFLUID || spouse1.Gender == Gender.NONBINARY) && spouse2GenderRoll > nonheteroThreshold)
+                    spouse2Gender = getRandom(this.Settings.Genders.filter(g => g != Gender.FEMALE && g != Gender.MALE));
+                else
+                    spouse2Gender = null;
+            }
             else
-                spouse2Gender = Gender[getRandom(Object.keys(Gender))];
+                spouse2Gender = null;
 
             var spouse2 = null;
             for (var j = i + 1; j < this.City.People.length; j++) {
@@ -186,7 +194,7 @@ class CityGenerator {
                 if (spouse2.Family
                     || spouse2.Age < AdultHumanAge
                     || Math.abs(spouse2.Age - spouse1.Age) > 10
-                    || spouse2Gender != spouse2.Gender
+                    || (spouse2Gender && spouse2Gender != spouse2.Gender)
                     || spouse2.Caste != spouse1.Caste
                     || (spouse2.Race != spouse1.Race && !outgoing))
                     continue;

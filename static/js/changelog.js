@@ -1,4 +1,5 @@
 const CHANGES = [
+    { Date: "2021-12-06", Changes: ['Added a selection for gender (E.g. all female villages).'] },
     {
         Date: "2021-11-23", Changes: [
             'Names! Names! Names!'

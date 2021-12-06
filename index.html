@@ -162,6 +162,19 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row my-1 border p-3 rounded">
+                    <div class="container">
+                        <h5>Genders</h5>
+                        <h6 class="text-danger" v-if="genderError">{{genderError}}</h6>
+                        <div class="form-check" v-for="g in genderOptions">
+                            <input class="form-check-input" type="checkbox" :value="g" :id="g + 'Check'"
+                                v-model="genders">
+                            <label class="form-check-label" :for="g + 'Check'">{{ g }}</label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row my-1 border p-3 rounded">
                     <div class="container">
 
@@ -592,7 +605,10 @@
                 femaleNames: {},
                 lastNames: {},
                 magicLevelOptions: MagicLevel,
-                magicLevel: MagicLevel.NONE
+                magicLevel: MagicLevel.NONE,
+                genderOptions: Gender,
+                genders: Object.keys(Gender).map(g => Gender[g]),
+                genderError: null
             },
             mounted: function () {
                 for (var i in this.raceOptions) {
@@ -631,7 +647,8 @@
                             Races: this.raceFreqSettings,
                             NaturalFeatures: this.naturalFeatures,
                             Prosperity: this.prosperity,
-                            MagicLevl: this.magicLevel
+                            MagicLevl: this.magicLevel,
+                            Genders: this.genders
                         }
                         this.citygen = new CityGenerator(settings);
                         this.city = await this.citygen.getNew();
@@ -654,7 +671,10 @@
                             break;
                         }
                     }
-                    return this.raceError == null;
+
+                    this.genderError = this.genders.length < 1 ? "You must select at least one gender." : null;
+
+                    return this.raceError == null && this.genderError == null;
                 },
                 toggleSettings(event) {
                     $('#settings_col').collapse('toggle');
