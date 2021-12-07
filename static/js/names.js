@@ -4868,11 +4868,9 @@ const LastNames = ['MICHEL',
     'VAUGHN',
     'PASTERNACK',
     'PASTERNAK',];
-
 const FirstNamesMaleDragonborn = ['ARJHAN', 'BALASAR', 'BHARASH', 'DONAAR', 'GHESH', 'HESKAN', 'KRIV', 'MEDRASH', 'MEHEN', 'NADARR', 'PANDJED', 'PATRIN', 'RHOGAR', 'SHAMASH', 'SHEDINN', 'TARHUN', 'TORINN'];
 const FirstNamesFemaleDragonborn = ['AKRA', 'BIRI', 'DAAR', 'FARIDEH', 'HARANN', 'HAVILAR', 'JHERI', 'KAVA', 'KORINN', 'MISHANN', 'NALA', 'PERRA', 'RAIANN', 'SORA', 'SURINA', 'THAVA', 'UADJIT'];
 const LastNamesDragonborn = ['CLETHTINTHIALLOR', 'DAARDENDRIAN', 'DELMIREV', 'DRACHEDANDION', 'FENKENKABRADON', 'KEPESHKMOLIK', 'KERRHYLON', 'KIMBATUUL', 'LINXAKASENDALOR', 'MYASTAN', 'NEMMONIS', 'NORIXIUS', 'OPHINSHTALAJIIR', 'PREXIJANDILIN', 'SHESTENDELIATH', 'TURNUROTH', 'VERTHISATHURGIESH', 'YARJERIT'];
-
 const FirstNamesMaleDwarf = ['ADRIK', 'ALBERICH', 'BAERN', 'BARENDD', 'BROTTOR', 'BRUENOR', 'DAIN', 'DARRAK', 'DELG', 'EBERK', 'EINKIL', 'FARGRIM', 'FLINT', 'GARDAIN', 'HARBEK', 'KILDRAK', 'MORGRAN', 'ORSIK', 'OSKAR', 'RANGRIM', 'RURIK', 'TAKLINN', 'THORADIN', 'THORIN', 'TORDEK', 'TRAUBON', 'TRAVOK', 'ULFGAR', 'VEIT', 'VONDAL', 'AARON',
     'ADAM',
     'AIDAN',
@@ -7547,15 +7545,12 @@ const LastNamesDwarf = ['BALDERK', 'BATTLEHAMMER', 'BRAWNANVIL', 'DANKIL', 'FIRE
     'WYATT',
     'YOUNIE',
 ];
-
-const FirstNamesMaleElf = ['ADRAN', 'AELAR', 'ARAMIL', 'ARANNIS', 'AUST', 'BEIRO', 'BERRIAN', 'CARRIC', 'ENIALIS', 'ERDAN', 'EREVAN', 'GALINNDAN', 'HADARAI', 'HEIAN', 'HIMO', 'IMMERAL', 'IVELLIOS', 'LAUCIAN', 'MINDARTIS', 'PAELIAS', 'PEREN', 'QUARION', 'RIARDON', 'ROLEN', 'SOVELISS', 'THAMIOR', 'THARIVOL', 'THEREN', 'VARIS'];
+const FirstNamesMaleElf = ['ADRAN', 'AELAR', 'ARAMIL', 'ARANNIS', 'AUST', 'BEIRO', 'BERRIAN', 'CARRIC', 'ENIALIS', 'ERDAN', 'EREVAN', 'GALINNDAN', 'HADARAI', 'HEIAN', 'HIMO', 'IMMERAL', 'IVELLIOS', 'LAUCIAN', 'MINDARTIS', 'PAELIAS', 'PEREN', 'QUARION', 'RIARDON', 'ROLEN', 'SOVELISS', 'THAMIOR', 'THARIVOL', 'THEREN', 'letIS'];
 const FirstNamesFemaleElf = ['ADRIE', 'ALTHAEA', 'ANASTRIANNA', 'ANDRASTE', 'ANTINUA', 'BETHRYNNA', 'BIREL', 'CAELYNN', 'DRUSILIA', 'ENNA', 'FELOSIAL', 'IELENIA', 'JELENNETH', 'KEYLETH', 'LESHANNA', 'LIA', 'MERIELE', 'MIALEE', 'NAIVARA', 'QUELENNA', 'QUILLATHE', 'SARIEL', 'SHANAIRRA', 'SHAVA', 'SILAQUI', 'THEIRASTRA', 'THIA', 'VADANIA', 'VALANTHE', 'XANAPHIA'];
 const LastNamesElf = ['AMAKIIR', 'AMASTACIA', 'GALANODEL', 'HOLIMION', 'ILPHELKIIR', 'LIADON', 'MELIAMNE', 'NAILO', 'SIANNODEL', 'XILOSCIENT'];
-
 const FirstNamesMaleGnome = ['Alston', 'Alvyn', 'Boddynock', 'Brocc', 'Burgell', 'Dimble', 'Eldon', 'Erky', 'Fonkin', 'Frug', 'Gerbo', 'Gimble', 'Glim', 'Jebeddo', 'Kellen', 'Namfoodle', 'Orryn', 'Roondar', 'Seebo', 'Sindri', 'Warryn', 'Wrenn', 'Zook'];
 const FirstNamesFemaleGnome = ['Bimpnottin', 'Breena', 'Caramip', 'Carlin', 'Donella', 'Duvamil', 'Ella', 'Ellyjobell', 'Ellywick', 'Lilli', 'Loopmottin', 'Lorilla', 'Mardnab', 'Nissa', 'Nyx', 'Oda', 'Orla', 'Roywyn', 'Shamil', 'Tana', 'Waywocket', 'Zanna'];
 const LastNamesGnome = ['Beren', 'Daergel', 'Folkor', 'Garrick', 'Nackle', 'Murnig', 'Ningel', 'Raulnor', 'Scheppen', 'Timbers', 'Turen'];
-
 const FirstNamesMaleHalfing = ['Alton', 'Ander', 'Cade', 'Corrin', 'Eldon', 'Errich', 'Finnan', 'Garret', 'Lindal', 'Lyle', 'Merric', 'Milo', 'Osborn', 'Perrin', 'Reed', 'Roscoe', 'Wellby',
     'John',
     'Patrick',
@@ -8364,78 +8359,63 @@ const LastNamesHalfing = ['Brushgather', 'Goodbarrel', 'Greenbottle', 'Highhill'
     'Buckley',
     'O\'Dwyer',
 ];
-
 const FirstNamesMaleOrc = ['Dench', 'Feng', 'Gell', 'Henk', 'Holg', 'Imsh', 'Keth', 'Krusk', 'Mhurren', 'Ront', 'Shump', 'Thokk', 'Grutok', 'Lortar', 'Abzug', 'Shugog', 'Urzul', 'Ruhk', 'Mobad', 'Shamog', 'Mugrub', 'Bajok', 'Rhorog', 'Jahrukk'];
 const FirstNamesFemaleOrc = ['Baggi', 'Emen', 'Engong', 'Kansif', 'Myev', 'Neega', 'Ovak', 'Ownka', 'Shautha', 'Sutha', 'Vola', 'Volen', 'Yevelda', 'Kansif', 'Ownka', 'Emen', 'Sutha', 'Myev', 'Neega', 'Baggi', 'Shautha', 'Ovak', 'Vola', 'Engong', 'Volen'];
 const LastNamesOrc = FirstNamesMaleOrc.concat(FirstNamesFemaleOrc);
-
-const FirstNamesMaleHalfOrc = FirstNamesMaleOrc.concat(randomSample(FirstNamesMale, FirstNamesMale.length / 2));
-const FirstNamesFemaleHalfOrc = FirstNamesFemaleOrc.concat(randomSample(FirstNamesMale, FirstNamesFemale.length / 2));
+const FirstNamesMaleHalfOrc = FirstNamesMaleOrc.concat(Stats.randomSample(FirstNamesMale, FirstNamesMale.length / 2));
+const FirstNamesFemaleHalfOrc = FirstNamesFemaleOrc.concat(Stats.randomSample(FirstNamesMale, FirstNamesFemale.length / 2));
 const LastNamesHalfOrc = LastNames;
-
-const FirstNamesMaleTiefling = ['Akmenos', 'Amnon', 'Barakas', 'Damakos', 'Ekemon', 'Iados', 'Kairon', 'Leucis', 'Melech', 'Mordai', 'Morthos', 'Pelaios', 'Skamos', 'Therai', 'Art', 'Carrion', 'Chant', 'Creed', 'Despair', 'Excellence', 'Fear', 'Glory', 'Hope', 'Ideal', 'Music', 'Nowhere', 'Open', 'Poetry', 'Quest', 'Random', 'Reverence', 'Sorrow', 'Temerity', 'Torment', 'Weary'].concat(randomSample(FirstNamesMale, FirstNamesMale.length / 2));
-const FirstNamesFemaleTiefling = ['Akta', 'Anakis', 'Bryseis', 'Criella', 'Damaia', 'Ea', 'Kallista', 'Lerissa', 'Makaria', 'Nemeia', 'Orianna', 'Phelaia', 'Rieta', 'Art', 'Carrion', 'Chant', 'Creed', 'Despair', 'Excellence', 'Fear', 'Glory', 'Hope', 'Ideal', 'Music', 'Nowhere', 'Open', 'Poetry', 'Quest', 'Random', 'Reverence', 'Sorrow', 'Temerity', 'Torment', 'Weary'].concat(randomSample(FirstNamesMale, FirstNamesFemale.length / 2));
+const FirstNamesMaleTiefling = ['Akmenos', 'Amnon', 'Barakas', 'Damakos', 'Ekemon', 'Iados', 'Kairon', 'Leucis', 'Melech', 'Mordai', 'Morthos', 'Pelaios', 'Skamos', 'Therai', 'Art', 'Carrion', 'Chant', 'Creed', 'Despair', 'Excellence', 'Fear', 'Glory', 'Hope', 'Ideal', 'Music', 'Nowhere', 'Open', 'Poetry', 'Quest', 'Random', 'Reverence', 'Sorrow', 'Temerity', 'Torment', 'Weary'].concat(Stats.randomSample(FirstNamesMale, FirstNamesMale.length / 2));
+const FirstNamesFemaleTiefling = ['Akta', 'Anakis', 'Bryseis', 'Criella', 'Damaia', 'Ea', 'Kallista', 'Lerissa', 'Makaria', 'Nemeia', 'Orianna', 'Phelaia', 'Rieta', 'Art', 'Carrion', 'Chant', 'Creed', 'Despair', 'Excellence', 'Fear', 'Glory', 'Hope', 'Ideal', 'Music', 'Nowhere', 'Open', 'Poetry', 'Quest', 'Random', 'Reverence', 'Sorrow', 'Temerity', 'Torment', 'Weary'].concat(Stats.randomSample(FirstNamesMale, FirstNamesFemale.length / 2));
 const LastNamesTiefling = LastNames;
-
 const FirstNamesMaleAarakocra = ['Aera', 'Aial', 'Aur', 'Deekek', 'Errk', 'Heehk', 'Ikki', 'Kleeck', 'Oorr', 'Ouss', 'Quaf', 'Quierk', 'Salleek', 'Urreek', 'Zeed'];
 const FirstNamesFemaleAarakocra = FirstNamesMaleAarakocra;
 const LastNamesAarakocra = FirstNamesMaleAarakocra;
-
 const GenasiElementalNames = ['Flame', 'Ember', 'Wave', 'Onyx', 'Blaze', 'Flare', 'Flash', 'Light', 'Spark', 'Ash', 'Cinder', 'Coal', 'Breeze', 'Wind', 'Blast', 'Draft', 'Puff', 'Sky', 'Zephyr', 'Breath', 'Gale', 'Gust', 'Gem', 'Pebble', 'Rock', 'Boulder', 'Crag', 'Jewel', 'Ore', 'Jade', 'Opal', 'Rain', 'Tide', 'Brine', 'Pond', 'Puddle', 'River', 'Stream', 'Beck', 'Brook', 'Loch'];
-const FirstNamesMaleGenasi = GenasiElementalNames.concat(randomSample(FirstNamesMale, FirstNamesMale.length / 2));
-const FirstNamesFemaleGenasi = GenasiElementalNames.concat(randomSample(FirstNamesMale, FirstNamesFemale.length / 2));
+const FirstNamesMaleGenasi = GenasiElementalNames.concat(Stats.randomSample(FirstNamesMale, FirstNamesMale.length / 2));
+const FirstNamesFemaleGenasi = GenasiElementalNames.concat(Stats.randomSample(FirstNamesMale, FirstNamesFemale.length / 2));
 const LastNamesGenasi = LastNames;
-
 const FirstNamesMaleGoliath = ['Aukan', 'Eglath', 'Gae-Al', 'Gauthak', 'Ilikan', 'Keothi', 'Kuori', 'Lo-Kag', 'Manneo', 'Maveith', 'Nalla', 'Orilo', 'Paavu', 'Pethani', 'Thalai', 'Thotham', 'Uthal', 'Vaunea', 'Vimak'];
 const FirstNamesFemaleGoliath = FirstNamesMaleGoliath;
 const LastNamesGoliath = ['Anakalathai', 'Elanithino', 'Gathakanathi', 'Kalagiano', 'Katho-Olavi', 'Kolae-Gileana', 'Ogolakanu', 'Thuliaga', 'Thunukalathi', 'Vaimei-Laga'];
-
 const FirstNamesKenku = ['BLOOP', 'DRIBBLE', 'DRIP', 'DRIZZLE', 'SPLASH', 'BELCH', 'BLURT', 'GIGGLE', 'GROWL', 'GROAN', 'GRUNT', 'GULP', 'GURGLE', 'EEK', 'MUMBLE', 'MURMUR', 'SQUEAL', 'WHIMPER', 'BAM', 'BANG', 'CLANG', 'CLANK', 'CLAP', 'CLATTER', 'CLICK', 'CLINK', 'CRASH', 'CRUNCH', 'DING', 'JINGLE', 'KNOCK', 'SCREECH', 'SLAP', 'SMASH', 'THUD', 'THUMP', 'FLUTTER', 'FWOOSH', 'GASP', 'SWISH', 'SWOOSH', 'WAFT', 'WHIFF', 'WHOOSH', 'WHIP', 'ARF', 'BARK', 'BRAY', 'BUZZ', 'CHEEP', 'CHIRP', 'CHORTLE', 'CLUCK', 'CUCKOO', 'HISS', 'HONK', 'HOWL', 'PURR', 'RIBBIT', 'TWEET', 'WARBLE'];
-
-const FirstNamesKobold = ['Arix', 'Eks', 'Ett', 'Galax', 'Garu', 'Hagnar', 'Hox', 'Irtos', 'Kashak', 'Meepo', 'Molo', 'Ohsoss', 'Rotom', 'Sagin', 'Sik', 'Sniv', 'Taklak', 'Tes', 'Urak', 'Varn'];
-
-const FirstNamesLizardFolk = ['Achuak', 'Aryte', 'Baeshra', 'Darastrix', 'Garurt', 'Irhtos', 'Jhank', 'Kepesk', 'Kethend', 'Korth', 'Kosj', 'Kothar', 'Litrix', 'Mirik', 'Othokent', 'Sauriv', 'Throden', 'Thurkear', 'Usk', 'Valignat', 'Vargach', 'Verthica', 'Vutha', 'Vyth'];
-
+const FirstNamesKobold = ['Arix', 'Eks', 'Ett', 'Galax', 'Garu', 'Hagnar', 'Hox', 'Irtos', 'Kashak', 'Meepo', 'Molo', 'Ohsoss', 'Rotom', 'Sagin', 'Sik', 'Sniv', 'Taklak', 'Tes', 'Urak', 'letn'];
+const FirstNamesLizardFolk = ['Achuak', 'Aryte', 'Baeshra', 'Darastrix', 'Garurt', 'Irhtos', 'Jhank', 'Kepesk', 'Kethend', 'Korth', 'Kosj', 'Kothar', 'Litrix', 'Mirik', 'Othokent', 'Sauriv', 'Throden', 'Thurkear', 'Usk', 'Valignat', 'letgach', 'Verthica', 'Vutha', 'Vyth'];
 const FirstNamesTabaxi = ['Cloud', 'Timber', 'Jade', 'Bird', 'Thunder', 'Snake', 'Smoke', 'Blossom', 'Breeze', 'Clover', 'Coral', 'Dawn', 'Sunset', 'Fern', 'Flora', 'Gale', 'Ivy', 'Maple', 'Meadow', 'Misty', 'Petal', 'Prairie', 'Solstice', 'Sunny', 'Tempest', 'Wind', 'Wren', 'Wind', 'Birch', 'Cliff', 'Cloud', 'Field', 'Flint', 'Forrest', 'Glenn', 'Grove', 'Leaf', 'Land', 'Ridge', 'Rock', 'Woods', 'Ash', 'Aspen', 'Basil', 'Bay', 'Berry', 'Blaze', 'Brook', 'Cedar', 'Clay', 'Cove', 'Dale', 'Dusty', 'Ember', 'Lake', 'Linden', 'Lotus', 'Ocean', 'Olive', 'Rain', 'Reed', 'River', 'Roan', 'Sage', 'Sky', 'Star', 'Storm', 'Stone', 'Tree', 'West', 'Winter'];
-// TODO Tabaxi last names
-
 const FirstNamesMaleTriton = ['Corus', ' Delnis', ' Jhimas', ' Keros', ' Molos', ' Nalos', ' Vodos', ' Zunis'];
 const FirstNamesFemaleTriton = ['Aryn', ' Belthyn', ' Duthyn', ' Feloren', ' Otanyn', ' Shalryn', ' Vlaryn', ' Wolyn'];
 const LastNamesTriton = ['Ahlorsath', 'Pumanath', 'Vuuvaxath'];
-// TODO more Triton last names
-
 const LetterSwap = [['R', 'X'],
-['N', 'Q'],
-['L', 'Z'],
-['D', 'P'],
-['T', 'F'],
-['S', 'W'],
-['C', 'V'],
-['M', 'G'],
-['H', 'J'],
-['B', 'K'],
-['K', 'B'],
-['J', 'H'],
-['G', 'M'],
-['V', 'C'],
-['W', 'S'],
-['F', 'T'],
-['P', 'D'],
-['Z', 'L'],
-['Q', 'N'],
-['X', 'R'],
-['E', 'U'],
-['A', 'Y'],
-['O', 'I'],
-['I', 'O'],
-['Y', 'A'],
-['U', 'E']];
-
+    ['N', 'Q'],
+    ['L', 'Z'],
+    ['D', 'P'],
+    ['T', 'F'],
+    ['S', 'W'],
+    ['C', 'V'],
+    ['M', 'G'],
+    ['H', 'J'],
+    ['B', 'K'],
+    ['K', 'B'],
+    ['J', 'H'],
+    ['G', 'M'],
+    ['V', 'C'],
+    ['W', 'S'],
+    ['F', 'T'],
+    ['P', 'D'],
+    ['Z', 'L'],
+    ['Q', 'N'],
+    ['X', 'R'],
+    ['E', 'U'],
+    ['A', 'Y'],
+    ['O', 'I'],
+    ['I', 'O'],
+    ['Y', 'A'],
+    ['U', 'E']];
 function swapLetters(name) {
-    var newName = '';
-    for (var i = 0; i < name.length; i++) {
+    let newName = '';
+    for (let i = 0; i < name.length; i++) {
         if (CryptoRandom.random() > 0.5) {
-            var swap = LetterSwap.filter(x => x[0] == name[i])[0]
+            let swap = LetterSwap.filter(x => x[0] == name[i])[0];
             newName += swap[1];
         }
         else
@@ -8443,14 +8423,10 @@ function swapLetters(name) {
     }
     return newName;
 }
-
 const FirstNamesMaleInverse = FirstNamesMale.filter(name => name.length <= 6).map(name => swapLetters(name));
 const FirstNamesFemaleInverse = FirstNamesFemale.filter(name => name.length <= 6).map(name => swapLetters(name));
 const LastNamesInverse = LastNames.filter(name => name.length <= 8).map(name => swapLetters(name));
-
 const FirstNamesYuanTi = ['Asutali', 'Eztli', 'Hessatal', 'Hitotee', 'Issahu', 'Itstli', 'Manuya', 'Meztli', 'Nesalli', 'Otleh', 'Shalkashlah', 'Sisava', 'Sitlali', 'Soakosh', 'Ssimalli', 'Suisatal', 'Talash', 'Teoshi', 'Yaotal', 'Zihu'];
-
 const FirstNamesTortle = ['Baka', ' Damu', ' Gar', ' Gura', ' Ini', ' Jappa', ' Kinlek', ' Krull', ' Lim', ' Lop', ' Nortle', ' Nulka', ' Olo', ' Ploqwat', ' Quee', ' Queg', ' Quott', ' Sunny', ' Tibor', ' Ubo', ' Uhok', ' Wabu', ' Xelbuk', ' Xopa', ' Yog'];
-
 const FirstNamesMaleGith = ['Elirdain', 'Gaath', 'Ja\'adoc', 'Kar\'i\'nas', 'Lykus', 'Quith', 'Ris\'a\'an', 'Tropos', 'Viran', 'Xamodas', 'Dak', 'Duurth', 'Ferzth', 'Greth', 'Hurm', 'Kalla', 'Muurg', 'Nurm', 'Shrakk', 'Xorm'];
 const FirstNamesFemaleGith = ['Aaryl', 'B\'noor', 'Fenelzi\'ir', 'Jen\'lig', 'Pah\'zel', 'Quorstyl', 'Sirruth', 'Vaira', 'Yessune', 'Zar\'ryth', 'Adaka', 'Adeya', 'Ella', 'Ezhelya', 'Immilzin', 'Izera', 'Janara', 'Loraya', 'Uweya', 'Vithka'];

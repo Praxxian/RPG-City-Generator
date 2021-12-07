@@ -42,7 +42,7 @@
                     <select class="form-select bg-dark text-light" v-model="citySize" @change="onSelectChanged($event)"
                         required>
                         <option value="" selected>City Size</option>
-                        <option v-for="o in citySizeOptions" :value="o.name">{{ o.label() }}</option>
+                        <option v-for="(o, index) in citySizeOptions" :value="index">{{ o.label() }}</option>
                     </select>
                 </div>
                 <div class="row my-1">
@@ -412,9 +412,9 @@
                             <p>
                                 This {{ city.Settings.CitySize.name }} (population
                                 {{ city.People.length.toLocaleString() }}) features
-                                <strong>{{ city.Details.notableTrait }}</strong> and is known for its
-                                <strong>{{ city.Details.knownFor }}</strong>. Unfortunately, it is afflicted by
-                                <strong>{{ city.Details.calamity }}</strong>.
+                                <strong>{{ city.notableTrait }}</strong> and is known for its
+                                <strong>{{ city.knownFor }}</strong>. Unfortunately, it is afflicted by
+                                <strong>{{ city.calamity }}</strong>.
                             </p>
                         </div>
                         <div class="tab-pane fade" id="people" role="tabpanel">
@@ -524,8 +524,8 @@
     <script src="static/js/changelog.js"></script>
     <script src="static/js/stats.js"></script>
     <script src="static/js/names.js"></script>
-    <script src="static/js/enums.js"></script>
     <script src="static/js/models.js"></script>
+    <script src="static/js/constants.js"></script>
     <script src="static/js/namegen.js"></script>
     <script src="static/js/citygen.js"></script>
     <script>
@@ -535,49 +535,42 @@
             })
         }
 
-        var dice = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
-  <circle cx="4" cy="4" r="1.5"/>
-  <circle cx="12" cy="4" r="1.5"/>
-  <circle cx="12" cy="12" r="1.5"/>
-  <circle cx="12" cy="8" r="1.5"/>
-  <circle cx="4" cy="12" r="1.5"/>
-  <circle cx="4" cy="8" r="1.5"/>
+        let dice = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
+<circle cx="4" cy="4" r="1.5"/>
+<circle cx="12" cy="4" r="1.5"/>
+<circle cx="12" cy="12" r="1.5"/>
+<circle cx="12" cy="8" r="1.5"/>
+<circle cx="4" cy="12" r="1.5"/>
+<circle cx="4" cy="8" r="1.5"/>
 </svg>`;
 
         Vue.component('reroll-btn', {
             props: ['id', 'entity'],
             template: `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
-  <circle cx="4" cy="4" r="1.5"/>
-  <circle cx="12" cy="4" r="1.5"/>
-  <circle cx="12" cy="12" r="1.5"/>
-  <circle cx="12" cy="8" r="1.5"/>
-  <circle cx="4" cy="12" r="1.5"/>
-  <circle cx="4" cy="8" r="1.5"/>
+<path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
+<circle cx="4" cy="4" r="1.5"/>
+<circle cx="12" cy="4" r="1.5"/>
+<circle cx="12" cy="12" r="1.5"/>
+<circle cx="12" cy="8" r="1.5"/>
+<circle cx="4" cy="12" r="1.5"/>
+<circle cx="4" cy="8" r="1.5"/>
 </svg>`
         });
 
-        var prosperityOptions = [
-            { Label: "Average Prosperity", noblePercent: 0.005, mercantilePercent: 0.015, tradePercent: 0.18, peasantPercent: 0.80 },
-            { Label: "Destitute", noblePercent: 0.0025, mercantilePercent: 0.0075, tradePercent: 0.09, peasantPercent: 0.90 },
-            { Label: "Prosperous", noblePercent: 0.01, mercantilePercent: 0.03, tradePercent: 0.36, peasantPercent: 0.60 },
-            { Label: "Custom", noblePercent: 0.005, mercantilePercent: 0.015, tradePercent: 0.18, peasantPercent: 0.80 },
-        ];
-
-        var citygenapp = new Vue({
+        let citygenapp = new Vue({
             el: '#citygenapp',
             data: {
                 generateDisabled: true,
-                citySizeOptions: CitySize,
-                raceOptions: Race,
+                citySizeOptions: CitySizes,
+                raceOptions: Races,
                 raceFreqOptions: RaceFrequency,
                 defaultRaceSettings: [
-                    { race: Race.HUMAN, frequency: RaceFrequency.COMMON },
-                    { race: Race.HALF_ELF, frequency: RaceFrequency.UNCOMMON },
-                    { race: Race.DWARF, frequency: RaceFrequency.UNCOMMON },
-                    { race: Race.ELF, frequency: RaceFrequency.RARE },
-                    { race: Race.HALFLING, frequency: RaceFrequency.RARE }],
+                    { race: Races.HUMAN, frequency: RaceFrequency.COMMON },
+                    { race: Races.HALF_ELF, frequency: RaceFrequency.UNCOMMON },
+                    { race: Races.DWARF, frequency: RaceFrequency.UNCOMMON },
+                    { race: Races.ELF, frequency: RaceFrequency.RARE },
+                    { race: Races.HALFLING, frequency: RaceFrequency.RARE }],
                 citySize: '',
                 gen_name_range: 0,
                 city: new City(),
@@ -590,8 +583,8 @@
                     Uncommon: 'text-warning',
                     Rare: 'text-danger',
                 },
-                prosperityOptions: prosperityOptions,
-                prosperity: prosperityOptions[0],
+                prosperityOptions: Prosperities,
+                prosperity: Prosperities[0],
                 noblePercent: -1,
                 mercantilePercent: -1,
                 tradePercent: -1,
@@ -604,17 +597,17 @@
                 maleNames: {},
                 femaleNames: {},
                 lastNames: {},
-                magicLevelOptions: MagicLevel,
-                magicLevel: MagicLevel.NONE,
+                magicLevelOptions: MagicLevels,
+                magicLevel: MagicLevels.NONE,
                 genderOptions: Gender,
                 genders: Object.keys(Gender).map(g => Gender[g]),
                 genderError: null
             },
             mounted: function () {
-                for (var i in this.raceOptions) {
-                    var race = this.raceOptions[i];
-                    var defaultSetting = this.defaultRaceSettings.filter(y => y.race == race)[0];
-                    var freq = defaultSetting ? defaultSetting.frequency : RaceFrequency.NONE;
+                for (let i in this.raceOptions) {
+                    let race = this.raceOptions[i];
+                    let defaultSetting = this.defaultRaceSettings.filter(y => y.race == race)[0];
+                    let freq = defaultSetting ? defaultSetting.frequency : RaceFrequency.NONE;
                     this.raceFreqSettings[race.name] = freq;
                     this.maleNames[race.name] = race.firstNameMaleList.join('\n');
                     this.femaleNames[race.name] = race.firstNameFemaleList.join('\n');
@@ -642,8 +635,8 @@
                             return;
                         console.log('Generating City...');
                         $('.result-table').DataTable().destroy();
-                        var settings = {
-                            CitySize: this.citySize,
+                        let settings = {
+                            CitySize: CitySizes[this.citySize],
                             Races: this.raceFreqSettings,
                             NaturalFeatures: this.naturalFeatures,
                             Prosperity: this.prosperity,
@@ -678,7 +671,7 @@
                 },
                 toggleSettings(event) {
                     $('#settings_col').collapse('toggle');
-                    var button = $('#collapse-btn');
+                    let button = $('#collapse-btn');
                     if (button.html() == '«')
                         button.html("Settings<br/>»");
                     else
@@ -689,11 +682,12 @@
                     if ($('.result-table').DataTable())
                         $('.result-table').DataTable().destroy();
 
-                    var peopleArr = [];
-                    var bizArray = [];
-                    var farmArray = [];
-                    var estateArray = [];
-                    var inventoryArray = [];
+                    let peopleArr = [];
+                    let bizArray = [];
+                    let farmArray = [];
+                    let estateArray = [];
+                    let inventoryArray = [];
+                    var businesses = this.city.Businesses;
 
                     if (this.city) {
                         console.log('Setting table data...');
@@ -706,8 +700,7 @@
                             x.Gender,
                             x.Spouse ?? '',
                             x.Family.displayValue(),
-                            x.getBusiness() ? `${x.getBusiness()} (Owner)` : x.getEmployer() ?? '',
-                            //x.Personality.toLabel(),
+                            x.getBusiness() ? `${x.getBusiness(businesses)} (Owner)` : x.getEmployer(businesses) ?? '',
                             x.Appearance ?? '',
                             x.Strength ?? '',
                             x.Weakness ?? '',
@@ -716,7 +709,7 @@
                             x.Interaction ?? '',
                         ]);
 
-                        bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessType.FARM && x.BusinessType != BusinessType.ESTATE).map(x => ({
+                        bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
@@ -724,26 +717,26 @@
                             Description: x.Description ?? '',
                         }));
 
-                        farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessType.FARM).map(x => ({
+                        farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.FARM).map(x => ({
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
                             Employees: x.Employees.map(o => o.fullName()).join(', '),
                         }));
 
-                        estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessType.ESTATE).map(x => ({
+                        estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.ESTATE).map(x => ({
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
                             Employees: x.Employees.map(o => o.fullName()).join(', '),
                         }));
 
-                        for (var i = 0; i < this.city.Businesses.length; i++) {
-                            var biz = this.city.Businesses[i];
-                            if (biz.BusinessType == BusinessType.FARM)
+                        for (let i = 0; i < this.city.Businesses.length; i++) {
+                            let biz = this.city.Businesses[i];
+                            if (biz.BusinessType == BusinessTypes.FARM)
                                 continue;
-                            for (var j = 0; j < biz.Inventory.length; j++) {
-                                var item = biz.Inventory[j];
+                            for (let j = 0; j < biz.Inventory.length; j++) {
+                                let item = biz.Inventory[j];
                                 inventoryArray.push([
                                     biz.Name,
                                     item.Name,
@@ -755,11 +748,11 @@
                         console.log('Setting table data complete.');
                     }
 
-                    var dtDOM = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>';
-                    var dtDOMSmall = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>';
-                    var dtButtons = ['copy', 'excel', 'csv'];
+                    let dtDOM = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>';
+                    let dtDOMSmall = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>';
+                    let dtButtons = ['copy', 'excel', 'csv'];
 
-                    var peopleTable = $('#people_table').DataTable({
+                    let peopleTable = $('#people_table').DataTable({
                         "pageLength": 100,
                         'processing': true,
                         "scrollX": true,
@@ -776,7 +769,7 @@
                         colReorder: true
                     });
 
-                    var bizTable = $('#business_table').DataTable({
+                    let bizTable = $('#business_table').DataTable({
                         "pageLength": 10,
                         'processing': true,
                         "scrollX": true,
@@ -793,7 +786,7 @@
                         colReorder: true
                     });
 
-                    var farmTable = $('#farm_table').DataTable({
+                    let farmTable = $('#farm_table').DataTable({
                         "pageLength": 10,
                         'processing': true,
                         "scrollX": true,
@@ -809,7 +802,7 @@
                         colReorder: true
                     });
 
-                    var estateTable = $('#estate_table').DataTable({
+                    let estateTable = $('#estate_table').DataTable({
                         "pageLength": 10,
                         'processing': true,
                         "scrollX": true,
@@ -825,7 +818,7 @@
                         colReorder: true
                     });
 
-                    var inventoryTable = $('#inventory_table').DataTable({
+                    let inventoryTable = $('#inventory_table').DataTable({
                         "pageLength": 100,
                         'processing': true,
                         "scrollX": true,
@@ -838,8 +831,8 @@
                     console.log('Initiating DataTables complete.');
                 },
                 updateCharts() {
-                    var ctxAge = document.getElementById('age_graph').getContext('2d');
-                    var ageData = [
+                    let ctxAge = document.getElementById('age_graph').getContext('2d');
+                    let ageData = [
                         this.city.People.filter(x => x.Age <= 10).length,
                         this.city.People.filter(x => x.Age > 10 && x.Age <= 20).length,
                         this.city.People.filter(x => x.Age > 20 && x.Age <= 30).length,
@@ -851,7 +844,7 @@
                         this.city.People.filter(x => x.Age > 80 && x.Age <= 90).length,
                         this.city.People.filter(x => x.Age > 90 && x.Age <= 100).length,
                     ];
-                    var options = {
+                    let options = {
                         scales: {
                             yAxes: [{
                                 ticks: {
@@ -860,7 +853,7 @@
                             }]
                         }
                     };
-                    var ageChart = new Chart(ctxAge, {
+                    let ageChart = new Chart(ctxAge, {
                         type: 'line',
                         data: {
                             labels: ['0-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', '91-100'],
@@ -874,24 +867,24 @@
                         options: options
                     });
 
-                    var raceLabels = [];
-                    for (var i in this.raceFreqSettings) {
+                    let raceLabels = [];
+                    for (let i in this.raceFreqSettings) {
                         if (this.raceFreqSettings[i] && this.raceFreqSettings[i] != RaceFrequency.NONE)
                             raceLabels.push(i);
                     }
-                    var raceData = [];
-                    var raceColors = [];
-                    for (var i = 0; i < raceLabels.length; i++) {
+                    let raceData = [];
+                    let raceColors = [];
+                    for (let i = 0; i < raceLabels.length; i++) {
                         raceData.push(this.city.People.filter(x => x.Race == raceLabels[i]).length);
 
-                        var r = CryptoRandom.random() * 159 + 32;
-                        var g = CryptoRandom.random() * 159 + 32;
-                        var b = CryptoRandom.random() * 159 + 32;
+                        let r = CryptoRandom.random() * 159 + 32;
+                        let g = CryptoRandom.random() * 159 + 32;
+                        let b = CryptoRandom.random() * 159 + 32;
                         raceColors.push(`rgb(${r}, ${g}, ${b})`);
                     }
 
-                    var ctxRace = document.getElementById('race_graph').getContext('2d');
-                    var raceChart = new Chart(ctxRace, {
+                    let ctxRace = document.getElementById('race_graph').getContext('2d');
+                    let raceChart = new Chart(ctxRace, {
                         type: 'doughnut',
                         data: {
                             labels: raceLabels,
@@ -905,51 +898,51 @@
                     });
                 },
                 getFrequencyClass(race) {
-                    var f = this.raceFreqSettings[race];
+                    let f = this.raceFreqSettings[race];
                     if (f)
                         return this.frequencyClass[f];
                     else
                         return '';
                 },
                 downloadCSV() {
-                    var rows = [
+                    let rows = [
                         ['Each set of data will be proceeded by a header in square brackets: [].'],
                         [''],
                         ['[DESCRIPTION]'],
-                        Object.keys(this.city.Details),
-                        Object.values(this.city.Details),
+                        ['Notable Trait', 'Known For', 'Calamity'],
+                        [this.city.notableTrait, this.city.knownFor, this.city.calamity],
                         [''],
                         ['[PEOPLE]'],
                         Object.keys(this.city.People[0]),
                     ];
 
-                    for (var i = 0; i < this.city.People.length; i++) {
+                    for (let i = 0; i < this.city.People.length; i++) {
                         rows.push(Object.values(this.city.People[i]).map(x => this.csvClean(x)));
                     }
 
                     rows.push(['']);
                     rows.push(['[BUSINESSES]'])
                     rows.push(Object.keys(this.city.Businesses[0]));
-                    for (var i = 0; i < this.city.Businesses.length; i++) {
+                    for (let i = 0; i < this.city.Businesses.length; i++) {
                         rows.push(Object.values(this.city.Businesses[i]).map(x => this.csvClean(x)));
                     }
 
                     rows.push(['']);
                     rows.push(['[INVENTORY]'])
-                    var invHeaders = ['Business', 'Item', 'Cost'].map(x => this.csvClean(x));
+                    let invHeaders = ['Business', 'Item', 'Cost'].map(x => this.csvClean(x));
                     rows.push(invHeaders);
-                    for (var i = 0; i < this.city.Businesses.length; i++) {
-                        for (var j = 0; j < this.city.Businesses[i].Inventory.length; j++) {
-                            var item = this.city.Businesses[i].Inventory[j];
-                            var invData = [this.city.Businesses[i].Name, item.Name, item.displayCost()].map(x => this.csvClean(x));
+                    for (let i = 0; i < this.city.Businesses.length; i++) {
+                        for (let j = 0; j < this.city.Businesses[i].Inventory.length; j++) {
+                            let item = this.city.Businesses[i].Inventory[j];
+                            let invData = [this.city.Businesses[i].Name, item.Name, item.displayCost()].map(x => this.csvClean(x));
                             rows.push(invData);
                         }
                     }
 
                     let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
 
-                    var encodedUri = encodeURI(csvContent);
-                    var link = document.createElement("a");
+                    let encodedUri = encodeURI(csvContent);
+                    let link = document.createElement("a");
                     link.setAttribute("href", encodedUri);
                     link.setAttribute("download", "rpg_city.csv");
                     document.body.appendChild(link);
@@ -963,7 +956,7 @@
                 },
                 updateProsperity() {
                     if (this.prosperity.Label == "Custom") {
-                        var total = 1.0;
+                        let total = 1.0;
 
                         this.noblePercent = Math.min(total, this.noblePercent).toPrecision(3);
                         this.prosperity.noblePercent = this.noblePercent;
@@ -989,7 +982,7 @@
                 },
                 makeRaceSettingsConsistent() {
                     if (this.raceMode != "Various") {
-                        for (var key in this.raceFreqSettings) {
+                        for (let key in this.raceFreqSettings) {
                             if (key == this.raceMode)
                                 this.raceFreqSettings[key] = RaceFrequency.COMMON;
                             else
@@ -998,10 +991,10 @@
                     }
                 },
                 saveNames(raceName) {
-                    var key = Object.keys(Race).filter(k => Race[k].name == raceName);
-                    Race[key].firstNameMaleList = this.maleNames[raceName].split('\n');
-                    Race[key].firstNameFemaleList = this.femaleNames[raceName].split('\n');
-                    Race[key].lastNameList = this.lastNames[raceName].split('\n');
+                    let key = Object.keys(Races).filter(k => Races[k].name == raceName);
+                    Races[key].firstNameMaleList = this.maleNames[raceName].split('\n');
+                    Races[key].firstNameFemaleList = this.femaleNames[raceName].split('\n');
+                    Races[key].lastNameList = this.lastNames[raceName].split('\n');
                 }
             }
         });
