@@ -66,24 +66,30 @@ class Person {
     toString() {
         return this.fullName();
     }
-    getBusiness(businesses) {
-        return Business.getById(businesses, this.ownedBusiness);
-    }
     setBusiness(business) {
-        this.ownedBusiness = business.Id;
+        this.ownedBusiness = business;
         if (business.Owners.indexOf(this) < 0)
             business.Owners.push(this);
     }
-    getEmployer(businesses) {
-        return Business.getById(businesses, this.worksAt);
-    }
     setEmployer(business) {
-        this.worksAt = business.Id;
+        this.worksAt = business;
         if (business.Employees.indexOf(this) < 0)
             business.Employees.push(this);
     }
     fullName() {
         return `${this.FirstName} ${this.LastName}`.trim();
+    }
+    getSpouse() {
+        return Person.getById(this.Family.Members, this.Spouse);
+    }
+    static getById(people, id) {
+        if (id < 0 || !people)
+            return null;
+        for (let i = 0; i < people.length; i++) {
+            if (people[i].Id == id)
+                return people[i];
+        }
+        return null;
     }
 }
 class City {
@@ -95,6 +101,9 @@ class City {
     }
 }
 class Family {
+    constructor() {
+        this.Members = [];
+    }
     toString() {
         return this.displayValue();
     }
@@ -104,6 +113,7 @@ class Family {
         person.LastName = this.LastName;
         person.Caste = this.Caste;
         person.Family = this;
+        this.Members.push(person);
     }
     displayValue() {
         return `${this.LastName} [${this.Id}]`;

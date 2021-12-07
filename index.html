@@ -691,30 +691,30 @@
 
                     if (this.city) {
                         console.log('Setting table data...');
-                        peopleArr = this.city.People.map(x => [
-                            x.Id,
-                            `${x.fullName()}`,
-                            x.Race,
-                            x.Caste,
-                            x.RaceAge,
-                            x.Gender,
-                            x.Spouse ?? '',
-                            x.Family.displayValue(),
-                            x.ownedBusiness >= 0 ? `${x.getBusiness(businesses)} (Owner)` : x.getEmployer(businesses) ?? '',
-                            x.Appearance ?? '',
-                            x.Interaction ?? '',
-                            x.Strength ?? '',
-                            x.Weakness ?? '',
-                            x.Talent ?? '',
-                            x.Mannerism ?? '',
-                        ]);
+                        peopleArr = this.city.People.map(x => ({
+                            ID: x.Id,
+                            Name: `${x.fullName()}`,
+                            Race: x.Race,
+                            Caste: x.Caste,
+                            Age: x.RaceAge,
+                            Gender: x.Gender,
+                            Spouse: x.getSpouse()?.fullName() ?? '',
+                            Family: x.Family.displayValue(),
+                            'Works At': x.ownedBusiness ? `${x.ownedBusiness} (Owner)` : x.worksAt ?? '',
+                            Appearance: x.Appearance ?? '',
+                            Interaction: x.Interaction ?? '',
+                            Strength: x.Strength ?? '',
+                            Weakness: x.Weakness ?? '',
+                            Talent: x.Talent ?? '',
+                            Mannerism: x.Mannerism ?? '',
+                        }));
 
                         bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
                             ID: x.Id,
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(o => o.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
+                            Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(emp => emp?.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
                             Description: x.Description ?? '',
                         }));
 
@@ -722,14 +722,14 @@
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o.fullName()).join(', '),
+                            Employees: x.Employees.map(o => o?.fullName()).join(', '),
                         }));
 
                         estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.ESTATE).map(x => ({
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o.fullName()).join(', '),
+                            Employees: x.Employees.map(o => o?.fullName()).join(', '),
                         }));
 
                         for (let i = 0; i < this.city.Businesses.length; i++) {
@@ -765,13 +765,34 @@
                             $(window).trigger('resize');
                         },
                         data: peopleArr,
+                        columns: [
+                            { data: "ID" },
+                            {
+                                data: "Name",
+                                render: function (data, type, row, meta) {
+                                    return `${data} <a href="#" onclick="rerollFirstName(${row.ID})" title="Rename First" class="mx-1">${dice}</a> <a href="#" onclick="rerollLastName(${row.ID})" title="Rename Last" class="mx-1">${dice}</a>`;
+                                }
+                            },
+                            { data: "Race" },
+                            { data: "Caste" },
+                            { data: "Age" },
+                            { data: "Gender" },
+                            { data: "Spouse" },
+                            { data: "Family" },
+                            { data: "Works At" },
+                            { data: "Appearance" },
+                            { data: "Interaction" },
+                            { data: "Strength" },
+                            { data: "Weakness" },
+                            { data: "Talent" },
+                            { data: "Mannerism" },],
                         dom: dtDOM,
                         buttons: dtButtons,
                         colReorder: true
                     });
 
                     let bizTable = $('#business_table').DataTable({
-                        "pageLength": 10,
+                        "pageLength": 100,
                         'processing': true,
                         "scrollX": true,
                         data: bizArray,
@@ -780,7 +801,7 @@
                             {
                                 data: 'Name',
                                 render: function (data, type, row, meta) {
-                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename"> ${dice}</a>`;
+                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename" class="mx-1">${dice}</a>`;
                                 }
                             },
                             { data: 'BusinessType' },
@@ -1010,8 +1031,8 @@
             $('.result-table').DataTable().columns.adjust();
         })
 
-        function rerollBusinessName(id, depth = 10) {
-            let business = Business.getById(citygenapp.city.Businesses, id);
+        async function rerollBusinessName(id, depth = 10, business = null) {
+            business = business ?? Business.getById(citygenapp.city.Businesses, id);
             if (business) {
                 let oldName = business.Name;
                 business.generateName();
@@ -1020,7 +1041,39 @@
                 else
                     citygenapp.initDataTables();
             }
+        }
 
+        async function rerollFirstName(id) {
+            let person = Person.getById(citygenapp.city.People, id);
+            if (person) {
+                let oldName = person.FirstName;
+                let nameGen = citygenapp.citygen.NameGenerators.filter(n => n.Key.Race == person.Race && n.Key.Gender == person.Gender)[0];
+                person.FirstName = nameGen.getFirst();
+                let business = person.ownedBusiness ?? person.worksAt;
+                if (business && business.Name.indexOf(oldName) >= 0)
+                    rerollBusinessName(business.Id, business);
+                else
+                    citygenapp.initDataTables();
+            }
+        }
+
+        async function rerollLastName(id) {
+            let person = Person.getById(citygenapp.city.People, id);
+            if (person) {
+                let oldName = person.LastName;
+                let nameGen = citygenapp.citygen.NameGenerators.filter(n => n.Key.Race == person.Race && n.Key.Gender == person.Gender)[0];
+                person.LastName = nameGen.getLast();
+                let familyMembers = person.Family.Members;
+                for (let i = 0; i < familyMembers.length; i++)
+                    familyMembers[i].LastName = person.LastName;
+                person.Family.LastName = person.LastName;
+
+                let business = person.ownedBusiness ?? person.worksAt;
+                if (business && business.Name.indexOf(oldName) >= 0)
+                    rerollBusinessName(business.Id, business);
+                else
+                    citygenapp.initDataTables();
+            }
         }
     </script>
 </body>

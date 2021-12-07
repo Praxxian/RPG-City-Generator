@@ -147,7 +147,7 @@ class Person {
     Age: number
     Gender: Gender
     Family: Family
-    Spouse: string
+    Spouse: number
     Appearance: string
     Strength: string
     Weakness: string
@@ -160,35 +160,41 @@ class Person {
     Bond: string
     FlawOrSecret: string
     RaceAge: number
-    ownedBusiness: number
-    worksAt: number
+    ownedBusiness: Business
+    worksAt: Business
 
     toString(): string {
         return this.fullName();
     }
 
-    getBusiness(businesses: Business[]): Business {
-        return Business.getById(businesses, this.ownedBusiness);
-    }
-
     setBusiness(business: Business) {
-        this.ownedBusiness = business.Id;
+        this.ownedBusiness = business;
         if (business.Owners.indexOf(this) < 0)
             business.Owners.push(this);
     }
 
-    getEmployer(businesses: Business[]): Business {
-        return Business.getById(businesses, this.worksAt);
-    }
-
     setEmployer(business: Business) {
-        this.worksAt = business.Id;
+        this.worksAt = business;
         if (business.Employees.indexOf(this) < 0)
             business.Employees.push(this);
     }
 
     fullName(): string {
         return `${this.FirstName} ${this.LastName}`.trim();
+    }
+
+    getSpouse(): Person {
+        return Person.getById(this.Family.Members, this.Spouse);
+    }
+
+    static getById(people: Person[], id: number): Person {
+        if (id < 0 || !people)
+            return null;
+        for (let i = 0; i < people.length; i++) {
+            if (people[i].Id == id)
+                return people[i];
+        }
+        return null;
     }
 }
 
@@ -207,6 +213,7 @@ class Family {
     LastName: string
     Caste: Caste
     Id: number
+    Members: Person[] = []
 
     toString(): string {
         return this.displayValue();
@@ -218,6 +225,7 @@ class Family {
         person.LastName = this.LastName;
         person.Caste = this.Caste;
         person.Family = this;
+        this.Members.push(person);
     }
 
     displayValue(): string {

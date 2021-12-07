@@ -181,8 +181,8 @@ class CityGenerator {
                     || (spouse2.Race != spouse1.Race && !outgoing))
                     continue;
                 family.add(spouse2);
-                spouse2.Spouse = spouse1.fullName();
-                spouse1.Spouse = spouse2.fullName();
+                spouse2.Spouse = spouse1.Id;
+                spouse1.Spouse = spouse2.Id;
                 break;
             }
             if (spouse2 || CryptoRandom.random() < 0.1) {
@@ -231,13 +231,12 @@ class CityGenerator {
         this.assignJobs();
     }
     createNobleEstates() {
-        let nobles = this.City.People.filter(x => x.Caste == Caste.NOBLE);
         let nobleFamilies = this.City.Families.filter(f => f.Caste == Caste.NOBLE);
         for (let i = 0; i < nobleFamilies.length; i++) {
             let family = nobleFamilies[i];
-            let headOfFamily = nobles.filter(x => x.Family == family).sort(x => x.Age).reverse()[0];
+            let headOfFamily = family.Members.sort(x => x.Age).reverse()[0];
             let business = this.createNewBusiness(BusinessTypes.ESTATE, headOfFamily);
-            let spouse = this.findSpouse(headOfFamily);
+            let spouse = headOfFamily.getSpouse();
             if (spouse)
                 spouse.setBusiness(business);
         }
@@ -250,11 +249,6 @@ class CityGenerator {
         business.generateName();
         this.City.Businesses.push(business);
         return business;
-    }
-    findSpouse(person) {
-        let family = this.City.People.filter(p => p.Family == person.Family);
-        let spouse = family.filter(p => p.fullName() == person.Spouse)[0];
-        return spouse;
     }
     createStoresAndFarms() {
         let businessTypes = [];
@@ -271,16 +265,16 @@ class CityGenerator {
             for (let j = 0; j < this.City.People.length; j++) {
                 let person = this.City.People[j];
                 if (person.Age < AdultHumanAge
-                    || person.ownedBusiness >= 0
-                    || person.worksAt >= 0
+                    || person.ownedBusiness
+                    || person.worksAt
                     || businessType.ownerCastes.indexOf(person.Caste) < 0)
                     continue;
                 let business = this.createNewBusiness(businessType, person);
-                let family = this.City.People.filter(p => p.Family == person.Family);
-                let spouse = family.filter(p => p.fullName() == person.Spouse)[0];
+                let familyMembers = person.Family.Members;
+                let spouse = person.getSpouse();
                 if (spouse && businessType != BusinessTypes.TEMPLE)
                     spouse.setBusiness(business);
-                let workingKids = family.filter(p => p != spouse && p != person && p.Age >= WorkingHumanAge);
+                let workingKids = familyMembers.filter(p => p != spouse && p != person && p.Age >= WorkingHumanAge);
                 workingKids.forEach(function (k) {
                     if (CryptoRandom.random() >= 0.1)
                         k.setEmployer(business);
@@ -327,8 +321,8 @@ class CityGenerator {
             for (let i = 0; i < this.City.People.length && bizMaxEmployees > 0; i++) {
                 let person = this.City.People[i];
                 if (person.Age < WorkingHumanAge
-                    || person.ownedBusiness >= 0
-                    || person.worksAt >= 0
+                    || person.ownedBusiness
+                    || person.worksAt
                     || biz.BusinessType.employeeCastes.indexOf(person.Caste) < 0)
                     continue;
                 person.setEmployer(biz);
