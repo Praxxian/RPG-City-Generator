@@ -166,7 +166,7 @@ class Business {
         this.Name = businessType == BusinessTypes.BREWERY || businessType == BusinessTypes.SHIPPING ? `${owner.LastName} ${CryptoRandom.randomFromArray(altNames)}` : `${owner.FirstName}'s ${CryptoRandom.randomFromArray(altNames)}`;
     }
     static getById(businesses, id) {
-        if (!id || !businesses)
+        if (id < 0 || !businesses)
             return null;
         for (let i = 0; i < businesses.length; i++) {
             if (businesses[i].Id == id)

@@ -294,7 +294,7 @@ class Business {
     }
 
     static getById(businesses: Business[], id: number): Business {
-        if (!id || !businesses)
+        if (id < 0 || !businesses)
             return null;
         for (let i = 0; i < businesses.length; i++) {
             if (businesses[i].Id == id)

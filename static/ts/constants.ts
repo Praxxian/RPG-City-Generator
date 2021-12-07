@@ -542,7 +542,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
         nouns: [],
-        altNames: ["Horses", "Fine Steeds", "Mounts", "Colts and Fillies", "Ranch"],
+        altNames: ["Horses", "Fine Steeds", "Mounts", "Colts and Fillies", "Ranch","Stables"],
         notes: function () { return ''; },
         frequency: function (settings) {
             switch (settings.CitySize) {

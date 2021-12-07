@@ -306,8 +306,8 @@ class CityGenerator {
             for (let j = 0; j < this.City.People.length; j++) {
                 let person = this.City.People[j];
                 if (person.Age < AdultHumanAge
-                    || person.ownedBusiness
-                    || person.worksAt
+                    || person.ownedBusiness >= 0
+                    || person.worksAt >= 0
                     || businessType.ownerCastes.indexOf(person.Caste) < 0)
                     continue;
 
@@ -367,8 +367,8 @@ class CityGenerator {
             for (let i = 0; i < this.City.People.length && bizMaxEmployees > 0; i++) {
                 let person = this.City.People[i];
                 if (person.Age < WorkingHumanAge
-                    || person.ownedBusiness
-                    || person.worksAt
+                    || person.ownedBusiness >= 0
+                    || person.worksAt >= 0
                     || biz.BusinessType.employeeCastes.indexOf(person.Caste) < 0)
                     continue;
                 person.setEmployer(biz);

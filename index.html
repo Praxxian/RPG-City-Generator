@@ -431,13 +431,12 @@
                                     <th>Spouse</th>
                                     <th>Family</th>
                                     <th>Works At</th>
-                                    <!-- <th>Personality</th> -->
                                     <th>Appearance</th>
+                                    <th>Interaction</th>
                                     <th>Strength</th>
                                     <th>Weakness</th>
                                     <th>Talent</th>
                                     <th>Mannerism</th>
-                                    <th>Interaction</th>
                                 </thead>
                             </table>
                         </div>
@@ -447,6 +446,7 @@
                                 class="table result-table table-striped table-hover table-bordered table-sm table-dark"
                                 id="business_table" style="width: 100%;">
                                 <thead>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Owners</th>
@@ -700,16 +700,17 @@
                             x.Gender,
                             x.Spouse ?? '',
                             x.Family.displayValue(),
-                            x.getBusiness() ? `${x.getBusiness(businesses)} (Owner)` : x.getEmployer(businesses) ?? '',
+                            x.ownedBusiness >= 0 ? `${x.getBusiness(businesses)} (Owner)` : x.getEmployer(businesses) ?? '',
                             x.Appearance ?? '',
+                            x.Interaction ?? '',
                             x.Strength ?? '',
                             x.Weakness ?? '',
                             x.Talent ?? '',
                             x.Mannerism ?? '',
-                            x.Interaction ?? '',
                         ]);
 
                         bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
+                            ID: x.Id,
                             Name: x.Name,
                             BusinessType: x.BusinessType.name,
                             Owners: x.Owners.map(o => o.fullName()).join(', '),
@@ -775,7 +776,13 @@
                         "scrollX": true,
                         data: bizArray,
                         columns: [
-                            { data: 'Name' },
+                            { data: 'ID' },
+                            {
+                                data: 'Name',
+                                render: function (data, type, row, meta) {
+                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename"> ${dice}</a>`;
+                                }
+                            },
                             { data: 'BusinessType' },
                             { data: 'Owners' },
                             { data: 'Employees' },
@@ -952,7 +959,7 @@
                 csvClean(value) {
                     if (Array.isArray(value))
                         value = value.join('; ');
-                    return '"' + (value ?? '') + '"';
+                    return '"' + (value?.toString() ?? '') + '"';
                 },
                 updateProsperity() {
                     if (this.prosperity.Label == "Custom") {
@@ -1002,6 +1009,19 @@
         $(document).on('shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
             $('.result-table').DataTable().columns.adjust();
         })
+
+        function rerollBusinessName(id, depth = 10) {
+            let business = Business.getById(citygenapp.city.Businesses, id);
+            if (business) {
+                let oldName = business.Name;
+                business.generateName();
+                if (business.Name == oldName && depth > 0)
+                    rerollBusinessName(id, --depth);
+                else
+                    citygenapp.initDataTables();
+            }
+
+        }
     </script>
 </body>
 
