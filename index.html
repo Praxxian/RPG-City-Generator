@@ -1032,48 +1032,71 @@
         })
 
         async function rerollBusinessName(id, depth = 10, business = null) {
-            business = business ?? Business.getById(citygenapp.city.Businesses, id);
-            if (business) {
-                let oldName = business.Name;
-                business.generateName();
-                if (business.Name == oldName && depth > 0)
-                    rerollBusinessName(id, --depth);
-                else
+            let promise = new Promise((resolve, reject) => {
+                business = business ?? Business.getById(citygenapp.city.Businesses, id);
+                if (business) {
+                    let oldName = business.Name;
+                    business.generateName();
+                    if (business.Name == oldName && depth > 0)
+                        rerollBusinessName(id, --depth);
+                    else
+                        return resolve(true);
+                }
+                return resolve(false);
+            });
+            promise.then(updateTables => {
+                if (updateTables)
                     citygenapp.initDataTables();
-            }
+            });
         }
 
         async function rerollFirstName(id) {
-            let person = Person.getById(citygenapp.city.People, id);
-            if (person) {
-                let oldName = person.FirstName;
-                let nameGen = citygenapp.citygen.NameGenerators.filter(n => n.Key.Race == person.Race && n.Key.Gender == person.Gender)[0];
-                person.FirstName = nameGen.getFirst();
-                let business = person.ownedBusiness ?? person.worksAt;
-                if (business && business.Name.indexOf(oldName) >= 0)
-                    rerollBusinessName(business.Id, business);
-                else
+            let promise = new Promise((resolve, reject) => {
+                let person = Person.getById(citygenapp.city.People, id);
+                if (person) {
+                    let oldName = person.FirstName;
+                    let nameGen = citygenapp.citygen.NameGenerators.filter(n => n.Key.Race == person.Race && n.Key.Gender == person.Gender)[0];
+                    person.FirstName = nameGen.getFirst();
+                    let business = person.ownedBusiness ?? person.worksAt;
+                    if (business && business.Name.indexOf(oldName) >= 0)
+                        rerollBusinessName(business.Id, business);
+                    else
+                        resolve(true);
+                }
+                return resolve(false);
+            });
+
+            promise.then(updateTables => {
+                if (updateTables)
                     citygenapp.initDataTables();
-            }
+            });
         }
 
         async function rerollLastName(id) {
-            let person = Person.getById(citygenapp.city.People, id);
-            if (person) {
-                let oldName = person.LastName;
-                let nameGen = citygenapp.citygen.NameGenerators.filter(n => n.Key.Race == person.Race && n.Key.Gender == person.Gender)[0];
-                person.LastName = nameGen.getLast();
-                let familyMembers = person.Family.Members;
-                for (let i = 0; i < familyMembers.length; i++)
-                    familyMembers[i].LastName = person.LastName;
-                person.Family.LastName = person.LastName;
+            let promise = new Promise((resolve, reject) => {
+                let person = Person.getById(citygenapp.city.People, id);
+                if (person) {
+                    let oldName = person.LastName;
+                    let nameGen = citygenapp.citygen.NameGenerators.filter(n => n.Key.Race == person.Race && n.Key.Gender == person.Gender)[0];
+                    person.LastName = nameGen.getLast();
+                    let familyMembers = person.Family.Members;
+                    for (let i = 0; i < familyMembers.length; i++)
+                        familyMembers[i].LastName = person.LastName;
+                    person.Family.LastName = person.LastName;
 
-                let business = person.ownedBusiness ?? person.worksAt;
-                if (business && business.Name.indexOf(oldName) >= 0)
-                    rerollBusinessName(business.Id, business);
-                else
+                    let business = person.ownedBusiness ?? person.worksAt;
+                    if (business && business.Name.indexOf(oldName) >= 0)
+                        rerollBusinessName(business.Id, business);
+                    else
+                        resolve(true);
+                }
+                resolve(false);
+            });
+
+            promise.then(updateTables => {
+                if (updateTables)
                     citygenapp.initDataTables();
-            }
+            });
         }
     </script>
 </body>
