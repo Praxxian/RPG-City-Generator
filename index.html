@@ -1078,7 +1078,7 @@
                     if (business && business.Name.indexOf(oldName) >= 0)
                         rerollBusinessName(business.Id, business);
                     else
-                        resolve(false);
+                        resolve(true);
                 }
                 return resolve(false);
             });
@@ -1105,7 +1105,7 @@
                     if (business && business.Name.indexOf(oldName) >= 0)
                         rerollBusinessName(business.Id, business);
                     else
-                        resolve(false);
+                        resolve(true);
                 }
                 resolve(false);
             });
