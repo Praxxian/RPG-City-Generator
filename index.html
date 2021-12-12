@@ -491,10 +491,14 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="stats" role="tabpanel">
-                            <h5>Race Distributions</h5>
-                            <canvas id="race_graph" width="400" height="100"></canvas>
-                            <h5>Age Distributions</h5>
-                            <canvas id="age_graph" width="400" height="100"></canvas>
+                            <div class="row mb-3">
+                                <div class="col-3" id="race_graph">
+                                    <h5>Race Distributions</h5>
+                                </div>
+                            </div>
+                            <div class="row" id="age_graph">
+                                <h5>Age Distributions</h5>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="changes" role="tabpanel">
                             <div v-for="change in changes">
@@ -517,10 +521,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.js"></script>
-    <!-- TODO swap for prod version -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.min.js"></script>
     <script src="static/js/changelog.js"></script>
     <script src="static/js/stats.js"></script>
     <script src="static/js/names.js"></script>
@@ -535,7 +537,7 @@
             })
         }
 
-        let dice = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        let diceIcon = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
 <circle cx="4" cy="4" r="1.5"/>
 <circle cx="12" cy="4" r="1.5"/>
@@ -545,17 +547,6 @@
 <circle cx="4" cy="8" r="1.5"/>
 </svg>`;
 
-        Vue.component('reroll-btn', {
-            props: ['id', 'entity'],
-            template: `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
-<circle cx="4" cy="4" r="1.5"/>
-<circle cx="12" cy="4" r="1.5"/>
-<circle cx="12" cy="12" r="1.5"/>
-<circle cx="12" cy="8" r="1.5"/>
-<circle cx="4" cy="12" r="1.5"/>
-<circle cx="4" cy="8" r="1.5"/>
-</svg>`
         });
 
         let citygenapp = new Vue({
@@ -601,7 +592,12 @@
                 magicLevel: MagicLevels.NONE,
                 genderOptions: Gender,
                 genders: Object.keys(Gender).map(g => Gender[g]),
-                genderError: null
+                genderError: null,
+                dtSettings: {
+                    dtDOM: '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>',
+                    dtDOMSmall: '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>',
+                    dtButtons: ['copy', 'excel', 'csv'],
+                }
             },
             mounted: function () {
                 for (let i in this.raceOptions) {
@@ -628,6 +624,9 @@
                 generate() {
                     this.isLoading = true;
                     doubleRaf(() => this.generateAsync());
+
+                    //Workaround for Chart JS not liking it when we generate a chart and the tab is open
+                    $('#about-tab').click();
                 },
                 async generateAsync() {
                     try {
@@ -678,99 +677,54 @@
                         button.html("«");
                 },
                 initDataTables() {
-                    console.log('Initiating DataTables...');
-                    if ($('.result-table').DataTable())
-                        $('.result-table').DataTable().destroy();
+                    if (this.city) {
+                        this.createPeopleTable();
+                        this.createBusinessTables();
+                    }
+                },
+                deleteExistingTable(selector) {
+                    let existing = $(selector).DataTable();
+                    if (existing)
+                        existing.destroy();
+                },
+                createPeopleTable() {
+                    console.log('Initiating People DataTables...');
+                    this.deleteExistingTable('#people_table');
 
                     let peopleArr = [];
-                    let bizArray = [];
-                    let farmArray = [];
-                    let estateArray = [];
-                    let inventoryArray = [];
-                    var businesses = this.city.Businesses;
 
-                    if (this.city) {
-                        console.log('Setting table data...');
-                        peopleArr = this.city.People.map(x => ({
-                            ID: x.Id,
-                            Name: `${x.fullName()}`,
-                            Race: x.Race,
-                            Caste: x.Caste,
-                            Age: x.RaceAge,
-                            Gender: x.Gender,
-                            Spouse: x.getSpouse()?.fullName() ?? '',
-                            Family: x.Family.displayValue(),
-                            'Works At': x.ownedBusiness ? `${x.ownedBusiness} (Owner)` : x.worksAt ?? '',
-                            Appearance: x.Appearance ?? '',
-                            Interaction: x.Interaction ?? '',
-                            Strength: x.Strength ?? '',
-                            Weakness: x.Weakness ?? '',
-                            Talent: x.Talent ?? '',
-                            Mannerism: x.Mannerism ?? '',
-                        }));
-
-                        bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
-                            ID: x.Id,
-                            Name: x.Name,
-                            BusinessType: x.BusinessType.name,
-                            Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(emp => emp?.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
-                            Description: x.Description ?? '',
-                        }));
-
-                        farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.FARM).map(x => ({
-                            Name: x.Name,
-                            BusinessType: x.BusinessType.name,
-                            Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o?.fullName()).join(', '),
-                        }));
-
-                        estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.ESTATE).map(x => ({
-                            Name: x.Name,
-                            BusinessType: x.BusinessType.name,
-                            Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o?.fullName()).join(', '),
-                        }));
-
-                        for (let i = 0; i < this.city.Businesses.length; i++) {
-                            let biz = this.city.Businesses[i];
-                            if (biz.BusinessType == BusinessTypes.FARM)
-                                continue;
-                            for (let j = 0; j < biz.Inventory.length; j++) {
-                                let item = biz.Inventory[j];
-                                inventoryArray.push([
-                                    biz.Name,
-                                    item.Name,
-                                    item.displayCost()
-                                ])
-                            }
-                        }
-
-                        console.log('Setting table data complete.');
-                    }
-
-                    let dtDOM = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>';
-                    let dtDOMSmall = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>';
-                    let dtButtons = ['copy', 'excel', 'csv'];
+                    console.log('Setting table data...');
+                    peopleArr = this.city.People.map(x => ({
+                        ID: x.Id,
+                        Name: `${x.fullName()}`,
+                        Race: x.Race,
+                        Caste: x.Caste,
+                        Age: x.RaceAge,
+                        Gender: x.Gender,
+                        Spouse: x.getSpouse()?.fullName() ?? '',
+                        Family: x.Family.displayValue(),
+                        'Works At': x.ownedBusiness ? `${x.ownedBusiness} (Owner)` : x.worksAt ?? '',
+                        Appearance: x.Appearance ?? '',
+                        Interaction: x.Interaction ?? '',
+                        Strength: x.Strength ?? '',
+                        Weakness: x.Weakness ?? '',
+                        Talent: x.Talent ?? '',
+                        Mannerism: x.Mannerism ?? '',
+                    }));
+                    console.log('Setting table data complete.');
 
                     let peopleTable = $('#people_table').DataTable({
-                        "pageLength": 100,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 100,
+                        processing: true,
+                        scrollX: true,
                         autoWidth: true,
-                        "fnInitComplete": function (oSettings) {
-                            $(window).resize();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            $(window).trigger('resize');
-                        },
                         data: peopleArr,
                         columns: [
                             { data: "ID" },
                             {
                                 data: "Name",
                                 render: function (data, type, row, meta) {
-                                    return `${data} <a href="#" onclick="rerollFirstName(${row.ID})" title="Rename First" class="mx-1">${dice}</a> <a href="#" onclick="rerollLastName(${row.ID})" title="Rename Last" class="mx-1">${dice}</a>`;
+                                    return `${data} <a href="#" onclick="rerollFirstName(${row.ID})" title="Rename First" class="mx-1">${diceIcon}</a> <a href="#" onclick="rerollLastName(${row.ID})" title="Rename Last" class="mx-1">${diceIcon}</a>`;
                                 }
                             },
                             { data: "Race" },
@@ -786,22 +740,76 @@
                             { data: "Weakness" },
                             { data: "Talent" },
                             { data: "Mannerism" },],
-                        dom: dtDOM,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOM,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
+                    this.$forceUpdate();
+                    console.log('Initiating People DataTables complete.');
+                },
+                createBusinessTables() {
+                    console.log('Initiating Business DataTables...');
+                    this.deleteExistingTable('#business_table');
+                    this.deleteExistingTable('#farm_table');
+                    this.deleteExistingTable('#estate_table');
+                    this.deleteExistingTable('#inventory_table');
+
+                    let bizArray = [];
+                    let farmArray = [];
+                    let estateArray = [];
+                    let inventoryArray = [];
+                    let businesses = this.city.Businesses;
+
+                    bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
+                        ID: x.Id,
+                        Name: x.Name,
+                        BusinessType: x.BusinessType.name,
+                        Owners: x.Owners.map(o => o.fullName()).join(', '),
+                        Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(emp => emp?.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
+                        Description: x.Description ?? '',
+                    }));
+
+                    farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.FARM).map(x => ({
+                        Name: x.Name,
+                        BusinessType: x.BusinessType.name,
+                        Owners: x.Owners.map(o => o.fullName()).join(', '),
+                        Employees: x.Employees.map(o => o?.fullName()).join(', '),
+                    }));
+
+                    estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.ESTATE).map(x => ({
+                        Name: x.Name,
+                        BusinessType: x.BusinessType.name,
+                        Owners: x.Owners.map(o => o.fullName()).join(', '),
+                        Employees: x.Employees.map(o => o?.fullName()).join(', '),
+                    }));
+
+                    for (let i = 0; i < this.city.Businesses.length; i++) {
+                        let biz = this.city.Businesses[i];
+                        if (biz.BusinessType == BusinessTypes.FARM)
+                            continue;
+                        for (let j = 0; j < biz.Inventory.length; j++) {
+                            let item = biz.Inventory[j];
+                            inventoryArray.push([
+                                biz.Name,
+                                item.Name,
+                                item.displayCost()
+                            ])
+                        }
+                    }
+
+                    console.log('Setting table data complete.');
 
                     let bizTable = $('#business_table').DataTable({
-                        "pageLength": 100,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 100,
+                        processing: true,
+                        scrollX: true,
                         data: bizArray,
                         columns: [
                             { data: 'ID' },
                             {
                                 data: 'Name',
                                 render: function (data, type, row, meta) {
-                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename" class="mx-1">${dice}</a>`;
+                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename" class="mx-1">${diceIcon}</a>`;
                                 }
                             },
                             { data: 'BusinessType' },
@@ -809,15 +817,15 @@
                             { data: 'Employees' },
                             { data: 'Description' },
                         ],
-                        dom: dtDOMSmall,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOMSmall,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
 
                     let farmTable = $('#farm_table').DataTable({
-                        "pageLength": 10,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 10,
+                        processing: true,
+                        scrollX: true,
                         data: farmArray,
                         columns: [
                             { data: 'Name' },
@@ -825,15 +833,15 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
-                        dom: dtDOMSmall,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOMSmall,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
 
                     let estateTable = $('#estate_table').DataTable({
-                        "pageLength": 10,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 10,
+                        processing: true,
+                        scrollX: true,
                         data: estateArray,
                         columns: [
                             { data: 'Name' },
@@ -841,25 +849,28 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
-                        dom: dtDOMSmall,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOMSmall,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
 
                     let inventoryTable = $('#inventory_table').DataTable({
-                        "pageLength": 100,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 100,
+                        processing: true,
+                        scrollX: true,
                         data: inventoryArray,
-                        dom: dtDOM,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOM,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
                     this.$forceUpdate();
-                    console.log('Initiating DataTables complete.');
+                    console.log('Initiating Business DataTables complete.');
                 },
                 updateCharts() {
-                    let ctxAge = document.getElementById('age_graph').getContext('2d');
+                    $('canvas').remove();
+
+                    let ageCanvas = $('<canvas width="32" height="9"></canvas>');
+                    $('#age_graph').append(ageCanvas);
                     let ageData = [
                         this.city.People.filter(x => x.Age <= 10).length,
                         this.city.People.filter(x => x.Age > 10 && x.Age <= 20).length,
@@ -874,25 +885,35 @@
                     ];
                     let options = {
                         scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.33)'
                                 }
-                            }]
+                            },
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.33)'
+                                }
+                            }
                         }
                     };
-                    let ageChart = new Chart(ctxAge, {
+
+                    let ageChart = new Chart(ageCanvas, {
                         type: 'line',
+                        options: options,
                         data: {
                             labels: ['0-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', '91-100'],
                             datasets: [{
                                 label: 'Age Count',
                                 data: ageData,
                                 borderWidth: 1,
-                                backgroundColor: 'rgba(100, 150, 255, 0.33)'
+                                borderColor: 'rgba(255, 255, 255, 1)',
+                                backgroundColor: 'rgba(0, 100, 255, 0.33)',
+                                fill: true
                             }]
-                        },
-                        options: options
+                        }
                     });
 
                     let raceLabels = [];
@@ -904,15 +925,13 @@
                     let raceColors = [];
                     for (let i = 0; i < raceLabels.length; i++) {
                         raceData.push(this.city.People.filter(x => x.Race == raceLabels[i]).length);
-
-                        let r = CryptoRandom.random() * 159 + 32;
-                        let g = CryptoRandom.random() * 159 + 32;
-                        let b = CryptoRandom.random() * 159 + 32;
-                        raceColors.push(`rgb(${r}, ${g}, ${b})`);
+                        let rgb = [32, 32, 64, 64, 128, 128, 200, 200].sort(() => 0.5 - CryptoRandom.random()).slice(0, 3);
+                        raceColors.push(`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
                     }
 
-                    let ctxRace = document.getElementById('race_graph').getContext('2d');
-                    let raceChart = new Chart(ctxRace, {
+                    let raceCanvas = $('<canvas width="1" height="1"></canvas>');
+                    $('#race_graph').append(raceCanvas);
+                    let raceChart = new Chart(raceCanvas, {
                         type: 'doughnut',
                         data: {
                             labels: raceLabels,
@@ -920,7 +939,6 @@
                                 label: 'Race Count',
                                 data: raceData,
                                 backgroundColor: raceColors
-                                //borderWidth: 1
                             }]
                         }
                     });
@@ -1023,6 +1041,7 @@
                     Races[key].firstNameMaleList = this.maleNames[raceName].split('\n');
                     Races[key].firstNameFemaleList = this.femaleNames[raceName].split('\n');
                     Races[key].lastNameList = this.lastNames[raceName].split('\n');
+                    this.$forceUpdate();
                 }
             }
         });
@@ -1060,15 +1079,14 @@
                     let business = person.ownedBusiness ?? person.worksAt;
                     if (business && business.Name.indexOf(oldName) >= 0)
                         rerollBusinessName(business.Id, business);
-                    else
-                        resolve(true);
+                    resolve(true);
                 }
                 return resolve(false);
             });
 
             promise.then(updateTables => {
                 if (updateTables)
-                    citygenapp.initDataTables();
+                    citygenapp.createPeopleTable();
             });
         }
 
@@ -1087,15 +1105,14 @@
                     let business = person.ownedBusiness ?? person.worksAt;
                     if (business && business.Name.indexOf(oldName) >= 0)
                         rerollBusinessName(business.Id, business);
-                    else
-                        resolve(true);
+                    resolve(true);
                 }
                 resolve(false);
             });
 
             promise.then(updateTables => {
                 if (updateTables)
-                    citygenapp.initDataTables();
+                    citygenapp.createPeopleTable();
             });
         }
     </script>
