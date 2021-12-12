@@ -1373,7 +1373,7 @@ const AllItems = {
     Meat_Chunk: new InventoryItem(ItemType.FOOD, "Meat, chunk", 30, Unit.COPPER),
     Pitcher_Of_Common_Wine: new InventoryItem(ItemType.FOOD, "Pitcher of Common Wine", 20, Unit.COPPER),
     Fine_Bottle_Of_Wine: new InventoryItem(ItemType.FOOD, "Fine Bottle of Wine", 1000, Unit.COPPER),
-    Coach_Cab_Beteen_Towns_Per_Mile: new InventoryItem(ItemType.SERVICE, "Coach Cab Beteen Towns (per mile)", 3, Unit.COPPER),
+    Coach_Cab_Between_Towns_Per_Mile: new InventoryItem(ItemType.SERVICE, "Coach Cab Between Towns (per mile)", 3, Unit.COPPER),
     Coach_Cab_Within_City: new InventoryItem(ItemType.SERVICE, "Coach Cab within City", 1, Unit.COPPER),
     Skilled_Labor_Per_Day: new InventoryItem(ItemType.SERVICE, "Skilled Labor (per day)", 200, Unit.COPPER),
     Untrained_Labor_Per_Day: new InventoryItem(ItemType.SERVICE, "Untrained Labor (per day)", 20, Unit.COPPER),
