@@ -57,8 +57,13 @@ class MagicLevel {
 class CitySettings {
 }
 class BusinessType {
-    constructor() {
+    constructor(data) {
         this.adjectives = [];
+        if (data) {
+            for (const i in data) {
+                this[i] = data[i];
+            }
+        }
     }
     toString() {
         return this.name;

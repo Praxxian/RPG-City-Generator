@@ -134,6 +134,14 @@ class BusinessType {
     minEmployees: (settings: CitySettings) => number
     maxEmployees: (settings: CitySettings) => number
 
+    constructor(data: object) {
+        if (data) {
+            for (const i in data) {
+                this[i] = data[i];
+            }
+        }
+    }
+
     toString(): string {
         return this.name;
     }
