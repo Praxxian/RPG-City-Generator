@@ -1077,14 +1077,15 @@
                     let business = person.ownedBusiness ?? person.worksAt;
                     if (business && business.Name.indexOf(oldName) >= 0)
                         rerollBusinessName(business.Id, business);
-                    resolve(true);
+                    else
+                        resolve(false);
                 }
                 return resolve(false);
             });
 
             promise.then(updateTables => {
                 if (updateTables)
-                    citygenapp.createPeopleTable();
+                    citygenapp.initDataTables();
             });
         }
 
@@ -1103,14 +1104,15 @@
                     let business = person.ownedBusiness ?? person.worksAt;
                     if (business && business.Name.indexOf(oldName) >= 0)
                         rerollBusinessName(business.Id, business);
-                    resolve(true);
+                    else
+                        resolve(false);
                 }
                 resolve(false);
             });
 
             promise.then(updateTables => {
                 if (updateTables)
-                    citygenapp.createPeopleTable();
+                    citygenapp.initDataTables();
             });
         }
     </script>
