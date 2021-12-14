@@ -182,12 +182,13 @@
                         <select v-model="raceMode" class="form-select bg-dark text-light mb-3"
                             @change="makeRaceSettingsConsistent()">
                             <option value="Various" selected>Various</option>
-                            <option v-for="r in raceOptions" :value="r.name">{{ r.name }} Only</option>
+                            <option v-for="r in Object.entries(raceOptions).sort((a,b) => a[1].sort - b[1].sort)"
+                                :value="r[0]">{{ r[1].name }} Only</option>
                         </select>
                         <button v-if="raceMode != 'Various'" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                            :data-bs-target="'#' + raceMode.replace(' ','') + 'Modal'">Names <svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            :data-bs-target="'#' + raceMode + 'Modal'">Edit <svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" class="bi bi-pencil-square"
+                                viewBox="0 0 16 16">
                                 <path
                                     d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                 <path fill-rule="evenodd"
@@ -197,16 +198,17 @@
                             <h5>Race Frequency</h5>
                             <h6><small class="text-muted">Some default values are already selected.</small></h6>
                             <h6 class="text-danger" v-if="raceError">{{raceError}}</h6>
-
+                            <button class="btn btn-sm btn-success" @click="addNewRace()">Add Race</button>
                             <table class="table">
-                                <tr v-for="r in raceOptions" class="align-middle">
+                                <tr v-for="r in Object.entries(raceOptions).sort((a,b) => a[1].sort - b[1].sort)"
+                                    class="align-middle">
                                     <td>
-                                        <label class="form-label text-light">{{r.name}}</label>
+                                        <label class="form-label text-light">{{r[1].name}}</label>
                                     </td>
                                     <td>
-                                        <select class="form-select bg-dark text-light" :id="r.name.replace(' ','')"
-                                            v-model="raceFreqSettings[r.name]"
-                                            :class="frequencyClass[raceFreqSettings[r.name]]" @change="$forceUpdate()">
+                                        <select class="form-select bg-dark text-light" :id="r[0]"
+                                            v-model="raceFreqSettings[r[0]]"
+                                            :class="frequencyClass[raceFreqSettings[r[0]]]" @change="$forceUpdate()">
                                             <option v-for="o in raceFreqOptions" :value="o" :class="frequencyClass[o]">
                                                 {{ o
                                                 }}
@@ -214,62 +216,77 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                            :data-bs-target="'#' + r.name.replace(' ','') + 'Modal'"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                            </svg></button>
-
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                                :data-bs-target="'#' + r[0] + 'Modal'" title="Edit Race"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                                </svg></button>
+                                            <delete-race-btn v-if="r[1].canDelete" :race="r[1]"></delete-race-btn>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                        <div v-for="r in raceOptions" class="modal fade" :id="r.name.replace(' ','') + 'Modal'"
+                        <div v-for="r in Object.keys(raceOptions)" class="modal fade" :id="r + 'Modal'"
                             data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content bg-dark">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit {{r.name}}</h4>
+                                        <h4 class="modal-title">Edit {{raceOptions[r].name}}</h4>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- <div class="row">
-                                            <label class="form-label">Name</label>
-                                            <input class="form-input" v-model="r.name">
-                                        </div> -->
-                                        <div class="row">
+                                        <div class="row mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label">Name</label>
+                                                <input class="form-input" v-model="raceOptions[r].name">
+                                            </div>
+                                        </div>
+                                        <div v-if="raceOptions[r].customRace" class="row mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label">Age of Maturity</label>
+                                                <input class="form-input" v-model="raceOptions[r].ageOfMaturity"
+                                                    type="number" step="1">
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label">Typical Lifespan</label>
+                                                <input class="form-input" v-model="raceOptions[r].maxAge" type="number"
+                                                    step="1">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
                                             <h6><small class="text-muted">Enter new names on separate
                                                     lines.</small></h6>
 
                                             <div class="col">
                                                 <h6>Male Names</h6>
                                                 <textarea class="form-control" rows="10"
-                                                    v-model="maleNames[r.name]"></textarea>
+                                                    v-model="maleNames[r]"></textarea>
                                             </div>
                                             <div class="col">
                                                 <h6>Female Names</h6>
-                                                <textarea class="form-control"
-                                                    rows="10">{{r.firstNameFemaleList.join('\r\n')}}</textarea>
+                                                <textarea class="form-control" rows="10"
+                                                    v-model="femaleNames[r]"></textarea>
                                             </div>
                                             <div class="col">
                                                 <h6>Last Names</h6>
-                                                <textarea class="form-control"
-                                                    rows="10">{{r.lastNameList.join('\r\n')}}</textarea>
+                                                <textarea class="form-control" rows="10"
+                                                    v-model="lastNames[r]"></textarea>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                            @click="saveNames(r.name)">Save</button>
+                                            @click="saveNames(r)">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -491,10 +508,14 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="stats" role="tabpanel">
-                            <h5>Race Distributions</h5>
-                            <canvas id="race_graph" width="400" height="100"></canvas>
-                            <h5>Age Distributions</h5>
-                            <canvas id="age_graph" width="400" height="100"></canvas>
+                            <div class="row mb-3">
+                                <div class="col-3" id="race_graph">
+                                    <h5>Race Distributions</h5>
+                                </div>
+                            </div>
+                            <div class="row" id="age_graph">
+                                <h5>Age Distributions</h5>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="changes" role="tabpanel">
                             <div v-for="change in changes">
@@ -517,10 +538,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.5/fh-3.2.0/datatables.min.js"></script>
-    <!-- TODO swap for prod version -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.min.js"></script>
     <script src="static/js/changelog.js"></script>
     <script src="static/js/stats.js"></script>
     <script src="static/js/names.js"></script>
@@ -535,30 +554,24 @@
             })
         }
 
-        let dice = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
-<circle cx="4" cy="4" r="1.5"/>
-<circle cx="12" cy="4" r="1.5"/>
-<circle cx="12" cy="12" r="1.5"/>
-<circle cx="12" cy="8" r="1.5"/>
-<circle cx="4" cy="12" r="1.5"/>
-<circle cx="4" cy="8" r="1.5"/>
-</svg>`;
-
-        Vue.component('reroll-btn', {
-            props: ['id', 'entity'],
-            template: `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
-<circle cx="4" cy="4" r="1.5"/>
-<circle cx="12" cy="4" r="1.5"/>
-<circle cx="12" cy="12" r="1.5"/>
-<circle cx="12" cy="8" r="1.5"/>
-<circle cx="4" cy="12" r="1.5"/>
-<circle cx="4" cy="8" r="1.5"/>
-</svg>`
+        Vue.component('delete-race-btn', {
+            props: ['race'],
+            template: `<button class="btn btn-sm btn-danger" @click="deleteRace(race)" title="Delete Race">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg></button>`,
+            methods: {
+                deleteRace: function (race) {
+                    let key = Object.keys(Races).filter(k => Races[k] == race)[0];
+                    delete citygenapp.raceFreqSettings[key];
+                    delete Races[key];
+                    citygenapp.$forceUpdate();
+                }
+            }
         });
 
-        let citygenapp = new Vue({
+        var citygenapp = new Vue({
             el: '#citygenapp',
             data: {
                 generateDisabled: true,
@@ -601,17 +614,32 @@
                 magicLevel: MagicLevels.NONE,
                 genderOptions: Gender,
                 genders: Object.keys(Gender).map(g => Gender[g]),
-                genderError: null
+                genderError: null,
+                dtSettings: {
+                    dtDOM: '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>',
+                    dtDOMSmall: '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>',
+                    dtButtons: ['copy', 'excel', 'csv'],
+                },
+                newRaceCount: 0,
+                icons: {
+                    dice: `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dice-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z"/>
+                            <circle cx="4" cy="4" r="1.5"/>
+                            <circle cx="12" cy="4" r="1.5"/>
+                            <circle cx="12" cy="12" r="1.5"/>
+                            <circle cx="12" cy="8" r="1.5"/>
+                            <circle cx="4" cy="12" r="1.5"/>
+                            <circle cx="4" cy="8" r="1.5"/>
+                            </svg>`
+                }
             },
             mounted: function () {
-                for (let i in this.raceOptions) {
-                    let race = this.raceOptions[i];
+                for (let key in this.raceOptions) {
+                    let race = this.raceOptions[key];
                     let defaultSetting = this.defaultRaceSettings.filter(y => y.race == race)[0];
                     let freq = defaultSetting ? defaultSetting.frequency : RaceFrequency.NONE;
-                    this.raceFreqSettings[race.name] = freq;
-                    this.maleNames[race.name] = race.firstNameMaleList.join('\n');
-                    this.femaleNames[race.name] = race.firstNameFemaleList.join('\n');
-                    this.lastNames[race.name] = race.lastNameList.join('\n');
+                    this.raceFreqSettings[key] = freq;
+                    this.saveNamesToStrings(key);
                 }
                 this.$forceUpdate();
             },
@@ -621,6 +649,11 @@
             computed: {
             },
             methods: {
+                saveNamesToStrings(raceKey) {
+                    this.maleNames[raceKey] = this.raceOptions[raceKey].firstNameMaleList.join('\n');
+                    this.femaleNames[raceKey] = this.raceOptions[raceKey].firstNameFemaleList.join('\n');
+                    this.lastNames[raceKey] = this.raceOptions[raceKey].lastNameList.join('\n');
+                },
                 onSelectChanged(event) {
                     if (this.citySize)
                         this.generateDisabled = false;
@@ -628,6 +661,9 @@
                 generate() {
                     this.isLoading = true;
                     doubleRaf(() => this.generateAsync());
+
+                    //Workaround for Chart JS not liking it when we generate a chart and the tab is open
+                    $('#about-tab').click();
                 },
                 async generateAsync() {
                     try {
@@ -678,99 +714,54 @@
                         button.html("«");
                 },
                 initDataTables() {
-                    console.log('Initiating DataTables...');
-                    if ($('.result-table').DataTable())
-                        $('.result-table').DataTable().destroy();
+                    if (this.city) {
+                        this.createPeopleTable();
+                        this.createBusinessTables();
+                    }
+                },
+                deleteExistingTable(selector) {
+                    let existing = $(selector).DataTable();
+                    if (existing)
+                        existing.destroy();
+                },
+                createPeopleTable() {
+                    console.log('Initiating People DataTables...');
+                    this.deleteExistingTable('#people_table');
 
                     let peopleArr = [];
-                    let bizArray = [];
-                    let farmArray = [];
-                    let estateArray = [];
-                    let inventoryArray = [];
-                    var businesses = this.city.Businesses;
 
-                    if (this.city) {
-                        console.log('Setting table data...');
-                        peopleArr = this.city.People.map(x => ({
-                            ID: x.Id,
-                            Name: `${x.fullName()}`,
-                            Race: x.Race,
-                            Caste: x.Caste,
-                            Age: x.RaceAge,
-                            Gender: x.Gender,
-                            Spouse: x.getSpouse()?.fullName() ?? '',
-                            Family: x.Family.displayValue(),
-                            'Works At': x.ownedBusiness ? `${x.ownedBusiness} (Owner)` : x.worksAt ?? '',
-                            Appearance: x.Appearance ?? '',
-                            Interaction: x.Interaction ?? '',
-                            Strength: x.Strength ?? '',
-                            Weakness: x.Weakness ?? '',
-                            Talent: x.Talent ?? '',
-                            Mannerism: x.Mannerism ?? '',
-                        }));
-
-                        bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
-                            ID: x.Id,
-                            Name: x.Name,
-                            BusinessType: x.BusinessType.name,
-                            Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(emp => emp?.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
-                            Description: x.Description ?? '',
-                        }));
-
-                        farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.FARM).map(x => ({
-                            Name: x.Name,
-                            BusinessType: x.BusinessType.name,
-                            Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o?.fullName()).join(', '),
-                        }));
-
-                        estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.ESTATE).map(x => ({
-                            Name: x.Name,
-                            BusinessType: x.BusinessType.name,
-                            Owners: x.Owners.map(o => o.fullName()).join(', '),
-                            Employees: x.Employees.map(o => o?.fullName()).join(', '),
-                        }));
-
-                        for (let i = 0; i < this.city.Businesses.length; i++) {
-                            let biz = this.city.Businesses[i];
-                            if (biz.BusinessType == BusinessTypes.FARM)
-                                continue;
-                            for (let j = 0; j < biz.Inventory.length; j++) {
-                                let item = biz.Inventory[j];
-                                inventoryArray.push([
-                                    biz.Name,
-                                    item.Name,
-                                    item.displayCost()
-                                ])
-                            }
-                        }
-
-                        console.log('Setting table data complete.');
-                    }
-
-                    let dtDOM = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>><"row"<"col"i><"col"p>>rt<"row"<"col"i><"col"p>>';
-                    let dtDOMSmall = '<"row"<"col-sm-4"l><"col-sm-4"B><"col-sm-4"f>>rt<"row"<"col"i><"col"p>>';
-                    let dtButtons = ['copy', 'excel', 'csv'];
+                    console.log('Setting table data...');
+                    peopleArr = this.city.People.map(x => ({
+                        ID: x.Id,
+                        Name: `${x.fullName()}`,
+                        Race: x.Race,
+                        Caste: x.Caste,
+                        Age: x.RaceAge,
+                        Gender: x.Gender,
+                        Spouse: x.getSpouse()?.fullName() ?? '',
+                        Family: x.Family.displayValue(),
+                        'Works At': x.ownedBusiness ? `${x.ownedBusiness} (Owner)` : x.worksAt ?? '',
+                        Appearance: x.Appearance ?? '',
+                        Interaction: x.Interaction ?? '',
+                        Strength: x.Strength ?? '',
+                        Weakness: x.Weakness ?? '',
+                        Talent: x.Talent ?? '',
+                        Mannerism: x.Mannerism ?? '',
+                    }));
+                    console.log('Setting table data complete.');
 
                     let peopleTable = $('#people_table').DataTable({
-                        "pageLength": 100,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 100,
+                        processing: true,
+                        scrollX: true,
                         autoWidth: true,
-                        "fnInitComplete": function (oSettings) {
-                            $(window).resize();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            $(window).trigger('resize');
-                        },
                         data: peopleArr,
                         columns: [
                             { data: "ID" },
                             {
                                 data: "Name",
                                 render: function (data, type, row, meta) {
-                                    return `${data} <a href="#" onclick="rerollFirstName(${row.ID})" title="Rename First" class="mx-1">${dice}</a> <a href="#" onclick="rerollLastName(${row.ID})" title="Rename Last" class="mx-1">${dice}</a>`;
+                                    return `${data} <a href="#" onclick="rerollFirstName(${row.ID})" title="Rename First" class="mx-1">${citygenapp.icons.dice}</a> <a href="#" onclick="rerollLastName(${row.ID})" title="Rename Last" class="mx-1">${citygenapp.icons.dice}</a>`;
                                 }
                             },
                             { data: "Race" },
@@ -786,22 +777,76 @@
                             { data: "Weakness" },
                             { data: "Talent" },
                             { data: "Mannerism" },],
-                        dom: dtDOM,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOM,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
+                    this.$forceUpdate();
+                    console.log('Initiating People DataTables complete.');
+                },
+                createBusinessTables() {
+                    console.log('Initiating Business DataTables...');
+                    this.deleteExistingTable('#business_table');
+                    this.deleteExistingTable('#farm_table');
+                    this.deleteExistingTable('#estate_table');
+                    this.deleteExistingTable('#inventory_table');
+
+                    let bizArray = [];
+                    let farmArray = [];
+                    let estateArray = [];
+                    let inventoryArray = [];
+                    let businesses = this.city.Businesses;
+
+                    bizArray = this.city.Businesses.filter(x => x.BusinessType != BusinessTypes.FARM && x.BusinessType != BusinessTypes.ESTATE).map(x => ({
+                        ID: x.Id,
+                        Name: x.Name,
+                        BusinessType: x.BusinessType.name,
+                        Owners: x.Owners.map(o => o.fullName()).join(', '),
+                        Employees: (x.Employees.length > 10 ? x.Employees.slice(0, 10) : x.Employees).map(emp => emp?.fullName()).join(', ') + (x.Employees.length > 10 ? "... (" + x.Employees.length + " total)" : ""),
+                        Description: x.Description ?? '',
+                    }));
+
+                    farmArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.FARM).map(x => ({
+                        Name: x.Name,
+                        BusinessType: x.BusinessType.name,
+                        Owners: x.Owners.map(o => o.fullName()).join(', '),
+                        Employees: x.Employees.map(o => o?.fullName()).join(', '),
+                    }));
+
+                    estateArray = this.city.Businesses.filter(x => x.BusinessType == BusinessTypes.ESTATE).map(x => ({
+                        Name: x.Name,
+                        BusinessType: x.BusinessType.name,
+                        Owners: x.Owners.map(o => o.fullName()).join(', '),
+                        Employees: x.Employees.map(o => o?.fullName()).join(', '),
+                    }));
+
+                    for (let i = 0; i < this.city.Businesses.length; i++) {
+                        let biz = this.city.Businesses[i];
+                        if (biz.BusinessType == BusinessTypes.FARM)
+                            continue;
+                        for (let j = 0; j < biz.Inventory.length; j++) {
+                            let item = biz.Inventory[j];
+                            inventoryArray.push([
+                                biz.Name,
+                                item.Name,
+                                item.displayCost()
+                            ])
+                        }
+                    }
+
+                    console.log('Setting table data complete.');
 
                     let bizTable = $('#business_table').DataTable({
-                        "pageLength": 100,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 100,
+                        processing: true,
+                        scrollX: true,
                         data: bizArray,
                         columns: [
                             { data: 'ID' },
                             {
                                 data: 'Name',
                                 render: function (data, type, row, meta) {
-                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename" class="mx-1">${dice}</a>`;
+                                    return `${data} <a href="#" onclick="rerollBusinessName(${row.ID})" title="Rename" class="mx-1">${citygenapp.icons.dice}</a>`;
                                 }
                             },
                             { data: 'BusinessType' },
@@ -809,15 +854,15 @@
                             { data: 'Employees' },
                             { data: 'Description' },
                         ],
-                        dom: dtDOMSmall,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOMSmall,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
 
                     let farmTable = $('#farm_table').DataTable({
-                        "pageLength": 10,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 10,
+                        processing: true,
+                        scrollX: true,
                         data: farmArray,
                         columns: [
                             { data: 'Name' },
@@ -825,15 +870,15 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
-                        dom: dtDOMSmall,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOMSmall,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
 
                     let estateTable = $('#estate_table').DataTable({
-                        "pageLength": 10,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 10,
+                        processing: true,
+                        scrollX: true,
                         data: estateArray,
                         columns: [
                             { data: 'Name' },
@@ -841,25 +886,28 @@
                             { data: 'Owners' },
                             { data: 'Employees' },
                         ],
-                        dom: dtDOMSmall,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOMSmall,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
 
                     let inventoryTable = $('#inventory_table').DataTable({
-                        "pageLength": 100,
-                        'processing': true,
-                        "scrollX": true,
+                        pageLength: 100,
+                        processing: true,
+                        scrollX: true,
                         data: inventoryArray,
-                        dom: dtDOM,
-                        buttons: dtButtons,
+                        dom: this.dtSettings.dtDOM,
+                        buttons: this.dtSettings.dtButtons,
                         colReorder: true
                     });
                     this.$forceUpdate();
-                    console.log('Initiating DataTables complete.');
+                    console.log('Initiating Business DataTables complete.');
                 },
                 updateCharts() {
-                    let ctxAge = document.getElementById('age_graph').getContext('2d');
+                    $('canvas').remove();
+
+                    let ageCanvas = $('<canvas width="32" height="9"></canvas>');
+                    $('#age_graph').append(ageCanvas);
                     let ageData = [
                         this.city.People.filter(x => x.Age <= 10).length,
                         this.city.People.filter(x => x.Age > 10 && x.Age <= 20).length,
@@ -874,45 +922,58 @@
                     ];
                     let options = {
                         scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.33)'
                                 }
-                            }]
+                            },
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.33)'
+                                }
+                            }
                         }
                     };
-                    let ageChart = new Chart(ctxAge, {
+
+                    let ageChart = new Chart(ageCanvas, {
                         type: 'line',
+                        options: options,
                         data: {
                             labels: ['0-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', '91-100'],
                             datasets: [{
                                 label: 'Age Count',
                                 data: ageData,
                                 borderWidth: 1,
-                                backgroundColor: 'rgba(100, 150, 255, 0.33)'
+                                borderColor: 'rgba(255, 255, 255, 1)',
+                                backgroundColor: 'rgba(0, 100, 255, 0.33)',
+                                fill: true
                             }]
-                        },
-                        options: options
+                        }
                     });
 
                     let raceLabels = [];
-                    for (let i in this.raceFreqSettings) {
-                        if (this.raceFreqSettings[i] && this.raceFreqSettings[i] != RaceFrequency.NONE)
-                            raceLabels.push(i);
+                    for (let key in this.raceFreqSettings) {
+                        if (this.raceFreqSettings[key] && this.raceFreqSettings[key] != RaceFrequency.NONE)
+                            raceLabels.push(this.raceOptions[key].name);
                     }
                     let raceData = [];
                     let raceColors = [];
+                    let colorStep = Math.floor(255 / raceLabels.length);
+                    let rgb = new Uint8Array([0,100,255]);                    
                     for (let i = 0; i < raceLabels.length; i++) {
-                        raceData.push(this.city.People.filter(x => x.Race == raceLabels[i]).length);
-
-                        let r = CryptoRandom.random() * 159 + 32;
-                        let g = CryptoRandom.random() * 159 + 32;
-                        let b = CryptoRandom.random() * 159 + 32;
-                        raceColors.push(`rgb(${r}, ${g}, ${b})`);
+                        raceData.push(this.city.People.filter(x => x.Race.name == raceLabels[i]).length);
+                        let newRGB =  new Uint8Array(3);
+                        newRGB[0] = rgb[0] + i * colorStep;
+                        newRGB[1] = rgb[1] + i * colorStep;
+                        newRGB[2] = rgb[2] - i * colorStep;
+                        raceColors.push(`rgb(${newRGB[0]}, ${newRGB[1]}, ${newRGB[2]}, 0.33)`);
                     }
 
-                    let ctxRace = document.getElementById('race_graph').getContext('2d');
-                    let raceChart = new Chart(ctxRace, {
+                    let raceCanvas = $('<canvas width="1" height="1"></canvas>');
+                    $('#race_graph').append(raceCanvas);
+                    let raceChart = new Chart(raceCanvas, {
                         type: 'doughnut',
                         data: {
                             labels: raceLabels,
@@ -920,17 +981,9 @@
                                 label: 'Race Count',
                                 data: raceData,
                                 backgroundColor: raceColors
-                                //borderWidth: 1
                             }]
                         }
                     });
-                },
-                getFrequencyClass(race) {
-                    let f = this.raceFreqSettings[race];
-                    if (f)
-                        return this.frequencyClass[f];
-                    else
-                        return '';
                 },
                 downloadCSV() {
                     let rows = [
@@ -1018,11 +1071,23 @@
                         }
                     }
                 },
-                saveNames(raceName) {
-                    let key = Object.keys(Races).filter(k => Races[k].name == raceName);
-                    Races[key].firstNameMaleList = this.maleNames[raceName].split('\n');
-                    Races[key].firstNameFemaleList = this.femaleNames[raceName].split('\n');
-                    Races[key].lastNameList = this.lastNames[raceName].split('\n');
+                saveNames(raceKey) {
+                    Races[raceKey].firstNameMaleList = this.maleNames[raceKey].split('\n');
+                    Races[raceKey].firstNameFemaleList = this.femaleNames[raceKey].split('\n');
+                    Races[raceKey].lastNameList = this.lastNames[raceKey].split('\n');
+                    this.$forceUpdate();
+                },
+                addNewRace() {
+                    this.newRaceCount++;
+                    let key = `NEWRACE${this.newRaceCount}`;
+                    let race = new Race(`NewRace${this.newRaceCount}`, FirstNamesMale, FirstNamesFemale, LastNames);
+                    race.customRace = true;
+                    race.sort = 0;
+                    race.canDelete = true;
+                    Races[key] = race;
+                    this.raceFreqSettings[key] = RaceFrequency.COMMON;
+                    this.saveNamesToStrings(key);
+                    citygenapp.$forceUpdate();
                 }
             }
         });

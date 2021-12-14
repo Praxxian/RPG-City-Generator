@@ -9,6 +9,7 @@ class Change {
 }
 
 const CHANGES: Change[] = [
+    new Change("2021-12-14", ['Added the ability to create, name, and set ages for custom races.', 'Fixed an issue with charts rerendering after regeneration.']),
     new Change("2021-12-07", ['Added a rename button for businesses and people.', 'Fixed a bug with people owning multiple businesses.']),
     new Change("2021-12-06", ['Added a selection for gender (E.g. all female villages).', 'Converted project to TypeScript and improved a lot of the data structure.']),
     new Change("2021-11-23", [

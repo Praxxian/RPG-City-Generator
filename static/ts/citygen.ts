@@ -16,12 +16,12 @@ class CityGenerator {
 
     groupRaceFrequencies() {
         this.Races = {}
-        for (let raceName in this.Settings.Races) {
-            let frequency = this.Settings.Races[raceName];
+        for (let raceKey in this.Settings.Races) {
+            let frequency = this.Settings.Races[raceKey];
             if (!frequency)
                 continue;
             let freqGroup = this.Races[frequency];
-            let race = this.getRaceByName(raceName);
+            let race = Races[raceKey];
             if (freqGroup)
                 freqGroup.push(race);
             else
@@ -34,25 +34,15 @@ class CityGenerator {
     }
 
     createNameGenerators() {
-        for (let raceName in this.Settings.Races) {
-            if (this.Settings.Races[raceName] == RaceFrequency.NONE)
+        for (let raceKey in this.Settings.Races) {
+            if (this.Settings.Races[raceKey] == RaceFrequency.NONE)
                 continue;
-            let race = this.getRaceByName(raceName);
+            let race = Races[raceKey];
             for (let i in this.Settings.Genders) {
                 let gender = this.Settings.Genders[i];
                 this.NameGenerators.push(new NameGenerator({ Race: race, Gender: gender }));
             }
         }
-    }
-
-    getRaceByName(name: string): Race {
-        let keys = Object.keys(Races);
-        for (let i = 0; i < keys.length; i++) {
-            let race = Races[keys[i]];
-            if (race.name == name)
-                return race;
-        }
-        return null;
     }
 
     getNew() {
@@ -427,6 +417,9 @@ class CityGenerator {
             default:
                 break;
         }
+
+        if (race.customRace && race.ageOfMaturity && race.maxAge)
+            return age <= race.ageOfMaturity ? Math.floor((race.ageOfMaturity / 18.0) * age) : Math.floor((race.maxAge / 80.0) * age);
 
         return age;
     }

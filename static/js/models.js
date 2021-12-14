@@ -13,6 +13,11 @@ class CitySize {
 }
 class Race {
     constructor(name, firstNameMaleList, firstNameFemaleList, lastNameList, nicknamePrefix = null, nicknameSuffix = null) {
+        this.sort = 1;
+        this.canDelete = false;
+        this.customRace = false;
+        this.ageOfMaturity = 18;
+        this.maxAge = 100;
         this.name = name;
         this.firstNameMaleList = firstNameMaleList;
         this.firstNameFemaleList = firstNameFemaleList;
@@ -55,8 +60,13 @@ class MagicLevel {
 class CitySettings {
 }
 class BusinessType {
-    constructor() {
+    constructor(data) {
         this.adjectives = [];
+        if (data) {
+            for (const i in data) {
+                this[i] = data[i];
+            }
+        }
     }
     toString() {
         return this.name;
@@ -654,7 +664,7 @@ class BusinessTypeUtil {
                     { item: AllItems.Messenger_Per_Mile, probability: 1 },
                     { item: AllItems.Stabling_Per_Day, probability: 1 },
                     { item: AllItems.Bread_Loaf, probability: 1 },
-                    { item: AllItems.Coach_Cab_Beteen_Towns_Per_Mile, probability: 1 },
+                    { item: AllItems.Coach_Cab_Between_Towns_Per_Mile, probability: 1 },
                     { item: AllItems.Coach_Cab_Within_City, probability: 1 }
                 ];
             case BusinessTypes.JEWELERY_SHOP:
@@ -769,7 +779,7 @@ class BusinessTypeUtil {
                     { item: AllItems.Fine_Bottle_Of_Wine, probability: 1 },
                     { item: AllItems.Messenger_Per_Mile, probability: 1 },
                     { item: AllItems.Bread_Loaf, probability: 1 },
-                    { item: AllItems.Coach_Cab_Beteen_Towns_Per_Mile, probability: 1 },
+                    { item: AllItems.Coach_Cab_Between_Towns_Per_Mile, probability: 1 },
                     { item: AllItems.Coach_Cab_Within_City, probability: 1 }
                 ];
             case BusinessTypes.TEMPLE:

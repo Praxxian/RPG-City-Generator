@@ -279,8 +279,8 @@ const CitySizes: { [name: string]: CitySize } = {
     CITY: new CitySize('City', 25000, 4),
 }
 
-const BusinessTypes: { [name: string]: BusinessType } = {
-    ALCHEMIST_SHOP: <BusinessType>({
+var BusinessTypes: { [name: string]: BusinessType } = {
+    ALCHEMIST_SHOP: new BusinessType({
         name: 'Alchemist Shop',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN],
@@ -308,7 +308,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    ARMOR_SHOP: <BusinessType>({
+    ARMOR_SHOP: new BusinessType({
         name: 'Armor Shop',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -336,7 +336,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    BAKERY: <BusinessType>({
+    BAKERY: new BusinessType({
         name: 'Bakery',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -364,7 +364,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    SMITHY: <BusinessType>({
+    SMITHY: new BusinessType({
         name: 'Smithy',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -392,7 +392,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    BOW_SHOP: <BusinessType>({
+    BOW_SHOP: new BusinessType({
         name: 'Bow Shop',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -421,7 +421,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    BUTCHER_SHOP: <BusinessType>({
+    BUTCHER_SHOP: new BusinessType({
         name: 'Butcher Shop',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -450,7 +450,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    GENERAL_STORE: <BusinessType>({
+    GENERAL_STORE: new BusinessType({
         name: 'General Store',
         ownerCastes: [Caste.MERCANTILE],
         employeeCastes: [Caste.PEASANT],
@@ -479,7 +479,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    GROCERY: <BusinessType>({
+    GROCERY: new BusinessType({
         name: 'Grocery',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.PEASANT],
@@ -508,7 +508,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    HERBS: <BusinessType>({
+    HERBS: new BusinessType({
         name: 'Herbs',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -537,7 +537,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    HORSE_RANCH: <BusinessType>({
+    HORSE_RANCH: new BusinessType({
         name: 'Horse Ranch',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -566,7 +566,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    HUNTING_CABIN: <BusinessType>({
+    HUNTING_CABIN: new BusinessType({
         name: 'Hunting Cabin',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN],
@@ -595,7 +595,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    INN: <BusinessType>({
+    INN: new BusinessType({
         name: 'Inn',
         ownerCastes: [Caste.MERCANTILE],
         employeeCastes: [Caste.PEASANT],
@@ -649,7 +649,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    JEWELERY_SHOP: <BusinessType>({
+    JEWELERY_SHOP: new BusinessType({
         name: 'Jewelery Shop',
         ownerCastes: [Caste.MERCANTILE],
         employeeCastes: [Caste.TRADESMEN],
@@ -678,7 +678,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    LEATHERWORKING: <BusinessType>({
+    LEATHERWORKING: new BusinessType({
         name: 'Leatherworking',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -706,7 +706,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    SCRIPTORIUM: <BusinessType>({
+    SCRIPTORIUM: new BusinessType({
         name: 'Scriptorium',
         ownerCastes: [Caste.MERCANTILE],
         employeeCastes: [Caste.MERCANTILE],
@@ -735,7 +735,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    TAILORING: <BusinessType>({
+    TAILORING: new BusinessType({
         name: 'Tailoring',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -764,7 +764,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    TANNERY: <BusinessType>({
+    TANNERY: new BusinessType({
         name: 'Tannery',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -792,7 +792,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    TAVERN: <BusinessType>({
+    TAVERN: new BusinessType({
         name: 'Tavern',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.PEASANT],
@@ -846,7 +846,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    TEMPLE: <BusinessType>({
+    TEMPLE: new BusinessType({
         name: 'Temple',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -890,7 +890,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    WEAPON_SHOP: <BusinessType>({
+    WEAPON_SHOP: new BusinessType({
         name: 'Weapon Shop',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -918,7 +918,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    WAINWRIGHT_WORKSHOP: <BusinessType>({
+    WAINWRIGHT_WORKSHOP: new BusinessType({
         name: 'Wainwright Workshop',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -947,7 +947,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    FARM: <BusinessType>({
+    FARM: new BusinessType({
         name: 'Farm',
         ownerCastes: [Caste.PEASANT],
         employeeCastes: [Caste.PEASANT],
@@ -976,7 +976,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    BREWERY: <BusinessType>({
+    BREWERY: new BusinessType({
         name: 'Brewery',
         ownerCastes: [Caste.TRADESMEN],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -1009,7 +1009,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    ESTATE: <BusinessType>({
+    ESTATE: new BusinessType({
         name: 'Estate',
         ownerCastes: [Caste.NOBLE],
         employeeCastes: [Caste.PEASANT],
@@ -1027,7 +1027,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    MINE: <BusinessType>({
+    MINE: new BusinessType({
         name: 'Mine',
         ownerCastes: [Caste.NOBLE],
         employeeCastes: [Caste.PEASANT],
@@ -1048,7 +1048,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees / 2) + maxEmployees / 2;
         }
     }),
-    SHIPPING: <BusinessType>({
+    SHIPPING: new BusinessType({
         name: 'Shipping',
         ownerCastes: [Caste.NOBLE, Caste.MERCANTILE],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -1083,7 +1083,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
     }),
-    LUMBER_CAMP: <BusinessType>({
+    LUMBER_CAMP: new BusinessType({
         name: 'Lumber Camp',
         ownerCastes: [Caste.NOBLE],
         employeeCastes: [Caste.PEASANT],
@@ -1104,7 +1104,7 @@ const BusinessTypes: { [name: string]: BusinessType } = {
             return Math.floor(CryptoRandom.random() * maxEmployees / 2) + maxEmployees / 2;
         }
     }),
-    FISHING: <BusinessType>({
+    FISHING: new BusinessType({
         name: 'Fishing Boat',
         ownerCastes: [Caste.TRADESMEN, Caste.PEASANT],
         employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
@@ -1390,7 +1390,7 @@ const AllItems: { [name: string]: InventoryItem } = {
     Meat_Chunk: new InventoryItem(ItemType.FOOD, "Meat, chunk", 30, Unit.COPPER),
     Pitcher_Of_Common_Wine: new InventoryItem(ItemType.FOOD, "Pitcher of Common Wine", 20, Unit.COPPER),
     Fine_Bottle_Of_Wine: new InventoryItem(ItemType.FOOD, "Fine Bottle of Wine", 1000, Unit.COPPER),
-    Coach_Cab_Beteen_Towns_Per_Mile: new InventoryItem(ItemType.SERVICE, "Coach Cab Beteen Towns (per mile)", 3, Unit.COPPER),
+    Coach_Cab_Between_Towns_Per_Mile: new InventoryItem(ItemType.SERVICE, "Coach Cab Between Towns (per mile)", 3, Unit.COPPER),
     Coach_Cab_Within_City: new InventoryItem(ItemType.SERVICE, "Coach Cab within City", 1, Unit.COPPER),
     Skilled_Labor_Per_Day: new InventoryItem(ItemType.SERVICE, "Skilled Labor (per day)", 200, Unit.COPPER),
     Untrained_Labor_Per_Day: new InventoryItem(ItemType.SERVICE, "Untrained Labor (per day)", 20, Unit.COPPER),

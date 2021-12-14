@@ -25,6 +25,11 @@ class Race {
     lastNameList: string[]
     nicknamePrefix: string[]
     nicknameSuffix: string[]
+    sort: number = 1
+    canDelete: boolean = false
+    customRace: boolean = false
+    ageOfMaturity: number = 18
+    maxAge: number = 100
 
     constructor(name: string, firstNameMaleList: string[], firstNameFemaleList: string[], lastNameList: string[], nicknamePrefix: string[] = null, nicknameSuffix: string[] = null) {
         this.name = name;
@@ -131,6 +136,14 @@ class BusinessType {
     frequency: (settings: CitySettings) => number
     minEmployees: (settings: CitySettings) => number
     maxEmployees: (settings: CitySettings) => number
+
+    constructor(data: object) {
+        if (data) {
+            for (const i in data) {
+                this[i] = data[i];
+            }
+        }
+    }
 
     toString(): string {
         return this.name;
@@ -824,7 +837,7 @@ class BusinessTypeUtil {
                     { item: AllItems.Messenger_Per_Mile, probability: 1 },
                     { item: AllItems.Stabling_Per_Day, probability: 1 },
                     { item: AllItems.Bread_Loaf, probability: 1 },
-                    { item: AllItems.Coach_Cab_Beteen_Towns_Per_Mile, probability: 1 },
+                    { item: AllItems.Coach_Cab_Between_Towns_Per_Mile, probability: 1 },
                     { item: AllItems.Coach_Cab_Within_City, probability: 1 }
                 ];
             case BusinessTypes.JEWELERY_SHOP:
@@ -941,7 +954,7 @@ class BusinessTypeUtil {
                     { item: AllItems.Fine_Bottle_Of_Wine, probability: 1 },
                     { item: AllItems.Messenger_Per_Mile, probability: 1 },
                     { item: AllItems.Bread_Loaf, probability: 1 },
-                    { item: AllItems.Coach_Cab_Beteen_Towns_Per_Mile, probability: 1 },
+                    { item: AllItems.Coach_Cab_Between_Towns_Per_Mile, probability: 1 },
                     { item: AllItems.Coach_Cab_Within_City, probability: 1 }
                 ];
             case BusinessTypes.TEMPLE:
