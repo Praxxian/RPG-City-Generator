@@ -121,15 +121,15 @@ class CitySettings {
     Races: IRaceFrequency
     NaturalFeatures: NaturalFeatures[]
     Prosperity: Prosperity
-    MagicLevl: MagicLevel
+    MagicLevel: MagicLevel
     Genders: Gender[]
 }
 
 class BusinessType {
     name: string
-    ownerCastes: Caste[]
-    employeeCastes: Caste[]
-    nouns: string[]
+    ownerCastes: Caste[] = []
+    employeeCastes: Caste[] = []
+    nouns: string[] = []
     adjectives: string[] = []
     altNames: string[]
     notes: () => string
@@ -298,16 +298,18 @@ class Business {
             return;
         }
 
-        if (r < 0.33 && nouns.length > 1 && businessType != BusinessTypes.FARM && businessType != BusinessTypes.BREWERY && businessType != BusinessTypes.SHIPPING && businessType != BusinessTypes.FISHING) {
+        let doNotCreateAmersandNames = [BusinessTypes.FARM, BusinessTypes.BREWERY, BusinessTypes.SHIPPING, BusinessTypes.FISHING, BusinessTypes.ARTIFICER_WORKSHOP, BusinessTypes.MAGIC_SHOP];
+        if (r < 0.33 && nouns.length > 1 && doNotCreateAmersandNames.indexOf(businessType) < 0) {
             let firstNoun = CryptoRandom.randomFromArray(nouns);
             nouns.splice(nouns.indexOf(firstNoun), 1);
             this.Name = `${firstNoun} & ${CryptoRandom.randomFromArray(nouns)}`;
             return;
         }
 
+        let specificAdjectives = [BusinessTypes.ARTIFICER_WORKSHOP, BusinessTypes.MAGIC_SHOP]
         if (r < 0.80 && nouns.length > 0 && businessType != BusinessTypes.FARM) {
-            let adjectives = GeneralAdjectives;
-            this.Name = (businessType == BusinessTypes.BREWERY ? "" : "The ") + `${CryptoRandom.randomFromArray(adjectives)} ${CryptoRandom.randomFromArray(nouns)}` + (businessType == BusinessTypes.BREWERY ? " " + CryptoRandom.randomFromArray(altNames) : "");
+            let adjectives = specificAdjectives.indexOf(businessType) >= 0 ? businessType.adjectives : [...businessType.adjectives, ...GeneralAdjectives];
+            this.Name = (businessType == BusinessTypes.BREWERY || businessType == BusinessTypes.MAGIC_SHOP ? "" : "The ") + `${CryptoRandom.randomFromArray(adjectives)} ${CryptoRandom.randomFromArray(nouns)}` + (businessType == BusinessTypes.BREWERY ? " " + CryptoRandom.randomFromArray(altNames) : "");
             return;
         }
 
@@ -330,10 +332,19 @@ class MagicItemRarity {
     MaxRoll: number
     Multiplier: number
 
-    static COMMON = <MagicItemRarity>({ MinRoll: 2, MaxRoll: 7, Multiplier: 10 });
-    static UNCOMMON = <MagicItemRarity>({ MinRoll: 1, MaxRoll: 6, Multiplier: 100 });
-    static RARE = <MagicItemRarity>({ MinRoll: 2, MaxRoll: 20, Multiplier: 1000 });
-    static VERYRARE = <MagicItemRarity>({ MinRoll: 2, MaxRoll: 5, Multiplier: 10000 });
+    constructor(data: object) {
+        if (data) {
+            for (const i in data) {
+                this[i] = data[i];
+            }
+        }
+    }
+
+    static COMMON = new MagicItemRarity({ MinRoll: 2, MaxRoll: 7, Multiplier: 10 });
+    static UNCOMMON = new MagicItemRarity({ MinRoll: 1, MaxRoll: 6, Multiplier: 100 });
+    static RARE = new MagicItemRarity({ MinRoll: 2, MaxRoll: 20, Multiplier: 1000 });
+    static VERYRARE = new MagicItemRarity({ MinRoll: 2, MaxRoll: 5, Multiplier: 10000 });
+    static LEGENDARY = new MagicItemRarity({ MinRoll: 2, MaxRoll: 12, Multiplier: 25000 });
 }
 
 class InventoryItem {
@@ -360,7 +371,7 @@ class InventoryItem {
         this.MagicRarity = rarity;
         this.MagicTier = magicTier;
 
-        if (this.MagicRarity)
+        if (this.MagicRarity && this.MagicTier)
             this.setMagicCost();
     }
 
@@ -374,7 +385,7 @@ class InventoryItem {
             roll = Math.max(roll1, roll2);
         this.Cost = roll * this.MagicRarity.Multiplier * 100;
         if (this.ItemType == ItemType.POTION || this.ItemType == ItemType.SCROLL)
-            this.Cost *= 1 / 2;
+            this.Cost = Math.floor(0.5 * this.Cost);
     }
 
     toString(): string {
@@ -429,6 +440,7 @@ interface IInventoryItemProbability {
     probability: number
 }
 
+// TODO limit magic items
 class BusinessTypeUtil {
     static getInventory(businessType: BusinessType): IInventoryItemProbability[] {
         switch (businessType) {

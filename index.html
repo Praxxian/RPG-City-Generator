@@ -38,59 +38,66 @@
                         </button>
                     </div>
                 </div>
-                <div class="row my-1">
-                    <select class="form-select bg-dark text-light" v-model="citySize" @change="onSelectChanged($event)"
-                        required>
-                        <option value="" selected>City Size</option>
-                        <option v-for="(o, index) in citySizeOptions" :value="index">{{ o.label() }}</option>
-                    </select>
-                </div>
-                <div class="row my-1">
-                    <select class="form-select bg-dark text-light" v-model="prosperity" required>
-                        <option v-for="o in prosperityOptions" :value="o">{{ o.Label }}</option>
-                    </select>
-                </div>
-                <div class="row my-1 border p-3 rounded" v-if="prosperity.Label == 'Custom'">
+
+                <div class="row my-1 border p-3 rounded">
                     <div class="container">
-                        <h5>Caste Percentages</h5>
-                        <div class="row">
-                            <label class="form-label text-light col-sm-4">Nobility</label>
-                            <div class="col-sm-5">
-                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
-                                    v-model="noblePercent" />
+                        <h5>Population Settings</h5>
+
+                        <select class="form-select bg-dark text-light mb-3" v-model="citySize"
+                            @change="onSelectChanged($event)" required>
+                            <option value="" selected>City Size</option>
+                            <option v-for="(o, index) in citySizeOptions" :value="index">{{ o.label() }}</option>
+                        </select>
+
+                        <select class="form-select bg-dark text-light mb-3" v-model="prosperity" required>
+                            <option v-for="o in prosperityOptions" :value="o">{{ o.Label }}</option>
+                        </select>
+
+                        <div class="row m-0 border p-3 rounded" v-if="prosperity.Label == 'Custom'">
+                            <div class="container">
+                                <h5>Caste Percentages</h5>
+                                <div class="row">
+                                    <label class="form-label text-light col-sm-4">Nobility</label>
+                                    <div class="col-sm-5">
+                                        <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                            v-model="noblePercent" />
+                                    </div>
+                                    <div class="col-sm">{{ noblePercent * 100 }}%</div>
+                                </div>
+                                <div class="row">
+                                    <label class="form-label text-light col-sm-4">Mercantile</label>
+                                    <div class="col-sm-5">
+                                        <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                            v-model="mercantilePercent" />
+                                    </div>
+                                    <div class="col-sm">{{ mercantilePercent * 100 }}%</div>
+                                </div>
+                                <div class="row">
+                                    <label class="form-label text-light col-sm-4">Tradesperson</label>
+                                    <div class="col-sm-5">
+                                        <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                            v-model="tradePercent" />
+                                    </div>
+                                    <div class="col-sm">{{ tradePercent * 100 }}%</div>
+                                </div>
+                                <div class="row">
+                                    <label class="form-label text-light col-sm-4">Peasant</label>
+                                    <div class="col-sm-5">
+                                        <input type="range" class="custom-range" min="0" max="1" step="0.005"
+                                            v-model="peasantPercent" />
+                                    </div>
+                                    <div class="col-sm">{{ peasantPercent * 100 }}%</div>
+                                </div>
                             </div>
-                            <div class="col-sm">{{ noblePercent * 100 }}%</div>
-                        </div>
-                        <div class="row">
-                            <label class="form-label text-light col-sm-4">Mercantile</label>
-                            <div class="col-sm-5">
-                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
-                                    v-model="mercantilePercent" />
-                            </div>
-                            <div class="col-sm">{{ mercantilePercent * 100 }}%</div>
-                        </div>
-                        <div class="row">
-                            <label class="form-label text-light col-sm-4">Tradesperson</label>
-                            <div class="col-sm-5">
-                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
-                                    v-model="tradePercent" />
-                            </div>
-                            <div class="col-sm">{{ tradePercent * 100 }}%</div>
-                        </div>
-                        <div class="row">
-                            <label class="form-label text-light col-sm-4">Peasant</label>
-                            <div class="col-sm-5">
-                                <input type="range" class="custom-range" min="0" max="1" step="0.005"
-                                    v-model="peasantPercent" />
-                            </div>
-                            <div class="col-sm">{{ peasantPercent * 100 }}%</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- <div class="row my-1 border p-3 rounded">
+                <div class="row my-1 border p-3 rounded">
                     <div class="container">
                         <h5>Magic Level</h5>
+                        <h6><small class="text-muted">Magic items are in progress and may not show up in
+                                inventories.</small></h6>
                         <select class="form-select bg-dark text-light" v-model="magicLevel" required>
                             <option v-for="o in magicLevelOptions" :value="o">{{ o.Label }}</option>
                         </select>
@@ -98,73 +105,72 @@
                             {{ magicLevel.Description }}
                         </p>
                     </div>
-                </div> -->
-
-                <div class="row my-1 border p-3 rounded">
-                    <h5>Natural Features</h5>
-                    <div class="container">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Forest" id="forestCheck"
-                                v-model="naturalFeatures">
-                            <label class="form-check-label" for="forestCheck">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-tree" viewBox="0 0 16 16">
-                                    <path
-                                        d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z" />
-                                </svg> Forest
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Mountains/Hills" id="mountainCheck"
-                                v-model="naturalFeatures">
-                            <label class="form-check-label" for="mountainCheck">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-minecart" viewBox="0 0 16 16">
-                                    <path
-                                        d="M4 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM.115 3.18A.5.5 0 0 1 .5 3h15a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 14 12H2a.5.5 0 0 1-.491-.408l-1.5-8a.5.5 0 0 1 .106-.411zm.987.82 1.313 7h11.17l1.313-7H1.102z" />
-                                </svg> Mountains/Hills
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Ocean" id="oceanCheck"
-                                v-model="naturalFeatures">
-                            <label class="form-check-label" for="oceanCheck">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-tsunami" viewBox="0 0 16 16">
-                                    <path
-                                        d="M.036 12.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zm0 2a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zM2.662 8.08c-.456 1.063-.994 2.098-1.842 2.804a.5.5 0 0 1-.64-.768c.652-.544 1.114-1.384 1.564-2.43.14-.328.281-.68.427-1.044.302-.754.624-1.559 1.01-2.308C3.763 3.2 4.528 2.105 5.7 1.299 6.877.49 8.418 0 10.5 0c1.463 0 2.511.4 3.179 1.058.67.66.893 1.518.819 2.302-.074.771-.441 1.516-1.02 1.965a1.878 1.878 0 0 1-1.904.27c-.65.642-.907 1.679-.71 2.614C11.076 9.215 11.784 10 13 10h2.5a.5.5 0 0 1 0 1H13c-1.784 0-2.826-1.215-3.114-2.585-.232-1.1.005-2.373.758-3.284L10.5 5.06l-.777.388a.5.5 0 0 1-.447 0l-1-.5a.5.5 0 0 1 .447-.894l.777.388.776-.388a.5.5 0 0 1 .447 0l1 .5a.493.493 0 0 1 .034.018c.44.264.81.195 1.108-.036.328-.255.586-.729.637-1.27.05-.529-.1-1.076-.525-1.495-.426-.42-1.19-.77-2.477-.77-1.918 0-3.252.448-4.232 1.123C5.283 2.8 4.61 3.738 4.07 4.79c-.365.71-.655 1.433-.945 2.16-.15.376-.301.753-.463 1.13z" />
-                                </svg> Ocean
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Lake" id="lakeCheck"
-                                v-model="naturalFeatures">
-                            <label class="form-check-label" for="lakeCheck">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-water" viewBox="0 0 16 16">
-                                    <path
-                                        d="M.036 3.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 3.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 6.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 9.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65z" />
-                                </svg> Lake
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="River" id="riverCheck"
-                                v-model="naturalFeatures">
-                            <label class="form-check-label" for="riverCheck">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-droplet" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z" />
-                                    <path fill-rule="evenodd"
-                                        d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z" />
-                                </svg> River
-                            </label>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="row my-1 border p-3 rounded">
-                    <div class="container">
+                    <div class="col-7">
+                        <h5>Natural Features</h5>
+                        <div class="container">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Forest" id="forestCheck"
+                                    v-model="naturalFeatures">
+                                <label class="form-check-label" for="forestCheck">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-tree" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z" />
+                                    </svg> Forest
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Mountains/Hills"
+                                    id="mountainCheck" v-model="naturalFeatures">
+                                <label class="form-check-label" for="mountainCheck">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-minecart" viewBox="0 0 16 16">
+                                        <path
+                                            d="M4 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM.115 3.18A.5.5 0 0 1 .5 3h15a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 14 12H2a.5.5 0 0 1-.491-.408l-1.5-8a.5.5 0 0 1 .106-.411zm.987.82 1.313 7h11.17l1.313-7H1.102z" />
+                                    </svg> Mountains/Hills
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Ocean" id="oceanCheck"
+                                    v-model="naturalFeatures">
+                                <label class="form-check-label" for="oceanCheck">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-tsunami" viewBox="0 0 16 16">
+                                        <path
+                                            d="M.036 12.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zm0 2a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zM2.662 8.08c-.456 1.063-.994 2.098-1.842 2.804a.5.5 0 0 1-.64-.768c.652-.544 1.114-1.384 1.564-2.43.14-.328.281-.68.427-1.044.302-.754.624-1.559 1.01-2.308C3.763 3.2 4.528 2.105 5.7 1.299 6.877.49 8.418 0 10.5 0c1.463 0 2.511.4 3.179 1.058.67.66.893 1.518.819 2.302-.074.771-.441 1.516-1.02 1.965a1.878 1.878 0 0 1-1.904.27c-.65.642-.907 1.679-.71 2.614C11.076 9.215 11.784 10 13 10h2.5a.5.5 0 0 1 0 1H13c-1.784 0-2.826-1.215-3.114-2.585-.232-1.1.005-2.373.758-3.284L10.5 5.06l-.777.388a.5.5 0 0 1-.447 0l-1-.5a.5.5 0 0 1 .447-.894l.777.388.776-.388a.5.5 0 0 1 .447 0l1 .5a.493.493 0 0 1 .034.018c.44.264.81.195 1.108-.036.328-.255.586-.729.637-1.27.05-.529-.1-1.076-.525-1.495-.426-.42-1.19-.77-2.477-.77-1.918 0-3.252.448-4.232 1.123C5.283 2.8 4.61 3.738 4.07 4.79c-.365.71-.655 1.433-.945 2.16-.15.376-.301.753-.463 1.13z" />
+                                    </svg> Ocean
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Lake" id="lakeCheck"
+                                    v-model="naturalFeatures">
+                                <label class="form-check-label" for="lakeCheck">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-water" viewBox="0 0 16 16">
+                                        <path
+                                            d="M.036 3.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 3.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 6.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 9.964a.5.5 0 0 1-.278-.65zm0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65z" />
+                                    </svg> Lake
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="River" id="riverCheck"
+                                    v-model="naturalFeatures">
+                                <label class="form-check-label" for="riverCheck">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-droplet" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z" />
+                                        <path fill-rule="evenodd"
+                                            d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z" />
+                                    </svg> River
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
                         <h5>Genders</h5>
                         <h6 class="text-danger" v-if="genderError">{{genderError}}</h6>
                         <div class="form-check" v-for="g in genderOptions">
@@ -381,11 +387,21 @@
                             <ul>
                                 <li>Hundreds to thousands of NPCs created with names, families, jobs, personalities, and
                                     appearances.</li>
-                                <li>Downloadable to CSV.</li>
                                 <ul>
-                                    <li>Even more details about NPCs are available in the CSV.</li>
+                                    <li>Don't like a name? You can reroll them!</li>
                                 </ul>
+                                <li>Downloadable to CSV with even more details for NPCs.</li>
+                                <li>Prosperity controls the percentage of castes in the settlement.</li>
+                                <li>Magic Level controls what locations and magic items are available.</li>
+                                <li>Natural features control dominating industries in the settlement.</li>
                                 <li>Select how common/uncommon/rare each race is.</li>
+                                <ul>
+                                    <li>Edit names available for each race. New names are generated using the list of
+                                        names. The shorter the list, the more likely that a name will be
+                                        generated.</li>
+                                    <li>Create your own race.</li>
+                                    <li>Ages adjusted for the NPC race.</li>
+                                </ul>
                                 <li>Businesses with distinct names and inventories.</li>
                                 <ul>
                                     <li>Depending on the business, some items are always available, while others have a
@@ -404,12 +420,8 @@
                                     <li>Presently these are just for flavor and do not translate to the NPCs generated.
                                     </li>
                                 </ul>
-                                <!-- <li>Schedules for each NPC so you can see who is at the pub or store when the PCs enter. -->
-                                </li>
                                 <li>Age distributions that make sense for medieval settings. It's not equal parts
                                     children, adults, and elderly.</li>
-                                <li>Populations divided by caste that make sense. (Awful lotta farms...)</li>
-                                <li>Ages adjusted for the NPC race.</li>
                             </ul>
                             <h5>
                                 Uses
@@ -421,8 +433,8 @@
                             <p>
                                 That last one comes in handy! Want to add a smith and wainwright to The Village of
                                 Barovia in <em>Curse of Strahd</em>? Just copy them, their family, and their inventories
-                                to your
-                                notes. You don't need to bring the whole generated village along if you don't want!
+                                to your notes. You don't need to bring the whole generated village along if you don't
+                                want!
                             </p>
                         </div>
                         <div v-if="city.Complete" class="tab-pane fade" id="detail" role="tabpanel">
@@ -676,7 +688,7 @@
                             Races: this.raceFreqSettings,
                             NaturalFeatures: this.naturalFeatures,
                             Prosperity: this.prosperity,
-                            MagicLevl: this.magicLevel,
+                            MagicLevel: this.magicLevel,
                             Genders: this.genders
                         }
                         this.citygen = new CityGenerator(settings);

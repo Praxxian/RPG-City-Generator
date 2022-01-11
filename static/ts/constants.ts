@@ -22,14 +22,14 @@ enum RaceFrequency {
 const Appearances = ["Distinctive jewelry: earrings, necklace, circlet, bracelets", "Piercings", "Flamboyant or outlandish clothes", "Formal, clean clothes", "Ragged, dirty clothes", "Pronounced scar", "Missing teeth", "Missing fingers", "Unusual eye color (or two different colors)", "Tattoos", "Birthmark", "Unusual skin color", "Bald", "Braided beard or hair", "Unusual hair color", "Nervous eye twitch", "Distinctive nose", "Distinctive posture (crooked or rigid)", "Exceptionally beautiful", "Exceptionally ugly"];
 const Strengths = ["Strength - powerful, brawny, strong as an ox", "Dexterity - lithe, agile, graceful", "Constitution - hardy, hale, healthy", "Intelligence - studious, learned, inquisitive", "Wisdom - perceptive, spiritual, insightful", "Charisma - persuasive, forceful, born leader"];
 const Weaknesses = ["Strength - feeble, scrawny", "Dexterity - clumsy, fumbling", "Constitution - sickly, pale", "Intelligence - dim-witted, slow", "Wisdom - oblivious, absentminded", "Charisma - dull, boring"];
-const Talents = ["Plays a musical instrument", "Speaks several languages fluently", "Unbelievably lucky", "Perfect memory", "Great with animals", "Great with children", "Great at solving puzzles", "Great at one game", "Great at impersonations", "Draws beautifully", "Paints beautifully", "Sings beautifully", "Drinks everyone under the table", "Expert carpenter", "Expert cook", "Expert dart thrower and rock skipper", "Expert juggler", "Skilled actor and master of disguise", "Skilled dancer", "Knows thieves’ cant"];
-const Mannerisms = ["Prone to singing, whistling, or humming quietly", "Speaks in rhyme or some other peculiar way", "Particularly low or high voice", "Slurs words, lisps, or stutters", "Enunciates overly clearly", "Speaks loudly", "Whispers", "Uses flowery speech or long words", "Frequently uses the wrong word", "Uses colorful oaths and exclamations", "Makes constant jokes or puns", "Prone to predictions of doom", "Fidgets", "Squints", "Stares into the distance", "Chews something", "Paces", "Taps fingers", "Bites fingernails", "Twirls hair or tugs beard"];
+const Talents = ["Plays a musical instrument", "Speaks several languages fluently", "Unbelievably lucky", "Perfect memory", "Great with animals", "Great with children", "Great at solving puzzles", "Great at one game", "Great at impersonations", "Draws beautifully", "Paints beautifully", "Sings beautifully", "Drinks everyone under the table", "Expert carpenter", "Expert cook", "Expert dart thrower and rock skipper", "Expert juggler", "Skilled actor and master of disguise", "Skilled dancer", "Knows thieves' cant"];
+const Mannerisms = ["Prone to singing, whistling, or humming quietly", "Speaks in rhyme or some other peculiar way", "Particularly low or high voice", "Slurs words, lisps, or stutters", "Enunciates overly clearly", "Speaks loudly", "Whispers", "Uses flowery speech or long words", "Frequently uses the wrong word", "Uses colorful oaths and exclamations", "Makes constant jokes or puns", "Prone to predictions of doom", "Fidgets", "Squints", "Stares into the distance", "Chews something", "Paces", "Taps fingers", "Bites fingernails", "Twirls hair or tugs beard"];
 const Interactions = ["Argumentative", "Arrogant", "Blustering", "Rude", "Curious", "Friendly", "Honest", "Hot tempered", "Irritable", "Ponderous", "Quiet", "Suspicious"];
 const GoodOrEvilIdeals = ["Beauty or Domination", "Charity or Greed", "Greater good or Might", "Life or Pain", "Respect or Retribution", "Self-sacrifice or Slaughter"];
 const LawfulOrChaoticIdeals = ["Community or Change", "Fairness or Creativity", "Honor or Freedom", "Logic or Independence", "Responsibility or No limits", "Tradition or Whimsy"];
 const NeutralOrOtherIdeals = ["Balance or Aspiration", "Knowledge or Discovery", "Live and let live or Glory", "Moderation or Nation", "Neutrality or Redemption", "People or Self-knowledge"];
 const Bonds = ["Dedicated to fulfilling a personal life goal", "Protective of close family members", "Protective of colleagues or compatriots", "Loyal to a benefactor, patron, or employer", "Captivated by a romantic interest", "Drawn to a special place", "Protective of a sentimental keepsake", "Protective of a valuable possession", "Out for revenge", "Roll twice, ignoring results of 10"];
-const FlawOrSecrets = ["Forbidden love or susceptibility to romance", "Enjoys decadent pleasures", "Arrogance", "Envies another creature’s possessions or station", "Overpowering greed", "Prone to rage", "Has a powerful enemy", "Specific phobia", "Shameful or scandalous history", "Secret crime or misdeed", "Possession of forbidden lore", "Foolhardy bravery"];
+const FlawOrSecrets = ["Forbidden love or susceptibility to romance", "Enjoys decadent pleasures", "Arrogance", "Envies another creature's possessions or station", "Overpowering greed", "Prone to rage", "Has a powerful enemy", "Specific phobia", "Shameful or scandalous history", "Secret crime or misdeed", "Possession of forbidden lore", "Foolhardy bravery"];
 
 const WorkingHumanAge = 12;
 
@@ -180,7 +180,7 @@ const Calamity = [
     "a suspected vampire infestation",
     "a new cult seeking converts",
     "an important figure's death (murder suspected)",
-    "a war between rival thieves’ guilds",
+    "a war between rival thieves' guilds",
     "a plague or famine (sparks riots)",
     "a plague or famine (sparks riots)",
     "corrupt officials",
@@ -279,6 +279,12 @@ const CitySizes: { [name: string]: CitySize } = {
     CITY: new CitySize('City', 25000, 4),
 }
 
+const MagicLevels: { [name: string]: MagicLevel } = {
+    NONE: new MagicLevel("None", "Magic locations, like Wizard Towers, will not appear and businesses will not sell magic items, potions, scrolls, or spellcasting."),
+    LOW: new MagicLevel("Low", "Magic locations, like Wizard Towers, are rare. Magic locations will sell some common magic items and offer low-level spellcasting."),
+    HIGH: new MagicLevel("High", "Magic locations, like Wizard Towers, appear rarely for small villages and more frequently for larger settlements. Any store might sell magic items, potions, scrolls, and spellcasting if it fits with their usual inventory.")
+}
+
 var BusinessTypes: { [name: string]: BusinessType } = {
     ALCHEMIST_SHOP: new BusinessType({
         name: 'Alchemist Shop',
@@ -287,7 +293,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Cauldron", "Vial", "Mortar", "Alembic", "Flask", "Boiler", "Beaker", "Bottle", "Phial", "Cistern", "Abacus", "Draught", "Elixer", "Brew", "Dram", "Philter", "Tonic", "Leaf"],
         altNames: ["Hermetics", "Alchemy Supplies", "Potions", "Store Room", "Labaratory"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.01 ? 1 : 0;
@@ -300,10 +306,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return 2;
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -315,7 +321,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Shield", "Bulwark", "Aegis", "Buckler", "Helmet", "Pauldron", "Breastplate", "Greaves", "Boot", "Gauntlet", "Chain", "Plate", "Bracer", "Defense", "Warrior", "Knight"],
         altNames: ["Armors", "Armory"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                 case CitySizes.SMALL_VILLAGE:
@@ -328,10 +334,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -343,7 +349,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Oven", "Kiln", "Bun", "Muffin", "Loaf", "Pastry", "Cake", "Roll", "Rolling Pin", "Measuring Cup", "Spoon", "Spatula", "Whisk", "Pan", "Slice", "Pie", "Dozen", "Bowl", "Cookie", "Tart"],
         altNames: ["Oven", "Baked Goods", "Pastry Shop", "Confectioneries", "Bake Shop", "Pâtisserie"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -356,10 +362,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -371,7 +377,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Anvil", "Hammer", "Forge", "Sledge", "Chisel", "Poker", "Shovel", "Ingot", "Swage", "Bolt", "Chain"],
         altNames: ["Anvil", "Forge", "Ironworks"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -384,10 +390,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -399,7 +405,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Bow", "Arrow", "Grip", "String", "Notch", "Bolt", "Quiver", "Shaft", "Bowyer", "Bracer", "Crest", "Draw", "Fletching", "Flight", "Limb", "Nib", "Nock", "Point", "Stringer"],
         altNames: ["Bows"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.01 ? 1 : 0;
@@ -413,10 +419,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -428,7 +434,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Knife", "Blade", "Cleaver", "Block", "Roast", "Chop"],
         altNames: ["Meats", "Meat Market", "Prime Cuts"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -442,10 +448,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -457,7 +463,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: ["General Goods", "Market", "Goods", "Marketplace"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return 0;
@@ -471,10 +477,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -486,7 +492,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: ["Market", "Vegetables", "Fresh Foods"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return 0;
@@ -500,10 +506,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -515,7 +521,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: ["Herbalism Hut", "Herb Gathering", "Incense"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -529,10 +535,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -544,7 +550,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: ["Horses", "Fine Steeds", "Mounts", "Colts and Fillies", "Ranch", "Stables"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return 0;
@@ -558,10 +564,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -573,7 +579,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: ["Trapping", "Falconry", "Big Game Hunting"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -587,10 +593,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -613,7 +619,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             else if (r <= 9)
                 return "Raucous dive";
             else if (r <= 10)
-                return "Thieves’ guild hangout";
+                return "Thieves' guild hangout";
             else if (r <= 11)
                 return "Gathering place for a secret society";
             else if (r <= 13)
@@ -627,7 +633,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             else if (r <= 20)
                 return "Brothel";
         },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.33 ? 1 : 0;
@@ -641,10 +647,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 3);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -656,7 +662,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Gem", "Tiara", "Jewel", "Jewel", "Treasure", "Trinket"],
         altNames: ["Fine Jewels", "Treasures", "Gems", "Trinkets"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return 0;
@@ -670,10 +676,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 1);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -685,7 +691,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Hide", "Grain", "Stitch", "Beveler", "Gauge", "Needle"],
         altNames: ["Leather Goods", "Leather Armor", "Leathers", "Hides"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -698,10 +704,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -713,7 +719,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Page", "Scroll", "Book", "Shelf", "Tome", "Manuscript", "Sheet"],
         altNames: ["Manuscripts", "Books", "Bookstore", "Tomes", "Volumes", "Scrolls"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return 0;
@@ -727,10 +733,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 1);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -742,7 +748,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Needle", "Thread", "Spool", "Lace", "Thimble", "Pin", "Bobbin", "Stitch", "Cuff", "Weave", "Loom"],
         altNames: ["Beskpoke Clothing", "Threads", "Attire", "Wardrobe", "Garments", "Vestments", "Tailored Goods", "Fine Clothes"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -756,10 +762,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -771,7 +777,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: ["Animal Skins", "Hides", "Fine Leathers"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -784,10 +790,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -811,7 +817,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             else if (r <= 9)
                 return "Raucous dive";
             else if (r <= 10)
-                return "Thieves’ guild hangout";
+                return "Thieves' guild hangout";
             else if (r <= 11)
                 return "Gathering place for a secret society";
             else if (r <= 13)
@@ -825,7 +831,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             else if (r <= 20)
                 return "Brothel";
         },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -838,10 +844,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -868,7 +874,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             else if (r <= 20)
                 return "Hidden shrine to a fiend or an evil deity";
         },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.5 ? 1 : 0;
@@ -882,10 +888,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 2) + 3);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -897,7 +903,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Armory", "Blade", "Sword", "Arsenal", "Mace", "Axe", "Spear", "Hilt", "Pommel", "Hammer", "Edge", "Scabbard", "Sheath", "Warrior", "Knight"],
         altNames: ["Weapons", "Armory", "Blades", "Fine Swords", "Arsenal"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                 case CitySizes.SMALL_VILLAGE:
@@ -910,10 +916,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -925,7 +931,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: ["Wheel", "Spoke", "Hub", "Cart", "Wagon", "Carriage"],
         altNames: ["Carts", "Wagons", "Carriages", "Workshop"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return CryptoRandom.random() <= 0.01 ? 1 : 0;
@@ -939,10 +945,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -954,7 +960,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: [],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                     return Math.floor(CryptoRandom.random() * 3) + 7;
@@ -968,10 +974,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return Math.floor(CryptoRandom.random() * 1100) + 2233;
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -988,7 +994,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             , "Elf", "Devil", "Gnome", "Orc", "Dragon", "Giant", "Angel", "Goblin", "Raven", "Crow", "Kobold", "Leopard", "Jaguar", "Fish"],
         altNames: ["Ale Works", "Fine Ales", "Beer", "Beers and Ciders", "Brewing", "Brew Co", "Beer Co", "Brew Works", "Ale Co", "Ale", "Bierhaus"],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             switch (settings.CitySize) {
                 case CitySizes.EXTRA_SMALL_VILLAGE:
                 case CitySizes.SMALL_VILLAGE:
@@ -1001,10 +1007,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -1016,13 +1022,13 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: [],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             return 0; // Generated per noble family
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 2;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -1034,13 +1040,13 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: [],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             return settings.NaturalFeatures.indexOf(NaturalFeatures.MOUNTAIN) >= 0 ? 1 : 0;
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var majorIndustryCount = settings.NaturalFeatures.filter(f => f == NaturalFeatures.MOUNTAIN
                 || f == NaturalFeatures.FOREST)
                 .length + 1;
@@ -1060,7 +1066,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             , "Elf", "Devil", "Gnome", "Orc", "Dragon", "Giant", "Angel", "Goblin", "Raven", "Crow", "Kobold", "Leopard", "Jaguar", "Fish", "Lady", "Mermaid"],
         altNames: ['Shipping Co', 'Imports'],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             if (settings.NaturalFeatures.indexOf(NaturalFeatures.OCEAN) < 0)
                 return 0;
             switch (settings.CitySize) {
@@ -1075,10 +1081,10 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random()) + 2);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = (settings.CitySize.avgSize * 0.01);
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
@@ -1090,13 +1096,13 @@ var BusinessTypes: { [name: string]: BusinessType } = {
         nouns: [],
         altNames: [],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             return settings.NaturalFeatures.indexOf(NaturalFeatures.FOREST) >= 0 ? 1 : 0;
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var majorIndustryCount = settings.NaturalFeatures.filter(f => f == NaturalFeatures.MOUNTAIN
                 || f == NaturalFeatures.FOREST)
                 .length + 1;
@@ -1116,7 +1122,7 @@ var BusinessTypes: { [name: string]: BusinessType } = {
             , "Elf", "Devil", "Gnome", "Orc", "Dragon", "Giant", "Angel", "Goblin", "Raven", "Crow", "Kobold", "Leopard", "Jaguar", "Fish", "Lady", "Mermaid"],
         altNames: [],
         notes: function () { return ''; },
-        frequency: function (settings) {
+        frequency: function (settings: CitySettings) {
             if (settings.NaturalFeatures.indexOf(NaturalFeatures.OCEAN) < 0
                 && settings.NaturalFeatures.indexOf(NaturalFeatures.LAKE) < 0
                 && settings.NaturalFeatures.indexOf(NaturalFeatures.RIVER) < 0)
@@ -1134,14 +1140,104 @@ var BusinessTypes: { [name: string]: BusinessType } = {
                     return (Math.floor(CryptoRandom.random() * 20) + 20);
             }
         },
-        minEmployees: function (settings) {
+        minEmployees: function (settings: CitySettings) {
             return 1;
         },
-        maxEmployees: function (settings) {
+        maxEmployees: function (settings: CitySettings) {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
-    })
+    }),
+    ARTIFICER_WORKSHOP: new BusinessType({
+        name: 'Artificer Workshop',
+        ownerCastes: [Caste.TRADESMEN],
+        employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
+        adjectives: ['Magic', 'Enchanted', 'Wondrous', 'Marvelous', 'Miraculous', 'Uncanny', 'Conjured', 'Ensorcelled', 'Mystic', 'Witch\'s', 'Wizard\'s', 'Astounding'],
+        nouns: ["Anvil", "Hammer", "Forge", "Armory", "Arsenal", "Lab", "Foundry", "Contraption", "Apparatus", "Gadget", "Mechanical", "Works"],
+        altNames: ['Laboratory', 'Foundry', 'Contraptions', 'Apparatuses', 'Gadgets', 'Mechanics', 'Armory', 'Arsenal', 'Anvil', 'Forge'],
+        notes: function () { return ''; },
+        frequency: function (settings: CitySettings) {
+            switch (settings.MagicLevel) {
+                case MagicLevels.NONE:
+                    return 0;
+                case MagicLevels.LOW:
+                    switch (settings.CitySize) {
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.05 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                    }
+                    break;
+                case MagicLevels.HIGH:
+                    switch (settings.CitySize) {
+                        case CitySizes.SMALL_VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.33 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return (Math.floor(CryptoRandom.random() * 2) + 1);
+                    }
+                    break;
+            }
+            return 0;
+        },
+        minEmployees: function (settings: CitySettings) {
+            return 1;
+        },
+        maxEmployees: function (settings: CitySettings) {
+            var maxEmployees = settings.CitySize.maxEmployees;
+            return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
+        }
+    }),
+    MAGIC_SHOP: new BusinessType({
+        name: 'Magic Shop',
+        ownerCastes: [Caste.MERCANTILE],
+        employeeCastes: [Caste.MERCANTILE, Caste.PEASANT],
+        adjectives: ['Magic', 'Enchanted', 'Wondrous', 'Marvelous', 'Miraculous', 'Uncanny', 'Mystic', 'Hidden', 'Eerie', 'Mythic', 'Invisible', 'Underground', 'Disguised', 'Veiled', 'Imperceivable', 'Shadowy', 'Crimson', 'Golden', 'Verdant', 'Azure', 'Violet', 'Amber', 'Silver', 'Onyx', 'Pallid', 'Unearthed', 'Umbral', 'Wandering', 'Traveling', 'Roaming', 'Fleeting', 'Ephemeral'],
+        nouns: ["Shop", "Market", "Boutique", 'Emporium', 'Stand', 'Curios', 'Wares', 'Trinkets', 'Baubles', 'Collectibles'],
+        altNames: ["Shop", "Market", "Boutique", 'Emporium', 'Stand', 'Curios', 'Wares', 'Trinkets', 'Baubles', 'Collectibles'],
+        notes: function () { return ''; },
+        frequency: function (settings: CitySettings) {
+            switch (settings.MagicLevel) {
+                case MagicLevels.NONE:
+                    return 0;
+                case MagicLevels.LOW:
+                    switch (settings.CitySize) {
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.05 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                    }
+                    break;
+                case MagicLevels.HIGH:
+                    switch (settings.CitySize) {
+                        case CitySizes.SMALL_VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.33 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return (Math.floor(CryptoRandom.random() * 2) + 1);
+                    }
+                    break;
+            }
+            return 0;
+        },
+        minEmployees: function (settings: CitySettings) {
+            return 1;
+        },
+        maxEmployees: function (settings: CitySettings) {
+            var maxEmployees = settings.CitySize.maxEmployees;
+            return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
+        }
+    }),
 };
 
 const AllItems: { [name: string]: InventoryItem } = {
@@ -1288,7 +1384,7 @@ const AllItems: { [name: string]: InventoryItem } = {
     Amulet: new InventoryItem(ItemType.MISC, "Amulet", 500, Unit.COPPER),
     Emblem: new InventoryItem(ItemType.MISC, "Emblem", 500, Unit.COPPER),
     Reliquary: new InventoryItem(ItemType.MISC, "Reliquary", 500, Unit.COPPER),
-    Holy_WaterFlask: new InventoryItem(ItemType.MISC, "Holy Water (flask)", 2500, Unit.COPPER),
+    Holy_WaterFlask: new InventoryItem(ItemType.MISC, "Holy Water (flask)", 2500, Unit.COPPER, MagicItemRarity.COMMON),
     Hourglass: new InventoryItem(ItemType.MISC, "Hourglass", 2500, Unit.COPPER),
     Hunting_Trap: new InventoryItem(ItemType.MISC, "Hunting trap", 500, Unit.COPPER),
     Ink1_Ounce_Bottle: new InventoryItem(ItemType.MISC, "Ink (1 ounce bottle)", 1000, Unit.COPPER),
@@ -1318,7 +1414,7 @@ const AllItems: { [name: string]: InventoryItem } = {
     Poison_Basic_Vial: new InventoryItem(ItemType.MISC, "Poison, basic (vial)", 10000, Unit.COPPER),
     Pole10_Foot: new InventoryItem(ItemType.MISC, "Pole (10-foot)", 5, Unit.COPPER),
     Pot_Iron: new InventoryItem(ItemType.MISC, "Pot, iron", 200, Unit.COPPER),
-    Potion_Of_Healing: new InventoryItem(ItemType.POTION, "Potion of Healing", 5000, Unit.COPPER),
+    Potion_Of_Healing: new InventoryItem(ItemType.POTION, "Potion of Healing", 5000, Unit.COPPER, MagicItemRarity.COMMON),
     Pouch: new InventoryItem(ItemType.MISC, "Pouch", 50, Unit.COPPER),
     Quiver: new InventoryItem(ItemType.AMMUNITION, "Quiver", 100, Unit.COPPER),
     Ram_Portable: new InventoryItem(ItemType.MISC, "Ram, portable", 400, Unit.COPPER),
@@ -1397,15 +1493,15 @@ const AllItems: { [name: string]: InventoryItem } = {
     Messenger_Per_Mile: new InventoryItem(ItemType.SERVICE, "Messenger (per mile)", 2, Unit.COPPER),
     Road_Or_Gate_Toll: new InventoryItem(ItemType.SERVICE, "Road or Gate Toll", 1, Unit.COPPER),
     Ship_Passsage_Per_Mile: new InventoryItem(ItemType.SERVICE, "Ship Passsage (per mile)", 10, Unit.COPPER),
-    Level_1_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 1 Spell (before components)", 1000, Unit.COPPER),
-    Level_2_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 2 Spell (before components)", 4000, Unit.COPPER),
-    Level_3_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 3 Spell (before components)", 9000, Unit.COPPER),
-    Level_4_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 4 Spell (before components)", 16000, Unit.COPPER),
-    Level_5_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 5 Spell (before components)", 25000, Unit.COPPER),
-    Level_6_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 6 Spell (before components)", 36000, Unit.COPPER),
-    Level_7_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 7 Spell (before components)", 49000, Unit.COPPER),
-    Level_8_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 8 Spell (before components)", 64000, Unit.COPPER),
-    Level_9_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 9 Spell (before components)", 81000, Unit.COPPER),
+    Level_1_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 1 Spell (before components)", 1000, Unit.COPPER, MagicItemRarity.COMMON),
+    Level_2_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 2 Spell (before components)", 4000, Unit.COPPER, MagicItemRarity.UNCOMMON),
+    Level_3_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 3 Spell (before components)", 9000, Unit.COPPER, MagicItemRarity.UNCOMMON),
+    Level_4_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 4 Spell (before components)", 16000, Unit.COPPER, MagicItemRarity.RARE),
+    Level_5_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 5 Spell (before components)", 25000, Unit.COPPER, MagicItemRarity.RARE),
+    Level_6_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 6 Spell (before components)", 36000, Unit.COPPER, MagicItemRarity.VERYRARE),
+    Level_7_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 7 Spell (before components)", 49000, Unit.COPPER, MagicItemRarity.VERYRARE),
+    Level_8_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 8 Spell (before components)", 64000, Unit.COPPER, MagicItemRarity.VERYRARE),
+    Level_9_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 9 Spell (before components)", 81000, Unit.COPPER, MagicItemRarity.LEGENDARY),
     Breastplate_Barding: new InventoryItem(ItemType.ARMOR, "Breastplate Barding", 160000, Unit.COPPER),
     Chain_Mail_Barding: new InventoryItem(ItemType.ARMOR, "Chain Mail Barding", 30000, Unit.COPPER),
     Chain_Shirt_Barding: new InventoryItem(ItemType.ARMOR, "Chain Shirt Barding", 20000, Unit.COPPER),
@@ -1428,8 +1524,3 @@ const Prosperities: Prosperity[] = [
     { Label: "Custom", noblePercent: 0.005, mercantilePercent: 0.015, tradePercent: 0.18, peasantPercent: 0.80 },
 ];
 
-const MagicLevels: { [name: string]: MagicLevel } = {
-    NONE: new MagicLevel("None", "Magic locations, like Wizard Towers, will not appear and businesses will not sell magic items, potions, scrolls, or spellcasting."),
-    LOW: new MagicLevel("Low", "Magic locations, like Wizard Towers, are rare. Businesses will only sell common magic items, potions, scrolls, and spellcasting (up to level 1)."),
-    HIGH: new MagicLevel("High", "Magic locations, like Wizard Towers, appear rarely for small villages and more frequently for larger settlements. Businesses might sell magic items, potions, scrolls, and spellcasting of all rarity and levels.")
-}

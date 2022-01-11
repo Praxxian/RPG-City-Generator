@@ -263,6 +263,11 @@ const CitySizes = {
     TOWN: new CitySize('Town', 5000, 3),
     CITY: new CitySize('City', 25000, 4),
 };
+const MagicLevels = {
+    NONE: new MagicLevel("None", "Magic locations, like Wizard Towers, will not appear and businesses will not sell magic items, potions, scrolls, or spellcasting."),
+    LOW: new MagicLevel("Low", "Magic locations, like Wizard Towers, are rare. Magic locations will sell some common magic items and offer low-level spellcasting."),
+    HIGH: new MagicLevel("High", "Magic locations, like Wizard Towers, appear rarely for small villages and more frequently for larger settlements. Any store might sell magic items, potions, scrolls, and spellcasting if it fits with their usual inventory.")
+};
 var BusinessTypes = {
     ALCHEMIST_SHOP: new BusinessType({
         name: 'Alchemist Shop',
@@ -1125,7 +1130,97 @@ var BusinessTypes = {
             var maxEmployees = settings.CitySize.maxEmployees;
             return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
         }
-    })
+    }),
+    ARTIFICER_WORKSHOP: new BusinessType({
+        name: 'Artificer Workshop',
+        ownerCastes: [Caste.TRADESMEN],
+        employeeCastes: [Caste.TRADESMEN, Caste.PEASANT],
+        adjectives: ['Magic', 'Enchanted', 'Wondrous', 'Marvelous', 'Miraculous', 'Uncanny', 'Conjured', 'Ensorcelled', 'Mystic', 'Witch\'s', 'Wizard\'s', 'Astounding'],
+        nouns: ["Anvil", "Hammer", "Forge", "Armory", "Arsenal", "Lab", "Foundry", "Contraption", "Apparatus", "Gadget", "Mechanical", "Works"],
+        altNames: ['Laboratory', 'Foundry', 'Contraptions', 'Apparatuses', 'Gadgets', 'Mechanics', 'Armory', 'Arsenal', 'Anvil', 'Forge'],
+        notes: function () { return ''; },
+        frequency: function (settings) {
+            switch (settings.MagicLevel) {
+                case MagicLevels.NONE:
+                    return 0;
+                case MagicLevels.LOW:
+                    switch (settings.CitySize) {
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.05 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                    }
+                    break;
+                case MagicLevels.HIGH:
+                    switch (settings.CitySize) {
+                        case CitySizes.SMALL_VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.33 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return (Math.floor(CryptoRandom.random() * 2) + 1);
+                    }
+                    break;
+            }
+            return 0;
+        },
+        minEmployees: function (settings) {
+            return 1;
+        },
+        maxEmployees: function (settings) {
+            var maxEmployees = settings.CitySize.maxEmployees;
+            return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
+        }
+    }),
+    MAGIC_SHOP: new BusinessType({
+        name: 'Magic Shop',
+        ownerCastes: [Caste.MERCANTILE],
+        employeeCastes: [Caste.MERCANTILE, Caste.PEASANT],
+        adjectives: ['Magic', 'Enchanted', 'Wondrous', 'Marvelous', 'Miraculous', 'Uncanny', 'Mystic', 'Hidden', 'Eerie', 'Mythic', 'Invisible', 'Underground', 'Disguised', 'Veiled', 'Imperceivable', 'Shadowy', 'Crimson', 'Golden', 'Verdant', 'Azure', 'Violet', 'Amber', 'Silver', 'Onyx', 'Pallid', 'Unearthed', 'Umbral', 'Wandering', 'Traveling', 'Roaming', 'Fleeting', 'Ephemeral'],
+        nouns: ["Shop", "Market", "Boutique", 'Emporium', 'Stand', 'Curios', 'Wares', 'Trinkets', 'Baubles', 'Collectibles'],
+        altNames: ["Shop", "Market", "Boutique", 'Emporium', 'Stand', 'Curios', 'Wares', 'Trinkets', 'Baubles', 'Collectibles'],
+        notes: function () { return ''; },
+        frequency: function (settings) {
+            switch (settings.MagicLevel) {
+                case MagicLevels.NONE:
+                    return 0;
+                case MagicLevels.LOW:
+                    switch (settings.CitySize) {
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.05 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                    }
+                    break;
+                case MagicLevels.HIGH:
+                    switch (settings.CitySize) {
+                        case CitySizes.SMALL_VILLAGE:
+                            return CryptoRandom.random() <= 0.01 ? 1 : 0;
+                        case CitySizes.VILLAGE:
+                            return CryptoRandom.random() <= 0.10 ? 1 : 0;
+                        case CitySizes.TOWN:
+                            return CryptoRandom.random() <= 0.33 ? 1 : 0;
+                        case CitySizes.CITY:
+                            return (Math.floor(CryptoRandom.random() * 2) + 1);
+                    }
+                    break;
+            }
+            return 0;
+        },
+        minEmployees: function (settings) {
+            return 1;
+        },
+        maxEmployees: function (settings) {
+            var maxEmployees = settings.CitySize.maxEmployees;
+            return Math.floor(CryptoRandom.random() * maxEmployees) + this.minEmployees(settings);
+        }
+    }),
 };
 const AllItems = {
     Alchemists_Supplies: new InventoryItem(ItemType.TOOL, "Alchemist's supplies", 5000, Unit.COPPER),
@@ -1271,7 +1366,7 @@ const AllItems = {
     Amulet: new InventoryItem(ItemType.MISC, "Amulet", 500, Unit.COPPER),
     Emblem: new InventoryItem(ItemType.MISC, "Emblem", 500, Unit.COPPER),
     Reliquary: new InventoryItem(ItemType.MISC, "Reliquary", 500, Unit.COPPER),
-    Holy_WaterFlask: new InventoryItem(ItemType.MISC, "Holy Water (flask)", 2500, Unit.COPPER),
+    Holy_WaterFlask: new InventoryItem(ItemType.MISC, "Holy Water (flask)", 2500, Unit.COPPER, MagicItemRarity.COMMON),
     Hourglass: new InventoryItem(ItemType.MISC, "Hourglass", 2500, Unit.COPPER),
     Hunting_Trap: new InventoryItem(ItemType.MISC, "Hunting trap", 500, Unit.COPPER),
     Ink1_Ounce_Bottle: new InventoryItem(ItemType.MISC, "Ink (1 ounce bottle)", 1000, Unit.COPPER),
@@ -1301,7 +1396,7 @@ const AllItems = {
     Poison_Basic_Vial: new InventoryItem(ItemType.MISC, "Poison, basic (vial)", 10000, Unit.COPPER),
     Pole10_Foot: new InventoryItem(ItemType.MISC, "Pole (10-foot)", 5, Unit.COPPER),
     Pot_Iron: new InventoryItem(ItemType.MISC, "Pot, iron", 200, Unit.COPPER),
-    Potion_Of_Healing: new InventoryItem(ItemType.POTION, "Potion of Healing", 5000, Unit.COPPER),
+    Potion_Of_Healing: new InventoryItem(ItemType.POTION, "Potion of Healing", 5000, Unit.COPPER, MagicItemRarity.COMMON),
     Pouch: new InventoryItem(ItemType.MISC, "Pouch", 50, Unit.COPPER),
     Quiver: new InventoryItem(ItemType.AMMUNITION, "Quiver", 100, Unit.COPPER),
     Ram_Portable: new InventoryItem(ItemType.MISC, "Ram, portable", 400, Unit.COPPER),
@@ -1380,15 +1475,15 @@ const AllItems = {
     Messenger_Per_Mile: new InventoryItem(ItemType.SERVICE, "Messenger (per mile)", 2, Unit.COPPER),
     Road_Or_Gate_Toll: new InventoryItem(ItemType.SERVICE, "Road or Gate Toll", 1, Unit.COPPER),
     Ship_Passsage_Per_Mile: new InventoryItem(ItemType.SERVICE, "Ship Passsage (per mile)", 10, Unit.COPPER),
-    Level_1_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 1 Spell (before components)", 1000, Unit.COPPER),
-    Level_2_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 2 Spell (before components)", 4000, Unit.COPPER),
-    Level_3_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 3 Spell (before components)", 9000, Unit.COPPER),
-    Level_4_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 4 Spell (before components)", 16000, Unit.COPPER),
-    Level_5_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 5 Spell (before components)", 25000, Unit.COPPER),
-    Level_6_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 6 Spell (before components)", 36000, Unit.COPPER),
-    Level_7_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 7 Spell (before components)", 49000, Unit.COPPER),
-    Level_8_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 8 Spell (before components)", 64000, Unit.COPPER),
-    Level_9_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 9 Spell (before components)", 81000, Unit.COPPER),
+    Level_1_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 1 Spell (before components)", 1000, Unit.COPPER, MagicItemRarity.COMMON),
+    Level_2_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 2 Spell (before components)", 4000, Unit.COPPER, MagicItemRarity.UNCOMMON),
+    Level_3_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 3 Spell (before components)", 9000, Unit.COPPER, MagicItemRarity.UNCOMMON),
+    Level_4_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 4 Spell (before components)", 16000, Unit.COPPER, MagicItemRarity.RARE),
+    Level_5_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 5 Spell (before components)", 25000, Unit.COPPER, MagicItemRarity.RARE),
+    Level_6_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 6 Spell (before components)", 36000, Unit.COPPER, MagicItemRarity.VERYRARE),
+    Level_7_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 7 Spell (before components)", 49000, Unit.COPPER, MagicItemRarity.VERYRARE),
+    Level_8_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 8 Spell (before components)", 64000, Unit.COPPER, MagicItemRarity.VERYRARE),
+    Level_9_Spell_Before_Components: new InventoryItem(ItemType.SERVICE, "Level 9 Spell (before components)", 81000, Unit.COPPER, MagicItemRarity.LEGENDARY),
     Breastplate_Barding: new InventoryItem(ItemType.ARMOR, "Breastplate Barding", 160000, Unit.COPPER),
     Chain_Mail_Barding: new InventoryItem(ItemType.ARMOR, "Chain Mail Barding", 30000, Unit.COPPER),
     Chain_Shirt_Barding: new InventoryItem(ItemType.ARMOR, "Chain Shirt Barding", 20000, Unit.COPPER),
@@ -1409,8 +1504,3 @@ const Prosperities = [
     { Label: "Prosperous", noblePercent: 0.01, mercantilePercent: 0.03, tradePercent: 0.36, peasantPercent: 0.60 },
     { Label: "Custom", noblePercent: 0.005, mercantilePercent: 0.015, tradePercent: 0.18, peasantPercent: 0.80 },
 ];
-const MagicLevels = {
-    NONE: new MagicLevel("None", "Magic locations, like Wizard Towers, will not appear and businesses will not sell magic items, potions, scrolls, or spellcasting."),
-    LOW: new MagicLevel("Low", "Magic locations, like Wizard Towers, are rare. Businesses will only sell common magic items, potions, scrolls, and spellcasting (up to level 1)."),
-    HIGH: new MagicLevel("High", "Magic locations, like Wizard Towers, appear rarely for small villages and more frequently for larger settlements. Businesses might sell magic items, potions, scrolls, and spellcasting of all rarity and levels.")
-};

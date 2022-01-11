@@ -61,6 +61,9 @@ class CitySettings {
 }
 class BusinessType {
     constructor(data) {
+        this.ownerCastes = [];
+        this.employeeCastes = [];
+        this.nouns = [];
         this.adjectives = [];
         if (data) {
             for (const i in data) {
@@ -202,15 +205,17 @@ class Business {
             this.Name = `The ${adj} ${noun} ${name}`;
             return;
         }
-        if (r < 0.33 && nouns.length > 1 && businessType != BusinessTypes.FARM && businessType != BusinessTypes.BREWERY && businessType != BusinessTypes.SHIPPING && businessType != BusinessTypes.FISHING) {
+        let doNotCreateAmersandNames = [BusinessTypes.FARM, BusinessTypes.BREWERY, BusinessTypes.SHIPPING, BusinessTypes.FISHING, BusinessTypes.ARTIFICER_WORKSHOP, BusinessTypes.MAGIC_SHOP];
+        if (r < 0.33 && nouns.length > 1 && doNotCreateAmersandNames.indexOf(businessType) < 0) {
             let firstNoun = CryptoRandom.randomFromArray(nouns);
             nouns.splice(nouns.indexOf(firstNoun), 1);
             this.Name = `${firstNoun} & ${CryptoRandom.randomFromArray(nouns)}`;
             return;
         }
+        let specificAdjectives = [BusinessTypes.ARTIFICER_WORKSHOP, BusinessTypes.MAGIC_SHOP];
         if (r < 0.80 && nouns.length > 0 && businessType != BusinessTypes.FARM) {
-            let adjectives = GeneralAdjectives;
-            this.Name = (businessType == BusinessTypes.BREWERY ? "" : "The ") + `${CryptoRandom.randomFromArray(adjectives)} ${CryptoRandom.randomFromArray(nouns)}` + (businessType == BusinessTypes.BREWERY ? " " + CryptoRandom.randomFromArray(altNames) : "");
+            let adjectives = specificAdjectives.indexOf(businessType) >= 0 ? businessType.adjectives : [...businessType.adjectives, ...GeneralAdjectives];
+            this.Name = (businessType == BusinessTypes.BREWERY || businessType == BusinessTypes.MAGIC_SHOP ? "" : "The ") + `${CryptoRandom.randomFromArray(adjectives)} ${CryptoRandom.randomFromArray(nouns)}` + (businessType == BusinessTypes.BREWERY ? " " + CryptoRandom.randomFromArray(altNames) : "");
             return;
         }
         this.Name = businessType == BusinessTypes.BREWERY || businessType == BusinessTypes.SHIPPING ? `${owner.LastName} ${CryptoRandom.randomFromArray(altNames)}` : `${owner.FirstName}'s ${CryptoRandom.randomFromArray(altNames)}`;
@@ -226,11 +231,19 @@ class Business {
     }
 }
 class MagicItemRarity {
+    constructor(data) {
+        if (data) {
+            for (const i in data) {
+                this[i] = data[i];
+            }
+        }
+    }
 }
-MagicItemRarity.COMMON = ({ MinRoll: 2, MaxRoll: 7, Multiplier: 10 });
-MagicItemRarity.UNCOMMON = ({ MinRoll: 1, MaxRoll: 6, Multiplier: 100 });
-MagicItemRarity.RARE = ({ MinRoll: 2, MaxRoll: 20, Multiplier: 1000 });
-MagicItemRarity.VERYRARE = ({ MinRoll: 2, MaxRoll: 5, Multiplier: 10000 });
+MagicItemRarity.COMMON = new MagicItemRarity({ MinRoll: 2, MaxRoll: 7, Multiplier: 10 });
+MagicItemRarity.UNCOMMON = new MagicItemRarity({ MinRoll: 1, MaxRoll: 6, Multiplier: 100 });
+MagicItemRarity.RARE = new MagicItemRarity({ MinRoll: 2, MaxRoll: 20, Multiplier: 1000 });
+MagicItemRarity.VERYRARE = new MagicItemRarity({ MinRoll: 2, MaxRoll: 5, Multiplier: 10000 });
+MagicItemRarity.LEGENDARY = new MagicItemRarity({ MinRoll: 2, MaxRoll: 12, Multiplier: 25000 });
 class InventoryItem {
     constructor(itemType = null, name = null, cost = null, unit = null, rarity = null, magicTier = null) {
         this.favors = ['Simple', 'Major', 'Heroic'];
@@ -240,7 +253,7 @@ class InventoryItem {
         this.Unit = unit;
         this.MagicRarity = rarity;
         this.MagicTier = magicTier;
-        if (this.MagicRarity)
+        if (this.MagicRarity && this.MagicTier)
             this.setMagicCost();
     }
     setMagicCost() {
@@ -253,7 +266,7 @@ class InventoryItem {
             roll = Math.max(roll1, roll2);
         this.Cost = roll * this.MagicRarity.Multiplier * 100;
         if (this.ItemType == ItemType.POTION || this.ItemType == ItemType.SCROLL)
-            this.Cost *= 1 / 2;
+            this.Cost = Math.floor(0.5 * this.Cost);
     }
     toString() {
         return `${this.Name} [${this.displayCost()}]`;
