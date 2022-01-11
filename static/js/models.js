@@ -73,6 +73,32 @@ class BusinessType {
     }
 }
 class Person {
+    constructor() {
+        this.Id = null;
+        this.FirstName = null;
+        this.LastName = null;
+        this.Caste = null;
+        this.RaceFrequency = null;
+        this.Race = null;
+        this.Age = null;
+        this.Gender = null;
+        this.Family = null;
+        this.Spouse = null;
+        this.Appearance = null;
+        this.Strength = null;
+        this.Weakness = null;
+        this.Talent = null;
+        this.Mannerism = null;
+        this.Interaction = null;
+        this.GoodOrEvilIdeal = null;
+        this.LawfulOrChaoticIdeal = null;
+        this.NeutralOrOtherIdeal = null;
+        this.Bond = null;
+        this.FlawOrSecret = null;
+        this.RaceAge = null;
+        this.ownedBusiness = null;
+        this.worksAt = null;
+    }
     toString() {
         return this.fullName();
     }
@@ -131,8 +157,12 @@ class Family {
 }
 class Business {
     constructor() {
+        this.Id = null;
+        this.BusinessType = null;
         this.Owners = [];
         this.Employees = [];
+        this.Name = null;
+        this.Description = null;
         this.Inventory = [];
     }
     toString() {

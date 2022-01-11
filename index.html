@@ -961,10 +961,10 @@
                     let raceData = [];
                     let raceColors = [];
                     let colorStep = Math.floor(255 / raceLabels.length);
-                    let rgb = new Uint8Array([0,100,255]);                    
+                    let rgb = new Uint8Array([0, 100, 255]);
                     for (let i = 0; i < raceLabels.length; i++) {
                         raceData.push(this.city.People.filter(x => x.Race.name == raceLabels[i]).length);
-                        let newRGB =  new Uint8Array(3);
+                        let newRGB = new Uint8Array(3);
                         newRGB[0] = rgb[0] + i * colorStep;
                         newRGB[1] = rgb[1] + i * colorStep;
                         newRGB[2] = rgb[2] - i * colorStep;
@@ -986,6 +986,7 @@
                     });
                 },
                 downloadCSV() {
+                    let peopleHeaders = Object.keys(this.city.People[0]);
                     let rows = [
                         ['Each set of data will be proceeded by a header in square brackets: [].'],
                         [''],
@@ -994,11 +995,14 @@
                         [this.city.notableTrait, this.city.knownFor, this.city.calamity],
                         [''],
                         ['[PEOPLE]'],
-                        Object.keys(this.city.People[0]),
+                        peopleHeaders,
                     ];
 
                     for (let i = 0; i < this.city.People.length; i++) {
-                        rows.push(Object.values(this.city.People[i]).map(x => this.csvClean(x)));
+                        let peopleValues = Object.values(this.city.People[i]).map(x => this.csvClean(x));
+                        let spouseIndex = peopleHeaders.indexOf('Spouse');
+                        peopleValues[spouseIndex] = this.city.People[i].getSpouse()?.toString();
+                        rows.push(peopleValues);
                     }
 
                     rows.push(['']);

@@ -151,30 +151,30 @@ class BusinessType {
 }
 
 class Person {
-    Id: number
-    FirstName: string
-    LastName: string
-    Caste: Caste
-    RaceFrequency: RaceFrequency
-    Race: Race
-    Age: number
-    Gender: Gender
-    Family: Family
-    Spouse: number
-    Appearance: string
-    Strength: string
-    Weakness: string
-    Talent: string
-    Mannerism: string
-    Interaction: string
-    GoodOrEvilIdeal: string
-    LawfulOrChaoticIdeal: string
-    NeutralOrOtherIdeal: string
-    Bond: string
-    FlawOrSecret: string
-    RaceAge: number
-    ownedBusiness: Business
-    worksAt: Business
+    Id: number = null
+    FirstName: string = null
+    LastName: string = null
+    Caste: Caste = null
+    RaceFrequency: RaceFrequency = null
+    Race: Race = null
+    Age: number = null
+    Gender: Gender = null
+    Family: Family = null
+    Spouse: number = null
+    Appearance: string = null
+    Strength: string = null
+    Weakness: string = null
+    Talent: string = null
+    Mannerism: string = null
+    Interaction: string = null
+    GoodOrEvilIdeal: string = null
+    LawfulOrChaoticIdeal: string = null
+    NeutralOrOtherIdeal: string = null
+    Bond: string = null
+    FlawOrSecret: string = null
+    RaceAge: number = null
+    ownedBusiness: Business = null
+    worksAt: Business = null
 
     toString(): string {
         return this.fullName();
@@ -247,12 +247,12 @@ class Family {
 }
 
 class Business {
-    Id: number
-    BusinessType: BusinessType
+    Id: number = null
+    BusinessType: BusinessType = null
     Owners: Person[] = []
     Employees: Person[] = []
-    Name: string
-    Description: string
+    Name: string = null
+    Description: string = null
     Inventory: InventoryItem[] = []
 
     toString(): string {
