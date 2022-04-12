@@ -59,7 +59,7 @@
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="noblePercent" />
                             </div>
-                            <div class="col-sm">{{ noblePercent * 100 }}%</div>
+                            <div class="col-sm">{{ Math.round(( noblePercent * 100 + Number.EPSILON) * 100) / 100 }}%</div>
                         </div>
                         <div class="row">
                             <label class="form-label text-light col-sm-4">Mercantile</label>
@@ -67,7 +67,7 @@
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="mercantilePercent" />
                             </div>
-                            <div class="col-sm">{{ mercantilePercent * 100 }}%</div>
+                            <div class="col-sm">{{ Math.round(( mercantilePercent * 100 + Number.EPSILON) * 100) / 100 }}%</div>
                         </div>
                         <div class="row">
                             <label class="form-label text-light col-sm-4">Tradesperson</label>
@@ -75,7 +75,7 @@
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="tradePercent" />
                             </div>
-                            <div class="col-sm">{{ tradePercent * 100 }}%</div>
+                            <div class="col-sm">{{ Math.round(( tradePercent * 100 + Number.EPSILON) * 100) / 100 }}%</div>
                         </div>
                         <div class="row">
                             <label class="form-label text-light col-sm-4">Peasant</label>
@@ -83,7 +83,7 @@
                                 <input type="range" class="custom-range" min="0" max="1" step="0.005"
                                     v-model="peasantPercent" />
                             </div>
-                            <div class="col-sm">{{ peasantPercent * 100 }}%</div>
+                            <div class="col-sm">{{ Math.round(( peasantPercent * 100 + Number.EPSILON) * 100) / 100 }}%</div>
                         </div>
                     </div>
                 </div>
